@@ -6,12 +6,14 @@ export const taskRoutes = express.Router();
 
 const markOverdueTasks = async () => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
     await runAsync(
       `UPDATE tasks
        SET status = 'atrasada'
        WHERE due_date < $1 AND status = 'ativa'`,
-      [today]
+      [todayStr]
     );
   } catch (error) {
     console.error('Erro ao marcar tarefas atrasadas:', error);
@@ -147,7 +149,7 @@ taskRoutes.get('/stats/:member_id', async (req, res) => {
         SUM(CASE WHEN status = 'ativa' THEN 1 ELSE 0 END) as active,
         SUM(CASE WHEN status = 'atrasada' THEN 1 ELSE 0 END) as overdue,
         SUM(CASE WHEN status = 'concluída' THEN 1 ELSE 0 END) as completed
-       FROM tasks WHERE assigned_to = ?`,
+       FROM tasks WHERE assigned_to = $1`,
       [req.params.member_id]
     );
     res.json(stats);
