@@ -10,10 +10,19 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
 
+  const isTaskOverdue = (task) => {
+    if (task.status === 'concluída') return false;
+    if (!task.due_date) return false;
+    const dueDate = new Date(task.due_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dueDate < today;
+  };
+
   const stats = {
     total: tasks.length,
-    active: tasks.filter(t => t.status === 'ativa').length,
-    overdue: tasks.filter(t => t.status === 'atrasada').length,
+    active: tasks.filter(t => t.status === 'ativa' && !isTaskOverdue(t)).length,
+    overdue: tasks.filter(t => isTaskOverdue(t) || t.status === 'atrasada').length,
     completed: tasks.filter(t => t.status === 'concluída').length
   };
 
