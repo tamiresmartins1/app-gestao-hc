@@ -87,11 +87,11 @@ export default function ManagerDashboard({ members }) {
                   <span>Concluídas:</span>
                   <span className="value completed">{completed}</span>
                 </div>
-                {(active + overdue) > 0 && (
+                {total > 0 && (
                   <div className="progress-bar">
                     <div
                       className="progress-fill"
-                      style={{ width: `${(completed / (active + overdue + completed)) * 100}%` }}
+                      style={{ width: `${(completed / total) * 100}%` }}
                     ></div>
                   </div>
                 )}
