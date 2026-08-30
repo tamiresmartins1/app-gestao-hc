@@ -27,22 +27,54 @@
 }
 
 .stat-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #e8eef7 0%, #d9e4f0 100%);
   padding: 15px;
   border-radius: 8px;
   text-align: center;
 }
 
+.stat-card .stat-number {
+  color: #4a5f8f;
+}
+
+.stat-card .stat-label {
+  color: #7a8eaa;
+}
+
 .stat-card.active {
-  background: linear-gradient(135deg, #ffa500 0%, #ffb84d 100%) !important;
+  background: linear-gradient(135deg, #ffe8cc 0%, #fff3e0 100%) !important;
+}
+
+.stat-card.active .stat-number {
+  color: #e67e22;
+}
+
+.stat-card.active .stat-label {
+  color: #d97706;
 }
 
 .stat-card.completed {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%) !important;
+  background: linear-gradient(135deg, #c8e6c9 0%, #e8f5e9 100%) !important;
+}
+
+.stat-card.completed .stat-number {
+  color: #388e3c;
+}
+
+.stat-card.completed .stat-label {
+  color: #558b2f;
 }
 
 .stat-card.overdue {
-  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%) !important;
+  background: linear-gradient(135deg, #ffcdd2 0%, #ffebee 100%) !important;
+}
+
+.stat-card.overdue .stat-number {
+  color: #d32f2f;
+}
+
+.stat-card.overdue .stat-label {
+  color: #c62828;
 }
 
 .stat-number {

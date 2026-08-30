@@ -18,39 +18,63 @@
 }
 
 .overview-card {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #e8eef7 0%, #d9e4f0 100%);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.overview-card.active {
-  background: linear-gradient(135deg, #ffa500 0%, #ffb84d 100%);
-}
-
-.overview-card.overdue {
-  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
-}
-
-.overview-card.completed {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-}
-
 .overview-card h3 {
-  color: white;
+  color: #4a5f8f;
   font-size: 14px;
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+}
+
+.overview-card.active {
+  background: linear-gradient(135deg, #ffe8cc 0%, #fff3e0 100%);
+}
+
+.overview-card.active h3 {
+  color: #d97706;
+}
+
+.overview-card.active .big-number {
+  color: #e67e22;
+}
+
+.overview-card.overdue {
+  background: linear-gradient(135deg, #ffcdd2 0%, #ffebee 100%);
+}
+
+.overview-card.overdue h3 {
+  color: #c62828;
+}
+
+.overview-card.overdue .big-number {
+  color: #d32f2f;
+}
+
+.overview-card.completed {
+  background: linear-gradient(135deg, #c8e6c9 0%, #e8f5e9 100%);
+}
+
+.overview-card.completed h3 {
+  color: #558b2f;
+}
+
+.overview-card.completed .big-number {
+  color: #388e3c;
 }
 
 .big-number {
   font-size: 36px;
   font-weight: bold;
-  color: white;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #4a5f8f;
+  text-shadow: none;
 }
 
 .team-members-stats {
@@ -102,19 +126,19 @@
 
 .stat-row .value {
   font-weight: 600;
-  color: #2196F3;
+  color: #4a5f8f;
 }
 
 .stat-row .value.active {
-  color: #FFA500;
+  color: #e67e22;
 }
 
 .stat-row .value.overdue {
-  color: #f44336;
+  color: #d32f2f;
 }
 
 .stat-row .value.completed {
-  color: #4CAF50;
+  color: #388e3c;
 }
 
 .progress-bar {
