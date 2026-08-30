@@ -42,8 +42,9 @@ membersRoutes.post('/', async (req, res) => {
 
 membersRoutes.put('/:id', async (req, res) => {
   try {
-    const { name, role } = req.body;
+    const { name, email, role } = req.body;
     if (name) await runAsync('UPDATE members SET name = ? WHERE id = ?', [name, req.params.id]);
+    if (email) await runAsync('UPDATE members SET email = ? WHERE id = ?', [email, req.params.id]);
     if (role) await runAsync('UPDATE members SET role = ? WHERE id = ?', [role, req.params.id]);
 
     const member = await getAsync('SELECT * FROM members WHERE id = ?', [req.params.id]);
