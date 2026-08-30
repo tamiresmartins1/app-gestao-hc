@@ -1,0 +1,178 @@
+.quick-links {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.quick-links h2 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-size: 24px;
+}
+
+.links-container {
+  display: grid;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.category {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.category-header {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.category-header:hover {
+  transform: translateX(5px);
+}
+
+.category-header.expanded .arrow {
+  transform: rotate(180deg);
+}
+
+.arrow {
+  transition: transform 0.2s;
+  font-size: 12px;
+}
+
+.category-links {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 8px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.link-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+  color: #2196F3;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.link-item:hover {
+  background: #e3f2fd;
+  border-left-color: #2196F3;
+  transform: translateX(5px);
+}
+
+.link-item svg {
+  margin-left: 10px;
+}
+
+.phones-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.phones-section h3 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.phones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.phone-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.phone-area {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.phone-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.phone-number svg {
+  font-size: 20px;
+}
+
+.info-box {
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  padding: 12px 15px;
+  border-radius: 4px;
+  color: #856404;
+  font-size: 14px;
+}
+
+.info-box strong {
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .quick-links {
+    padding: 15px;
+  }
+
+  .quick-links h2 {
+    font-size: 20px;
+  }
+
+  .category-header {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .phones-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .link-item {
+    font-size: 14px;
+  }
+}

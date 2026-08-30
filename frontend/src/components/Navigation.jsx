@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch } from 'react-icons/fi';
+import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink } from 'react-icons/fi';
 import '../styles/navigation.css';
 
 export default function Navigation({ activeTab, onTabChange }) {
@@ -7,7 +7,8 @@ export default function Navigation({ activeTab, onTabChange }) {
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2 },
     { id: 'tarefas', label: 'Minhas Tarefas', icon: FiCheckSquare },
     { id: 'recados', label: 'Recados', icon: FiMail },
-    { id: 'processos', label: 'Processos', icon: FiGitBranch }
+    { id: 'processos', label: 'Processos', icon: FiGitBranch },
+    { id: 'links', label: 'Links Rápidos', icon: FiLink }
   ];
 
   return (

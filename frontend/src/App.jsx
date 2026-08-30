@@ -7,6 +7,7 @@ import Dashboard from './components/Dashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import Messages from './components/Messages';
 import Processes from './components/Processes';
+import QuickLinks from './components/QuickLinks';
 import './styles/app.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -137,6 +138,10 @@ function App() {
 
             {activeTab === 'processos' && (
               <Processes members={members} />
+            )}
+
+            {activeTab === 'links' && (
+              <QuickLinks />
             )}
           </>
         )}
