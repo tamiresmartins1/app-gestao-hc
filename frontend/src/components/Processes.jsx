@@ -638,6 +638,11 @@ export default function Processes({ members }) {
             ))}
           </div>
 
+          {!filter ? (
+            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#999' }}>
+              <p style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>👆 Clique em uma categoria acima para ver os processos</p>
+            </div>
+          ) : (
           <div className="processes-grid">
           {processes
             .filter(p => filter && p.category === filter)
@@ -775,6 +780,7 @@ export default function Processes({ members }) {
             </div>
           ))}
           </div>
+          )}
         </>
       )}
 
