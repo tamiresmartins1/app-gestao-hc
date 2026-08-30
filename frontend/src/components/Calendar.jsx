@@ -152,7 +152,7 @@ export default function Calendar({ member, members }) {
         <div className="modal-overlay" onClick={() => setShowForm(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3>Nova Tarefa - {selectedDate.toLocaleDateString('pt-BR')}</h3>
+              <h3>Nova Tarefa - {selectedDateStr ? `${selectedDateStr.split('-')[2]}/${selectedDateStr.split('-')[1]}/${selectedDateStr.split('-')[0]}` : ''}</h3>
               <button className="close-btn" onClick={() => setShowForm(false)}>
                 <FiX />
               </button>
