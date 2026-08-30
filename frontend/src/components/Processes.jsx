@@ -618,21 +618,6 @@ export default function Processes({ members }) {
       ) : (
         <>
           <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', overflowX: 'auto', paddingBottom: '10px' }}>
-            <button
-              onClick={() => setFilter('all')}
-              style={{
-                padding: '8px 15px',
-                background: filter === 'all' ? '#4CAF50' : '#f0f0f0',
-                color: filter === 'all' ? 'white' : '#333',
-                border: 'none',
-                borderRadius: '20px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              📊 Todos ({processes.length})
-            </button>
             {[...new Set(processes.map(p => p.category))].sort().map(cat => (
               <button
                 key={cat}
@@ -648,7 +633,7 @@ export default function Processes({ members }) {
                   whiteSpace: 'nowrap'
                 }}
               >
-                📁 {cat} ({processes.filter(p => p.category === cat).length})
+                📁 {cat}
               </button>
             ))}
           </div>
