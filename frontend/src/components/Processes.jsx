@@ -271,24 +271,43 @@ export default function Processes({ members }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.7)',
+          background: 'white',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          flexDirection: 'column',
           zIndex: 1000,
-          padding: '20px',
-          overflowY: 'auto'
-        }} onClick={() => setEditingProcess(null)}>
+          overflow: 'hidden'
+        }}>
           <div style={{
-            background: 'white',
-            padding: '40px',
-            borderRadius: '8px',
-            maxWidth: '800px',
-            width: '100%',
-            maxHeight: '95vh',
+            background: '#f5f5f5',
+            padding: '20px 40px',
+            borderBottom: '1px solid #ddd',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <h2 style={{ margin: 0 }}>✏️ Editar Processo</h2>
+            <button
+              onClick={() => setEditingProcess(null)}
+              style={{
+                background: '#ff6b6b',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '16px'
+              }}
+            >
+              ✕ Fechar
+            </button>
+          </div>
+
+          <div style={{
+            flex: 1,
             overflowY: 'auto',
-            margin: 'auto'
-          }} onClick={(e) => e.stopPropagation()}>
+            padding: '40px'
+          }}>
             <h2 style={{ marginBottom: '30px', borderBottom: '2px solid #4CAF50', paddingBottom: '15px' }}>✏️ Editar Processo</h2>
 
             <div style={{ marginBottom: '20px' }}>
@@ -327,8 +346,12 @@ export default function Processes({ members }) {
               <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📅 Prazo:</label>
               <input
                 type="date"
+                placeholder="Selecione o prazo"
                 value={editingProcess.due_date || ''}
-                onChange={(e) => setEditingProcess({ ...editingProcess, due_date: e.target.value })}
+                onChange={(e) => {
+                  setEditingProcess({ ...editingProcess, due_date: e.target.value });
+                  console.log('📅 Due date set to:', e.target.value);
+                }}
                 style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
               />
             </div>
@@ -384,7 +407,14 @@ export default function Processes({ members }) {
               <button
                 onClick={async () => {
                   try {
-                    await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
+                    console.log('💾 Salvando processo com dados:', {
+                      id: editingProcess.id,
+                      name: editingProcess.name,
+                      due_date: editingProcess.due_date,
+                      status: editingProcess.status
+                    });
+                    const res = await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
+                    console.log('✅ Resposta do servidor:', res.data);
                     loadProcesses();
                     setEditingProcess(null);
                   } catch (error) {
@@ -472,11 +502,14 @@ export default function Processes({ members }) {
             style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
           />
 
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', marginTop: '15px' }}>
+            📅 Prazo:
+          </label>
           <input
             type="date"
-            placeholder="Prazo"
             value={formData.due_date}
             onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+            style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
           />
 
           <select
