@@ -74,7 +74,7 @@ taskRoutes.post('/', async (req, res) => {
 
     await runAsync(
       `INSERT INTO tasks (id, title, description, assigned_to, created_by, due_date, priority)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+       VALUES ($1, $2, $3, $4, $5, $6::date, $7)`,
       [id, title, description, assigned_to, created_by, due_date, priority]
     );
 
