@@ -262,6 +262,24 @@ processesRoutes.post('/:id/tasks', async (req, res) => {
   }
 });
 
+processesRoutes.put('/:id/member-incomplete/:member_id', async (req, res) => {
+  try {
+    const { processId, memberId } = { processId: req.params.id, memberId: req.params.member_id };
+
+    await runAsync(
+      `UPDATE process_completion_status SET completed = false WHERE process_id = $1 AND member_id = $2`,
+      [processId, memberId]
+    );
+
+    await runAsync('UPDATE processes SET status = $1 WHERE id = $2', ['em_progresso', processId]);
+
+    const process = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
+    res.json(process);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 processesRoutes.delete('/:id', async (req, res) => {
   try {
     const processId = req.params.id;

@@ -226,16 +226,21 @@ export default function Processes({ members }) {
                       checked={status.completed}
                       onChange={async (e) => {
                         try {
-                          const res = await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}/member-complete/${status.member_id}`);
+                          const isCompleting = e.target.checked;
+                          const endpoint = isCompleting
+                            ? `/member-complete/${status.member_id}`
+                            : `/member-incomplete/${status.member_id}`;
 
-                          if (res.data && res.data.status === 'concluido') {
+                          const res = await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}${endpoint}`);
+
+                          if (isCompleting && res.data && res.data.status === 'concluido') {
                             alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas para os próximos responsáveis!`);
                           }
 
                           loadProcessDetails(selectedProcessDetails.id);
                           loadProcesses();
                         } catch (error) {
-                          alert('Erro ao marcar conclusão: ' + error.response?.data?.error);
+                          alert('Erro ao atualizar status: ' + error.response?.data?.error);
                         }
                       }}
                       style={{ width: '20px', height: '20px', cursor: 'pointer' }}
