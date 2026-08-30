@@ -9,7 +9,7 @@ processesRoutes.get('/', async (req, res) => {
     const processes = await allAsync(
       `SELECT p.*, m.name as owner_name FROM processes p
        LEFT JOIN members m ON p.owner_id = m.id
-       ORDER BY p.created_at DESC`
+       ORDER BY p.created_at ASC`
     );
 
     for (let process of processes) {
@@ -73,9 +73,7 @@ processesRoutes.post('/', async (req, res) => {
 
     let safeDueDate = due_date;
     if (due_date) {
-      const [year, month, day] = due_date.split('-');
-      const dayNum = parseInt(day) + 1;
-      safeDueDate = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      safeDueDate = String(due_date).trim();
     }
 
     await runAsync(
@@ -144,9 +142,7 @@ processesRoutes.put('/:id', async (req, res) => {
     }
 
     if (due_date) {
-      const [year, month, day] = due_date.split('-');
-      const dayNum = parseInt(day) + 1;
-      const safeDueDate = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      const safeDueDate = String(due_date).trim();
       await runAsync('UPDATE processes SET due_date = $1 WHERE id = $2', [safeDueDate, req.params.id]);
     }
 
