@@ -75,11 +75,20 @@ function App() {
 
   const handleAddTask = async (taskData) => {
     try {
-      const res = await axios.post(`${API_URL}/tasks`, {
+      const dataToSend = {
         ...taskData,
         created_by: currentMember.id,
         assigned_to: taskData.assigned_to || currentMember.id
-      });
+      };
+
+      if (dataToSend.due_date) {
+        const [year, month, day] = dataToSend.due_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        console.log(`⏰ Adjusting date for UTC-3: ${taskData.due_date} → ${dataToSend.due_date}`);
+      }
+
+      const res = await axios.post(`${API_URL}/tasks`, dataToSend);
       await loadTasks();
     } catch (error) {
       alert('Erro ao adicionar tarefa: ' + error.response?.data?.error);
