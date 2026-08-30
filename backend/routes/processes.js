@@ -217,6 +217,26 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
     if (parseInt(allCompleted.total) === parseInt(allCompleted.completed)) {
       await runAsync('UPDATE processes SET status = $1 WHERE id = $2', ['concluido', processId]);
 
+      const currentProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
+
+      // Notificar participants do processo atual
+      const participants = await allAsync(
+        `SELECT DISTINCT pm.member_id FROM process_members pm
+         WHERE pm.process_id = $1 AND pm.member_id NOT IN (
+           SELECT member_id FROM process_completion_status WHERE process_id = $1
+         )`,
+        [processId]
+      );
+
+      for (let { member_id } of participants) {
+        await runAsync(
+          `INSERT INTO process_notifications (id, process_id, member_id, message)
+           VALUES ($1, $2, $3, $4)`,
+          [uuidv4(), processId, member_id, `O processo "${currentProcess.name}" foi concluído! Agora é a sua vez!`]
+        );
+      }
+
+      // Notificar processos dependentes
       const dependentProcesses = await allAsync(
         `SELECT * FROM processes WHERE depends_on_id = $1`,
         [processId]
@@ -229,7 +249,6 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
         );
 
         for (let { member_id } of members) {
-          const currentProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
           await runAsync(
             `INSERT INTO process_notifications (id, process_id, member_id, message)
              VALUES ($1, $2, $3, $4)`,
