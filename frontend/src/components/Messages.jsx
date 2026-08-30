@@ -7,7 +7,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function Messages({ member, members, onUnreadUpdate }) {
   const [messages, setMessages] = useState([]);
-  const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [selectedRecipients, setSelectedRecipients] = useState([]);
   const [showCompose, setShowCompose] = useState(false);
   const [subject, setSubject] = useState('');
   const [content, setContent] = useState('');
@@ -32,18 +32,21 @@ export default function Messages({ member, members, onUnreadUpdate }) {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!subject || !content || !selectedRecipient) return;
+    if (!subject || !content || selectedRecipients.length === 0) return;
 
     try {
-      await axios.post(`${API_URL}/messages`, {
-        sender_id: member.id,
-        recipient_id: selectedRecipient,
-        subject,
-        content
-      });
+      for (let recipient_id of selectedRecipients) {
+        await axios.post(`${API_URL}/messages`, {
+          sender_id: member.id,
+          recipient_id,
+          subject,
+          content
+        });
+      }
       setSubject('');
       setContent('');
       setShowCompose(false);
+      setSelectedRecipients([]);
       loadMessages();
     } catch (error) {
       alert('Erro ao enviar mensagem: ' + error.response?.data?.error);
@@ -134,21 +137,33 @@ export default function Messages({ member, members, onUnreadUpdate }) {
         <form className="compose-form" onSubmit={handleSend}>
           <h3>Enviar Recado</h3>
 
-          <select
-            value={selectedRecipient || ''}
-            onChange={(e) => setSelectedRecipient(e.target.value)}
-            required
-          >
-            <option value="">Destinatário...</option>
+          <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+            👥 Destinatários (pode selecionar vários):
+          </label>
+          <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
             {members
               .filter(m => m.id !== member.id)
               .map(m => (
-                <option key={m.id} value={m.id}>
-                  {m.name}
-                </option>
-              ))
-            }
-          </select>
+                <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '12px' }}>
+                  <input
+                    type="checkbox"
+                    id={`recipient-${m.id}`}
+                    checked={selectedRecipients.includes(m.id)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedRecipients([...selectedRecipients, m.id]);
+                      } else {
+                        setSelectedRecipients(selectedRecipients.filter(id => id !== m.id));
+                      }
+                    }}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <label htmlFor={`recipient-${m.id}`} style={{ cursor: 'pointer', margin: 0 }}>
+                    {m.name}
+                  </label>
+                </div>
+              ))}
+          </div>
 
           <input
             type="text"
@@ -167,8 +182,8 @@ export default function Messages({ member, members, onUnreadUpdate }) {
           />
 
           <div className="form-actions">
-            <button type="submit" className="btn-primary">
-              <FiSend /> Enviar
+            <button type="submit" className="btn-primary" disabled={selectedRecipients.length === 0}>
+              <FiSend /> Enviar para {selectedRecipients.length} pessoa(s)
             </button>
             <button
               type="button"
@@ -177,7 +192,7 @@ export default function Messages({ member, members, onUnreadUpdate }) {
                 setShowCompose(false);
                 setSubject('');
                 setContent('');
-                setSelectedRecipient(null);
+                setSelectedRecipients([]);
               }}
             >
               Cancelar
