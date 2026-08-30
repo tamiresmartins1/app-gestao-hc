@@ -2,11 +2,11 @@ import React from 'react';
 import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink } from 'react-icons/fi';
 import '../styles/navigation.css';
 
-export default function Navigation({ activeTab, onTabChange }) {
+export default function Navigation({ activeTab, onTabChange, unreadMessagesCount = 0 }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2 },
     { id: 'tarefas', label: 'Minhas Tarefas', icon: FiCheckSquare },
-    { id: 'recados', label: 'Recados', icon: FiMail },
+    { id: 'recados', label: 'Recados', icon: FiMail, badge: unreadMessagesCount > 0 ? unreadMessagesCount : null },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
     { id: 'links', label: 'Links Rápidos', icon: FiLink }
   ];
@@ -23,8 +23,13 @@ export default function Navigation({ activeTab, onTabChange }) {
               onClick={() => onTabChange(tab.id)}
               title={tab.label}
             >
-              <Icon size={20} />
-              <span>{tab.label}</span>
+              <div className="nav-tab-content">
+                <Icon size={20} />
+                <span>{tab.label}</span>
+                {tab.badge && (
+                  <span className="nav-badge">{tab.badge}</span>
+                )}
+              </div>
             </button>
           );
         })}

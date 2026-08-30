@@ -18,6 +18,7 @@ function App() {
   const [currentMember, setCurrentMember] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
 
   useEffect(() => {
     loadMembers();
@@ -104,6 +105,10 @@ function App() {
     }
   };
 
+  const handleUnreadUpdate = (count) => {
+    setUnreadMessagesCount(count);
+  };
+
   return (
     <div className="app">
       <Header
@@ -113,7 +118,7 @@ function App() {
         onAddMember={handleAddMember}
       />
 
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} />
 
       <div className="app-content">
         {loading ? (
@@ -142,7 +147,7 @@ function App() {
             )}
 
             {activeTab === 'recados' && currentMember && (
-              <Messages member={currentMember} members={members} />
+              <Messages member={currentMember} members={members} onUnreadUpdate={handleUnreadUpdate} />
             )}
 
             {activeTab === 'processos' && (

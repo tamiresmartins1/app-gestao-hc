@@ -29,6 +29,13 @@
   transition: all 0.3s ease;
   border-bottom: 3px solid transparent;
   white-space: nowrap;
+  position: relative;
+}
+
+.nav-tab-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .nav-tab:hover {
@@ -40,6 +47,31 @@
   color: #4CAF50;
   border-bottom-color: #4CAF50;
   background-color: #f0f9f0;
+}
+
+.nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e53935;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  margin-left: 4px;
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(229, 57, 53, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(229, 57, 53, 0);
+  }
 }
 
 @media (max-width: 768px) {

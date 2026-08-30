@@ -57,11 +57,32 @@ export const initDatabase = async () => {
         subject TEXT NOT NULL,
         content TEXT NOT NULL,
         read BOOLEAN DEFAULT false,
+        parent_message_id TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (sender_id) REFERENCES members(id),
-        FOREIGN KEY (recipient_id) REFERENCES members(id)
+        FOREIGN KEY (recipient_id) REFERENCES members(id),
+        FOREIGN KEY (parent_message_id) REFERENCES messages(id)
       )
     `);
+
+    // Adicionar coluna parent_message_id se ela não existir (para bancos existentes)
+    try {
+      await pool.query(`
+        ALTER TABLE messages ADD COLUMN parent_message_id TEXT;
+      `);
+    } catch (error) {
+      // Coluna já existe, continuar
+    }
+
+    // Adicionar constraint de foreign key se ela não existir
+    try {
+      await pool.query(`
+        ALTER TABLE messages ADD CONSTRAINT fk_parent_message_id
+        FOREIGN KEY (parent_message_id) REFERENCES messages(id);
+      `);
+    } catch (error) {
+      // Constraint já existe, continuar
+    }
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS processes (

@@ -36,13 +36,13 @@ messagesRoutes.get('/conversation/:user_id/:other_user_id', async (req, res) => 
 
 messagesRoutes.post('/', async (req, res) => {
   try {
-    const { sender_id, recipient_id, subject, content } = req.body;
+    const { sender_id, recipient_id, subject, content, parent_message_id } = req.body;
     const id = uuidv4();
 
     await runAsync(
-      `INSERT INTO messages (id, sender_id, recipient_id, subject, content)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [id, sender_id, recipient_id, subject, content]
+      `INSERT INTO messages (id, sender_id, recipient_id, subject, content, parent_message_id)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [id, sender_id, recipient_id, subject, content, parent_message_id || null]
     );
 
     const message = await getAsync('SELECT * FROM messages WHERE id = $1', [id]);
