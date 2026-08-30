@@ -18,7 +18,11 @@ export default function ManagerDashboard({ members }) {
       if (member) {
         try {
           const res = await fetch(`${API_URL}/members/${member.id}/stats`);
-          if (res.ok) stats[name] = await res.json();
+          if (res.ok) {
+            const data = await res.json();
+            console.log(`📊 Stats de ${name}:`, data);
+            stats[name] = data;
+          }
         } catch (error) {
           console.error(`Erro ao carregar stats de ${name}:`, error);
         }
@@ -67,6 +71,8 @@ export default function ManagerDashboard({ members }) {
             const active = stats.active_tasks || 0;
             const overdue = stats.overdue_tasks || 0;
             const completed = stats.completed_tasks || 0;
+
+            console.log(`🔍 ${name}: total=${total}, completed=${completed}, %=${total > 0 ? (completed / total) * 100 : 0}%`);
 
             return (
               <div key={name} className="member-stat-card">
