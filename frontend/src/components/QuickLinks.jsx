@@ -75,7 +75,11 @@ export default function QuickLinks() {
     { area: 'FOFITO', number: '6515' },
     { area: 'Sala Deise', number: '3373' },
     { area: 'CEAC - Recepção', number: '7576' },
-    { area: 'CEAC amb', number: '2239' }
+    { area: 'CEAC amb', number: '2239' },
+    { area: 'Ricardo TI', number: '8071' },
+    { area: 'Alexandre Crispim TI', number: '8071' },
+    { area: 'Jose Nogueira (Chefe DAM)', number: '6699' },
+    { area: 'Vanessa Telessaude', number: '9719' }
   ];
 
   return (
