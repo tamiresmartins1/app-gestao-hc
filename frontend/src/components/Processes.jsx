@@ -21,11 +21,16 @@ const formatDueDate = (dueDate) => {
 export default function Processes({ members }) {
   const [processes, setProcesses] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const getTodayDateString = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     owner_id: members[0]?.id || '',
-    due_date: '',
+    due_date: getTodayDateString(),
     category: 'Auditoria',
     responsible_ids: [],
     participant_ids: [],
@@ -88,7 +93,7 @@ export default function Processes({ members }) {
         name: '',
         description: '',
         owner_id: members[0]?.id || '',
-        due_date: '',
+        due_date: getTodayDateString(),
         category: 'Auditoria',
         responsible_ids: [],
         participant_ids: [],
