@@ -38,21 +38,21 @@ export default function ManagerDashboard({ members }) {
             {Object.values(teamStats).reduce((sum, s) => sum + (s.total_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card">
+        <div className="overview-card active">
           <h3>Tarefas Ativas</h3>
-          <div className="big-number active">
+          <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.active_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card">
+        <div className="overview-card overdue">
           <h3>Tarefas Atrasadas</h3>
-          <div className="big-number overdue">
+          <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.overdue_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card">
+        <div className="overview-card completed">
           <h3>Tarefas Concluídas</h3>
-          <div className="big-number completed">
+          <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.completed_tasks || 0), 0)}
           </div>
         </div>

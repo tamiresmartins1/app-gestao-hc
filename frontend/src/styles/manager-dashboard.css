@@ -18,37 +18,39 @@
 }
 
 .overview-card {
-  background: white;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
+.overview-card.active {
+  background: linear-gradient(135deg, #ffa500 0%, #ffb84d 100%);
+}
+
+.overview-card.overdue {
+  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+}
+
+.overview-card.completed {
+  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+}
+
 .overview-card h3 {
-  color: #666;
+  color: white;
   font-size: 14px;
   margin-bottom: 10px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .big-number {
   font-size: 36px;
   font-weight: bold;
-  color: #2196F3;
-}
-
-.big-number.active {
-  color: #FFA500;
-}
-
-.big-number.overdue {
-  color: #f44336;
-}
-
-.big-number.completed {
-  color: #4CAF50;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .team-members-stats {
