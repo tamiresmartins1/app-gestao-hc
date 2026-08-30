@@ -40,15 +40,15 @@
 }
 
 .big-number.active {
-  color: #4CAF50;
+  color: #FFA500;
 }
 
 .big-number.overdue {
-  color: #FF9800;
+  color: #f44336;
 }
 
 .big-number.completed {
-  color: #8BC34A;
+  color: #4CAF50;
 }
 
 .team-members-stats {
@@ -104,15 +104,15 @@
 }
 
 .stat-row .value.active {
-  color: #4CAF50;
+  color: #FFA500;
 }
 
 .stat-row .value.overdue {
-  color: #FF9800;
+  color: #f44336;
 }
 
 .stat-row .value.completed {
-  color: #8BC34A;
+  color: #4CAF50;
 }
 
 .progress-bar {
