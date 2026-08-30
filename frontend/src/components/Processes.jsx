@@ -13,10 +13,12 @@ export default function Processes({ members }) {
     description: '',
     owner_id: members[0]?.id || '',
     due_date: '',
-    assigned_member_ids: []
+    assigned_member_ids: [],
+    depends_on_id: null
   });
   const [selectedProcess, setSelectedProcess] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     loadProcesses();
@@ -52,7 +54,8 @@ export default function Processes({ members }) {
         description: '',
         owner_id: members[0]?.id || '',
         due_date: '',
-        assigned_member_ids: []
+        assigned_member_ids: [],
+        depends_on_id: null
       });
       setShowForm(false);
       loadProcesses();
@@ -119,8 +122,23 @@ export default function Processes({ members }) {
             onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
           />
 
-          <label style={{ display: 'block', marginTop: '10px' }}>
-            👥 Pessoas que vão auditar (pode selecionar várias):
+          <select
+            value={formData.depends_on_id || ''}
+            onChange={(e) => setFormData({ ...formData, depends_on_id: e.target.value || null })}
+            style={{ marginTop: '10px' }}
+          >
+            <option value="">Nenhuma dependência (começa agora)</option>
+            {processes
+              .filter(p => p.id !== selectedProcess && p.status !== 'concluido')
+              .map(p => (
+                <option key={p.id} value={p.id}>
+                  Aguardar: {p.name} (será desbloqueado quando terminar)
+                </option>
+              ))}
+          </select>
+
+          <label style={{ display: 'block', marginTop: '15px' }}>
+            👥 Pessoas que participam do processo (pode selecionar várias):
           </label>
           <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
             {members.map(m => (
@@ -185,6 +203,19 @@ export default function Processes({ members }) {
 
               {process.description && (
                 <p className="process-description">{process.description}</p>
+              )}
+
+              {process.depends_on_id && (
+                <div style={{
+                  background: '#fff3cd',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  marginBottom: '10px',
+                  fontSize: '12px',
+                  color: '#856404'
+                }}>
+                  🔒 <strong>Bloqueado:</strong> Aguardando conclusão do processo anterior
+                </div>
               )}
 
               <div className="process-meta">

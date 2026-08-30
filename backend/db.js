@@ -92,13 +92,15 @@ export const initDatabase = async () => {
         status TEXT DEFAULT 'em_progresso',
         owner_id TEXT NOT NULL,
         due_date DATE,
+        depends_on_id TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (owner_id) REFERENCES members(id)
+        FOREIGN KEY (owner_id) REFERENCES members(id),
+        FOREIGN KEY (depends_on_id) REFERENCES processes(id)
       )
     `);
 
     try {
-      await pool.query(`ALTER TABLE processes ADD COLUMN due_date DATE;`);
+      await pool.query(`ALTER TABLE processes ADD COLUMN depends_on_id TEXT REFERENCES processes(id);`);
     } catch (error) {
       // Coluna já existe
     }
@@ -119,6 +121,19 @@ export const initDatabase = async () => {
         id TEXT PRIMARY KEY,
         process_id TEXT NOT NULL,
         member_id TEXT NOT NULL,
+        FOREIGN KEY (process_id) REFERENCES processes(id),
+        FOREIGN KEY (member_id) REFERENCES members(id)
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS process_notifications (
+        id TEXT PRIMARY KEY,
+        process_id TEXT NOT NULL,
+        member_id TEXT NOT NULL,
+        message TEXT NOT NULL,
+        read BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (process_id) REFERENCES processes(id),
         FOREIGN KEY (member_id) REFERENCES members(id)
       )
