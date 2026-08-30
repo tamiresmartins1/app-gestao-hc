@@ -226,7 +226,12 @@ export default function Processes({ members }) {
                       checked={status.completed}
                       onChange={async (e) => {
                         try {
-                          await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}/member-complete/${status.member_id}`);
+                          const res = await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}/member-complete/${status.member_id}`);
+
+                          if (res.data && res.data.status === 'concluido') {
+                            alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas para os próximos responsáveis!`);
+                          }
+
                           loadProcessDetails(selectedProcessDetails.id);
                           loadProcesses();
                         } catch (error) {
