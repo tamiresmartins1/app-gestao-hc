@@ -10,9 +10,9 @@ export default function QuickLinks() {
       title: '📋 Auditoria',
       links: [
         { name: '2026 MV Formulário de Auditoria - (respostas)', url: 'https://docs.google.com/spreadsheets/d/1DBbgVeMnGZNLb-QRpj_BpnZVM_8HZBEQM_E0nICSbpo/edit?gid=2055570076#gid=2055570076' },
-        { name: 'Manual Auditoria Interna 2026', url: 'https://docs.google.com/document/d/1LdW6ovoCJLyhJeBypQmv2_NdKGsK3caONmY-HF1kDQ4/edit?tab=t.0#heading=h.jea0c892xm7' },
+        { name: 'Formulário auditoria Atendimento', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfJuocBIbwhEtywpltj6t9_8q3qXxGJ9tTyCua-pTW-uDjTHA/viewform' },
         { name: 'Formulário auditoria Triagem', url: 'https://docs.google.com/forms/d/e/1FAIpQLSe6xJ5ofIW49pKFL2T9idIGkcRIjWA6GDE21qiAsGS6vWDoSg/viewform' },
-        { name: 'Formulário auditoria Atendimento', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfJuocBIbwhEtywpltj6t9_8q3qXxGJ9tTyCua-pTW-uDjTHA/viewform' }
+        { name: 'Manual Auditoria Interna 2026', url: 'https://docs.google.com/document/d/1LdW6ovoCJLyhJeBypQmv2_NdKGsK3caONmY-HF1kDQ4/edit?tab=t.0#heading=h.jea0c892xm7' }
       ]
     },
     checagem: {
@@ -25,18 +25,18 @@ export default function QuickLinks() {
     treinamento: {
       title: '🎓 Treinamento',
       links: [
-        { name: 'Treinamento Admissão + Atualização 2026', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' },
-        { name: 'Lista de treinamento - IMPRESSÃO', url: 'https://docs.google.com/document/d/1xA3_D2b0RaT8ucMW1pKsAnFWy0KyIaEN/edit' }
+        { name: 'Lista de treinamento - IMPRESSÃO', url: 'https://docs.google.com/document/d/1xA3_D2b0RaT8ucMW1pKsAnFWy0KyIaEN/edit' },
+        { name: 'Treinamento Admissão + Atualização 2026', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' }
       ]
     },
     logistica: {
       title: '📦 Logística',
       links: [
-        { name: 'Logistica agendas', url: 'https://docs.google.com/spreadsheets/d/1xrciwqZHoYVcgGC9hxYGpJgOGMysopuehhridYxkpZA/edit?usp=drive_web&ouid=114421952541590824162' },
-        { name: 'Mapa de ocupação 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
-        { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' },
+        { name: 'Controle de Triagem', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' },
         { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' },
-        { name: 'Controle de Triagem', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
+        { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' },
+        { name: 'Logistica agendas', url: 'https://docs.google.com/spreadsheets/d/1xrciwqZHoYVcgGC9hxYGpJgOGMysopuehhridYxkpZA/edit?usp=drive_web&ouid=114421952541590824162' },
+        { name: 'Mapa de ocupação 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' }
       ]
     },
     compras: {
@@ -48,24 +48,24 @@ export default function QuickLinks() {
     sondas: {
       title: '🔬 Sondas',
       links: [
-        { name: 'Sondas Controle de esterilização', url: 'https://docs.google.com/spreadsheets/d/1xq1Ui5WpPxkoJmVIgclkZ-SH0q5tV-2LGxTAvBJy5i0/edit?gid=454997872#gid=454997872' },
-        { name: 'Rastreabilidade de Sondas Ambulatório', url: 'https://docs.google.com/spreadsheets/d/1Yg02-aUoMhNM9nDLgsgWu_AMeMSAln7iY5sv9Ji6YXY/edit?gid=1826935223#gid=1826935223' }
+        { name: 'Rastreabilidade de Sondas Ambulatório', url: 'https://docs.google.com/spreadsheets/d/1Yg02-aUoMhNM9nDLgsgWu_AMeMSAln7iY5sv9Ji6YXY/edit?gid=1826935223#gid=1826935223' },
+        { name: 'Sondas Controle de esterilização', url: 'https://docs.google.com/spreadsheets/d/1xq1Ui5WpPxkoJmVIgclkZ-SH0q5tV-2LGxTAvBJy5i0/edit?gid=454997872#gid=454997872' }
       ]
     },
     indicadores: {
       title: '📊 Indicadores',
       links: [
-        { name: 'Indicadores protocolo Reabilitação Pulmonar 2026', url: 'https://docs.google.com/spreadsheets/d/1oYKF-ysiRksCCGWKip5UuVcl101k8V2ZKnkbShIYiz0/edit?gid=1314571940#gid=1314571940' },
+        { name: 'Avaliação de Desempenho Duxx- 2026', url: 'https://docs.google.com/spreadsheets/d/1eFVpzMjmEdFP7Y1ff1dHYTrMo5akY7j6RNpIvdftEb8/edit?gid=1805105409#gid=1805105409' },
         { name: 'Indicadores Amb 2026', url: 'https://docs.google.com/spreadsheets/d/1NAi7KvFApQyE-Pe7Nk8Rqm39GGq1IwuUaK2W96qn0rw/edit?gid=2103906718#gid=2103906718' },
-        { name: 'Avaliação de Desempenho Duxx- 2026', url: 'https://docs.google.com/spreadsheets/d/1eFVpzMjmEdFP7Y1ff1dHYTrMo5akY7j6RNpIvdftEb8/edit?gid=1805105409#gid=1805105409' }
+        { name: 'Indicadores protocolo Reabilitação Pulmonar 2026', url: 'https://docs.google.com/spreadsheets/d/1oYKF-ysiRksCCGWKip5UuVcl101k8V2ZKnkbShIYiz0/edit?gid=1314571940#gid=1314571940' }
       ]
     },
     paineis: {
       title: '🖥️ Painéis',
       links: [
-        { name: 'Painel MV Triagem', url: 'http://painelmv.phcnet.usp.br/PainelTriagemFisioAmb' },
+        { name: 'Painel Faturamento', url: 'http://portalhishc.phcnet.usp.br/PAINEL/ACCOUNT/LOGIN_NEW.ASPX?chave=kWHnpAzY6uQZXfCJVmrnfzZM3Nb6%2baZFEIM7xmLkXMqPqMmhJE2Qz%2fRPYBHJpLap8QOrpmDQQz15h0Z5uSbBwA%3d%3d' },
         { name: 'Painel MV Atendimento', url: 'http://painelmv.phcnet.usp.br/PainelEvolucaoFisioterapeuticaAmbulatorial' },
-        { name: 'Painel Faturamento', url: 'http://portalhishc.phcnet.usp.br/PAINEL/ACCOUNT/LOGIN_NEW.ASPX?chave=kWHnpAzY6uQZXfCJVmrnfzZM3Nb6%2baZFEIM7xmLkXMqPqMmhJE2Qz%2fRPYBHJpLap8QOrpmDQQz15h0Z5uSbBwA%3d%3d' }
+        { name: 'Painel MV Triagem', url: 'http://painelmv.phcnet.usp.br/PainelTriagemFisioAmb' }
       ]
     }
   };
