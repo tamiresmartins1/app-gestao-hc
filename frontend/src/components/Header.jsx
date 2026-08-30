@@ -55,7 +55,7 @@ export default function Header({ currentMember, onMemberChange, members, onAddMe
   return (
     <header className="header">
       <div className="header-left">
-        <div className="logo">📋 APP GESTÃO HC</div>
+        <div className="logo">📋 GESTÃO TÉCNICA HC</div>
       </div>
 
       <div className="header-center">
