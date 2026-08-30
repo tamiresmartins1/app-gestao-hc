@@ -125,8 +125,15 @@ export default function Calendar({ member, members }) {
           >
             {day && (
               <>
-                <div className="day-number">
-                  {day}
+                <div className="day-header">
+                  <div className="day-number">
+                    {day}
+                  </div>
+                  {getTasksForDate(day).length > 0 && (
+                    <div className="task-badge">
+                      {getTasksForDate(day).length} tarefa{getTasksForDate(day).length > 1 ? 's' : ''}
+                    </div>
+                  )}
                 </div>
                 <div className="day-tasks">
                   {getTasksForDate(day).map(task => (
