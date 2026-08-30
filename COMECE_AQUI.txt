@@ -1,0 +1,137 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                     APP GESTÃO HC - GUIA RÁPIDO                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+✨ Bem-vindo ao APP GESTÃO HC!
+
+Um sistema completo de gerenciamento de tarefas para equipes de saúde com:
+  ✓ Dashboard com visão geral de tarefas
+  ✓ Gerenciamento individual de tarefas (Lista, Kanban, Calendário)
+  ✓ Sistema de recados entre membros
+  ✓ Gerenciamento de processos com dependências
+  ✓ Responsivo para desktop, tablet e mobile
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSO 1: Instalar Node.js
+───────────────────────────────────────────────────────────────────────────────
+
+1. Acesse: https://nodejs.org/
+2. Baixe a versão LTS (a que está escrito "Recommended")
+3. Execute o instalador e siga os passos
+4. IMPORTANTE: Reinicie o computador após instalar
+5. Verifique a instalação abrindo CMD e digitando: node --version
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSO 2: Preparar o APP (Execute uma única vez)
+───────────────────────────────────────────────────────────────────────────────
+
+Após instalar Node.js e reiniciar:
+
+Opção A - Automática (Windows):
+  → Clique 2x em "setup.bat"
+
+Opção B - Manual:
+  1. Abra CMD (Prompt de Comando)
+  2. Digite: cd C:\Users\mizae\Downloads\APP GESTAO HC
+  3. Digite: cd backend
+  4. Digite: npm install
+  5. Digite: cd ..\frontend
+  6. Digite: npm install
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PASSO 3: Rodar o APP
+───────────────────────────────────────────────────────────────────────────────
+
+Você precisa de 2 terminais abertos (mantenha ambos rodando):
+
+TERMINAL 1 (Backend):
+  cd C:\Users\mizae\Downloads\APP GESTAO HC\backend
+  npm run dev
+
+TERMINAL 2 (Frontend):
+  cd C:\Users\mizae\Downloads\APP GESTAO HC\frontend
+  npm run dev
+
+Depois abra seu navegador em:
+  http://localhost:5173
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ARQUIVOS IMPORTANTES
+───────────────────────────────────────────────────────────────────────────────
+
+📄 README.md          - Documentação completa
+📄 SETUP.md           - Guia de instalação detalhado
+🚀 setup.bat          - Script automático de setup (Windows)
+🚀 run.bat            - Script para rodar o app (Windows)
+📁 backend/           - Servidor Node.js
+📁 frontend/          - Aplicação React
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FUNCIONALIDADES
+───────────────────────────────────────────────────────────────────────────────
+
+📊 Dashboard
+  • Resumo de tarefas (ativas, atrasadas, concluídas)
+  • Carga de trabalho por membro
+  • Tarefas atrasadas e próximas
+
+📋 Minhas Tarefas
+  • Criar novas tarefas
+  • Filtrar por status e prioridade
+  • 3 visualizações: Lista, Kanban, Calendário
+  • Marcar como concluída/atrasada
+
+💬 Recados
+  • Enviar mensagens para membros
+  • Inbox com recados recebidos
+  • Marcar como lido
+
+🔗 Processos
+  • Organizar tarefas em processos
+  • Gerenciar dependências
+  • Acompanhar status
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DÚVIDAS FREQUENTES
+───────────────────────────────────────────────────────────────────────────────
+
+P: Apareceu erro "npm: command not found"?
+R: Node.js não está instalado. Instale de https://nodejs.org/ e reinicie.
+
+P: Porta já está em uso?
+R: Feche outros apps ou mude a porta no backend/.env
+
+P: Como resetar o banco de dados?
+R: Delete o arquivo "backend/app_gestao.db" e reinicie.
+
+P: Preciso de ajuda?
+R: Leia os arquivos README.md e SETUP.md para mais detalhes.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTRUTURA DO PROJETO
+───────────────────────────────────────────────────────────────────────────────
+
+backend/
+  ├── routes/          - APIs de tarefas, membros, mensagens, processos
+  ├── db.js            - Banco de dados SQLite
+  └── server.js        - Servidor Express
+
+frontend/
+  ├── src/components/  - Componentes React (Dashboard, Tasks, Messages, etc)
+  ├── src/styles/      - CSS dos componentes
+  └── index.html       - Página principal
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 Tudo pronto! Bom uso!
+
+Para mais informações, abra README.md ou SETUP.md
+
+═══════════════════════════════════════════════════════════════════════════════

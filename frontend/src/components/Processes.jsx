@@ -1,0 +1,199 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { FiTrash2, FiPlus } from 'react-icons/fi';
+import '../styles/processes.css';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
+export default function Processes({ members }) {
+  const [processes, setProcesses] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    owner_id: members[0]?.id || ''
+  });
+  const [selectedProcess, setSelectedProcess] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadProcesses();
+  }, []);
+
+  const loadProcesses = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(`${API_URL}/processes`);
+      setProcesses(res.data);
+    } catch (error) {
+      console.error('Erro ao carregar processos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name) return;
+
+    try {
+      await axios.post(`${API_URL}/processes`, formData);
+      setFormData({
+        name: '',
+        description: '',
+        owner_id: members[0]?.id || ''
+      });
+      setShowForm(false);
+      loadProcesses();
+    } catch (error) {
+      alert('Erro ao criar processo: ' + error.response?.data?.error);
+    }
+  };
+
+  const handleDelete = async (processId) => {
+    if (!window.confirm('Deseja deletar este processo?')) return;
+    try {
+      await axios.delete(`${API_URL}/processes/${processId}`);
+      loadProcesses();
+      setSelectedProcess(null);
+    } catch (error) {
+      alert('Erro ao deletar processo: ' + error.response?.data?.error);
+    }
+  };
+
+  const handleStatusChange = async (processId, newStatus) => {
+    try {
+      await axios.put(`${API_URL}/processes/${processId}`, { status: newStatus });
+      loadProcesses();
+    } catch (error) {
+      alert('Erro ao atualizar processo: ' + error.response?.data?.error);
+    }
+  };
+
+  return (
+    <div className="processes">
+      <div className="processes-header">
+        <h2>🔗 Processos e Dependências</h2>
+        <button
+          className="btn-primary"
+          onClick={() => setShowForm(!showForm)}
+        >
+          <FiPlus /> Novo Processo
+        </button>
+      </div>
+
+      {showForm && (
+        <form className="process-form" onSubmit={handleSubmit}>
+          <h3>Criar Novo Processo</h3>
+
+          <input
+            type="text"
+            placeholder="Nome do processo"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            required
+          />
+
+          <textarea
+            placeholder="Descrição (opcional)"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows="3"
+          />
+
+          <select
+            value={formData.owner_id}
+            onChange={(e) => setFormData({ ...formData, owner_id: e.target.value })}
+          >
+            {members.map(m => (
+              <option key={m.id} value={m.id}>
+                {m.name}
+              </option>
+            ))}
+          </select>
+
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">Criar</button>
+            <button type="button" className="btn-secondary" onClick={() => setShowForm(false)}>
+              Cancelar
+            </button>
+          </div>
+        </form>
+      )}
+
+      {loading ? (
+        <div>Carregando...</div>
+      ) : processes.length === 0 ? (
+        <div className="empty-state">
+          <p>Nenhum processo criado ainda</p>
+        </div>
+      ) : (
+        <div className="processes-grid">
+          {processes.map(process => (
+            <div
+              key={process.id}
+              className="process-card"
+              onClick={() => setSelectedProcess(process.id)}
+            >
+              <div className="process-header">
+                <h4>{process.name}</h4>
+                <button
+                  className="btn-delete"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(process.id);
+                  }}
+                >
+                  <FiTrash2 />
+                </button>
+              </div>
+
+              {process.description && (
+                <p className="process-description">{process.description}</p>
+              )}
+
+              <div className="process-meta">
+                <span>👤 {process.owner_name}</span>
+                <select
+                  value={process.status}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    handleStatusChange(process.id, e.target.value);
+                  }}
+                  className="status-select"
+                >
+                  <option value="em_progresso">Em Progresso</option>
+                  <option value="pausado">Pausado</option>
+                  <option value="concluido">Concluído</option>
+                </select>
+              </div>
+
+              {process.tasks && process.tasks.length > 0 && (
+                <div className="process-tasks">
+                  <h5>Tarefas ({process.tasks.length})</h5>
+                  <ul>
+                    {process.tasks.slice(0, 3).map(task => (
+                      <li key={task.id}>{task.title}</li>
+                    ))}
+                    {process.tasks.length > 3 && (
+                      <li className="more">+{process.tasks.length - 3} mais</li>
+                    )}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="info-section">
+        <h3>ℹ️ Sobre Processos</h3>
+        <p>
+          Processos permitem organizar tarefas interdependentes. Cada processo pode conter
+          múltiplas tarefas com dependências de ordem, facilitando o gerenciamento de workflows
+          complexos e sequenciais.
+        </p>
+      </div>
+    </div>
+  );
+}

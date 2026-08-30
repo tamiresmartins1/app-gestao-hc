@@ -1,0 +1,221 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    CHECKLIST - DEPLOY NO NETLIFY                             ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Siga os passos abaixo para colocar seu app na nuvem! ☁️
+
+═══════════════════════════════════════════════════════════════════════════════
+📋 ANTES DE COMEÇAR
+═══════════════════════════════════════════════════════════════════════════════
+
+□ Você tem a pasta "APP GESTAO HC" com todos os arquivos criados
+□ O app funciona localmente (npm run dev)
+□ Você tem uma conta de email
+
+═══════════════════════════════════════════════════════════════════════════════
+🔧 PASSO 1: PREPARAR O CÓDIGO (5 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+Local do GitHub:
+  1. Abra https://github.com/signup
+  2. Crie sua conta (use seu email)
+  3. Confirme o email
+
+Local do seu computador:
+  1. Abra Prompt de Comando (CMD)
+  2. Execute:
+
+    cd C:\Users\mizae\Downloads\APP GESTAO HC
+    git init
+    git config user.name "Seu Nome"
+    git config user.email "seu@email.com"
+    git add .
+    git commit -m "Initial commit"
+
+Status: □ Código preparado
+
+═══════════════════════════════════════════════════════════════════════════════
+📤 PASSO 2: CRIAR REPOSITÓRIO NO GITHUB (2 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vá para https://github.com/new
+2. Nome: app-gestao-hc
+3. Escolha: Public
+4. Clique: Create repository
+5. Você verá instruções, copie a URL do seu repositório
+
+Sua URL será algo como:
+  https://github.com/seu-username/app-gestao-hc.git
+
+Status: □ Repositório criado
+
+═══════════════════════════════════════════════════════════════════════════════
+⬆️ PASSO 3: ENVIAR CÓDIGO PARA GITHUB (3 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+No Prompt de Comando, execute:
+
+  git remote add origin https://github.com/seu-username/app-gestao-hc.git
+  git branch -M main
+  git push -u origin main
+
+Será pedida senha do GitHub. Se falhar, use Personal Access Token (veja DEPLOY.md)
+
+Status: □ Código enviado
+
+═══════════════════════════════════════════════════════════════════════════════
+🔨 PASSO 4: DEPLOY DO BACKEND (5 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vá para https://render.com
+2. Clique: Sign up
+3. Escolha: GitHub
+4. Clique: Authorize
+5. Após entrar, clique: New + > Web Service
+6. Selecione: app-gestao-hc
+7. Clique: Connect
+
+Preencha assim:
+  - Name: app-gestao-hc-backend
+  - Environment: Node
+  - Build Command: cd backend && npm install
+  - Start Command: node backend/server.js
+  - Plan: Free
+
+8. Clique: Create Web Service
+9. Aguarde 3-5 minutos (status vai para "Live")
+
+IMPORTANTE: Copie a URL que aparece na página!
+  Exemplo: https://app-gestao-hc-backend.onrender.com
+
+Status: □ Backend deployado
+Backend URL: _______________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+🌐 PASSO 5: DEPLOY DO FRONTEND (3 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vá para https://netlify.com
+2. Clique: Sign up
+3. Escolha: GitHub
+4. Clique: Authorize
+5. Após entrar, clique: Add new site
+6. Escolha: Import an existing project
+7. Selecione: GitHub
+8. Procure: app-gestao-hc
+9. Clique: app-gestao-hc
+
+Preencha assim:
+  - Base directory: frontend
+  - Build command: npm run build
+  - Publish directory: frontend/dist
+
+10. Clique: Deploy site
+11. Aguarde 2-3 minutos (status vai para "Published")
+
+IMPORTANTE: Copie a URL do seu site Netlify!
+  Exemplo: https://seu-site.netlify.app
+
+Status: □ Frontend deployado
+Frontend URL: _______________________________________
+
+═══════════════════════════════════════════════════════════════════════════════
+🔗 PASSO 6: CONECTAR BACKEND AO FRONTEND (2 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. No Netlify, clique: Site settings
+2. Clique: Environment (menu esquerdo)
+3. Clique: Add environment variable
+4. Campo: VITE_API_URL
+5. Valor: (copie a URL do backend que você anotou)
+
+   VITE_API_URL = https://app-gestao-hc-backend.onrender.com
+
+6. Clique: Save
+
+Status: □ Variável configurada
+
+═══════════════════════════════════════════════════════════════════════════════
+🔄 PASSO 7: REDEPLOYE DO FRONTEND (importante!)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. No Netlify, clique: Deploys
+2. Clique: Trigger deploy
+3. Escolha: Deploy site
+4. Aguarde 1-2 minutos
+
+Status: □ Frontend redeployado
+
+═══════════════════════════════════════════════════════════════════════════════
+✅ PASSO 8: TESTAR (2 minutos)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Abra a URL do seu Frontend Netlify no navegador
+2. Clique em "+ Novo Membro"
+3. Crie um membro
+4. Clique em "Minhas Tarefas"
+5. Crie uma tarefa
+6. Verifique se salvou
+
+✅ Se tudo funcionar, você conseguiu! 🎉
+
+Status: □ App testado e funcionando
+
+═══════════════════════════════════════════════════════════════════════════════
+🎯 RESUMO FINAL
+═══════════════════════════════════════════════════════════════════════════════
+
+Frontend (Netlify):
+  URL: https://seu-site.netlify.app
+  Status: _______________
+
+Backend (Render):
+  URL: https://app-gestao-hc-backend.onrender.com
+  Status: _______________
+
+GitHub:
+  URL: https://github.com/seu-username/app-gestao-hc
+  Status: _______________
+
+═══════════════════════════════════════════════════════════════════════════════
+🔄 PRÓXIMAS VEZES (depois de testar)
+═══════════════════════════════════════════════════════════════════════════════
+
+Sempre que quiser atualizar o app:
+
+1. Faça mudanças locais
+2. Execute:
+
+   git add .
+   git commit -m "Descrição da mudança"
+   git push origin main
+
+3. Netlify e Render fazem redeploy automaticamente! ✅
+
+═══════════════════════════════════════════════════════════════════════════════
+❓ AJUDA RÁPIDA
+═══════════════════════════════════════════════════════════════════════════════
+
+Erro CORS?
+  → Vá para Render > seu-serviço > redeploy
+
+Build failed no Netlify?
+  → Verifique se frontend/package.json existe
+  → Veja DEPLOY.md para mais dicas
+
+Frontend não conecta ao backend?
+  → Verifique se VITE_API_URL está correto
+  → Faça redeploy do frontend
+
+Banco de dados vazio?
+  → Tudo é salvo em tempo real
+  → Crie um novo membro para testar
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 PARABÉNS! SEU APP ESTÁ NA NUVEM!
+
+Compartilhe a URL do Frontend com sua equipe:
+https://seu-site.netlify.app
+
+═══════════════════════════════════════════════════════════════════════════════
