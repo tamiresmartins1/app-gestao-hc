@@ -77,12 +77,6 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
             Lista
           </button>
           <button
-            className={`view-btn ${viewMode === 'kanban' ? 'active' : ''}`}
-            onClick={() => setViewMode('kanban')}
-          >
-            Kanban
-          </button>
-          <button
             className={`view-btn ${viewMode === 'calendar' ? 'active' : ''}`}
             onClick={() => setViewMode('calendar')}
           >
@@ -115,39 +109,7 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
         />
       )}
 
-      {viewMode === 'kanban' && (
-        <div className="kanban-board">
-          <div className="kanban-column">
-            <h3 className="kanban-title">Ativas</h3>
-            <TaskList
-              tasks={getTasksByStatus('ativa')}
-              onUpdate={onUpdateTask}
-              onDelete={onDeleteTask}
-              compact
-            />
-          </div>
-          <div className="kanban-column">
-            <h3 className="kanban-title">Atrasadas</h3>
-            <TaskList
-              tasks={getTasksByStatus('atrasada')}
-              onUpdate={onUpdateTask}
-              onDelete={onDeleteTask}
-              compact
-            />
-          </div>
-          <div className="kanban-column">
-            <h3 className="kanban-title">Concluídas</h3>
-            <TaskList
-              tasks={getTasksByStatus('concluída')}
-              onUpdate={onUpdateTask}
-              onDelete={onDeleteTask}
-              compact
-            />
-          </div>
-        </div>
-      )}
-
-      {viewMode === 'calendar' && (
+{viewMode === 'calendar' && (
         <div className="calendar-view">
           <p>📅 Visualização de calendário (próximas tarefas ordenadas por data)</p>
           <TaskList
