@@ -19,8 +19,7 @@ export default function QuickLinks() {
       title: '✓ Checagem',
       links: [
         { name: 'Checagem painel diário', url: 'https://docs.google.com/spreadsheets/d/1ooaDcXuaBRMZzBop6tFNcgL0270Cj0AUiBwklEZkfIs/edit?gid=1124401189#gid=1124401189' },
-        { name: 'Liberação porta FOFITO', url: 'https://docs.google.com/spreadsheets/d/1RGUNDiKTUgNA-HlbDi0gchqk2nNP1E11vMZr1dRAtqM/edit?gid=1695514206#gid=1695514206' },
-        { name: 'Controle de Triagem', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
+        { name: 'Liberação porta FOFITO', url: 'https://docs.google.com/spreadsheets/d/1RGUNDiKTUgNA-HlbDi0gchqk2nNP1E11vMZr1dRAtqM/edit?gid=1695514206#gid=1695514206' }
       ]
     },
     treinamento: {
@@ -36,7 +35,8 @@ export default function QuickLinks() {
         { name: 'Logistica agendas', url: 'https://docs.google.com/spreadsheets/d/1xrciwqZHoYVcgGC9hxYGpJgOGMysopuehhridYxkpZA/edit?usp=drive_web&ouid=114421952541590824162' },
         { name: 'Mapa de ocupação 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
         { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' },
-        { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' }
+        { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' },
+        { name: 'Controle de Triagem', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
       ]
     },
     compras: {
