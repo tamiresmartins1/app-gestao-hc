@@ -11,7 +11,7 @@ export default function Notifications({ member, onUnreadUpdate }) {
   useEffect(() => {
     if (member) {
       loadNotifications();
-      const interval = setInterval(loadNotifications, 10000);
+      const interval = setInterval(loadNotifications, 3000);
       return () => clearInterval(interval);
     }
   }, [member]);
