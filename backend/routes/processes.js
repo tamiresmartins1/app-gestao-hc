@@ -175,8 +175,14 @@ processesRoutes.post('/:id/tasks', async (req, res) => {
 
 processesRoutes.delete('/:id', async (req, res) => {
   try {
-    await runAsync('DELETE FROM process_tasks WHERE process_id = $1', [req.params.id]);
-    await runAsync('DELETE FROM processes WHERE id = $1', [req.params.id]);
+    const processId = req.params.id;
+
+    await runAsync('DELETE FROM process_notifications WHERE process_id = $1', [processId]);
+    await runAsync('DELETE FROM process_members WHERE process_id = $1', [processId]);
+    await runAsync('DELETE FROM process_tasks WHERE process_id = $1', [processId]);
+    await runAsync('UPDATE processes SET depends_on_id = NULL WHERE depends_on_id = $1', [processId]);
+    await runAsync('DELETE FROM processes WHERE id = $1', [processId]);
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
