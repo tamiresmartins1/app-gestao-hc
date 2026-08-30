@@ -656,6 +656,11 @@ export default function Processes({ members }) {
           <div className="processes-grid">
           {processes
             .filter(p => filter === 'all' || p.category === filter)
+            .sort((a, b) => {
+              const dateA = a.due_date ? new Date(a.due_date) : new Date('9999-12-31');
+              const dateB = b.due_date ? new Date(b.due_date) : new Date('9999-12-31');
+              return dateA - dateB;
+            })
             .map(process => (
             <div
               key={process.id}
