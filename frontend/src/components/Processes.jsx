@@ -271,30 +271,57 @@ export default function Processes({ members }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 1000
+          zIndex: 1000,
+          overflowY: 'auto'
         }} onClick={() => setEditingProcess(null)}>
           <div style={{
             background: 'white',
-            padding: '20px',
+            padding: '30px',
             borderRadius: '8px',
-            maxWidth: '400px',
-            width: '90%'
+            maxWidth: '600px',
+            width: '95%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            margin: '20px auto'
           }} onClick={(e) => e.stopPropagation()}>
-            <h3>Editar Processo</h3>
+            <h2 style={{ marginBottom: '20px' }}>✏️ Editar Processo</h2>
+
             <input
               type="text"
-              placeholder="Nome"
+              placeholder="Nome do processo"
               value={editingProcess.name}
               onChange={(e) => setEditingProcess({ ...editingProcess, name: e.target.value })}
-              style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
+              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
             />
+
             <textarea
-              placeholder="Descrição"
+              placeholder="Descrição (opcional)"
               value={editingProcess.description || ''}
               onChange={(e) => setEditingProcess({ ...editingProcess, description: e.target.value })}
-              rows="3"
-              style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
+              rows="4"
+              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
             />
+
+            <input
+              type="date"
+              value={editingProcess.due_date || ''}
+              onChange={(e) => setEditingProcess({ ...editingProcess, due_date: e.target.value })}
+              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
+            />
+
+            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
+              Status:
+            </label>
+            <select
+              value={editingProcess.status}
+              onChange={(e) => setEditingProcess({ ...editingProcess, status: e.target.value })}
+              style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
+            >
+              <option value="em_progresso">Em Progresso</option>
+              <option value="pausado">Pausado</option>
+              <option value="concluido">Concluído</option>
+            </select>
+
             <div style={{ display: 'flex', gap: '10px' }}>
               <button
                 onClick={async () => {
@@ -306,15 +333,15 @@ export default function Processes({ members }) {
                     alert('Erro ao atualizar: ' + error.response?.data?.error);
                   }
                 }}
-                style={{ flex: 1, padding: '10px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '12px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
               >
-                Salvar
+                💾 Salvar
               </button>
               <button
                 onClick={() => setEditingProcess(null)}
-                style={{ flex: 1, padding: '10px', background: '#ccc', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                style={{ flex: 1, padding: '12px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
               >
-                Cancelar
+                ❌ Cancelar
               </button>
             </div>
           </div>
