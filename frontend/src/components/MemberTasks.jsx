@@ -54,6 +54,10 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
           member={member}
           members={members}
           onSubmit={async (data) => {
+            console.log('📤 Frontend sending task data:', data);
+            if (data.due_date) {
+              console.log(`📅 Frontend due_date: "${data.due_date}" (type: ${typeof data.due_date})`);
+            }
             await onAddTask(data);
             setShowForm(false);
           }}

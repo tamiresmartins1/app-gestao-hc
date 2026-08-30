@@ -27,6 +27,19 @@ app.use(cors({
 }));
 
 app.use(bodyParser.json());
+
+app.use((req, res, next) => {
+  if (req.method === 'POST' && req.path === '/api/tasks') {
+    console.log('🔍 DEBUG - Raw POST body:', JSON.stringify(req.body, null, 2));
+    if (req.body.due_date) {
+      console.log(`📅 due_date type: ${typeof req.body.due_date}`);
+      console.log(`📅 due_date value: "${req.body.due_date}"`);
+      console.log(`📅 due_date length: ${String(req.body.due_date).length}`);
+    }
+  }
+  next();
+});
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
