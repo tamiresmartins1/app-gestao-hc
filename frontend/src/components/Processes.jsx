@@ -330,28 +330,32 @@ export default function Processes({ members }) {
                 </div>
               )}
 
-              <div className="process-meta">
-                <span>👤 {process.owner_name}</span>
-                {process.due_date && (
-                  <span>📅 {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
-                )}
-                <select
-                  value={process.status}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    handleStatusChange(process.id, e.target.value);
-                  }}
-                  className="status-select"
-                >
-                  <option value="em_progresso">Em Progresso</option>
-                  <option value="pausado">Pausado</option>
-                  <option value="concluido">Concluído</option>
-                </select>
+              <div className="process-meta" style={{ alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  {process.due_date && (
+                    <div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#d32f2f' }}>
+                      📅 Prazo: {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}
+                    </div>
+                  )}
+                  <select
+                    value={process.status}
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      handleStatusChange(process.id, e.target.value);
+                    }}
+                    className="status-select"
+                    style={{ width: '100%' }}
+                  >
+                    <option value="em_progresso">Em Progresso</option>
+                    <option value="pausado">Pausado</option>
+                    <option value="concluido">Concluído</option>
+                  </select>
+                </div>
               </div>
 
               {process.assigned_members && process.assigned_members.length > 0 && (
                 <div className="process-members">
-                  <h5>👥 Auditando ({process.assigned_members.length})</h5>
+                  <h5>👨‍💼 Responsáveis ({process.assigned_members.length})</h5>
                   <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
                     {process.assigned_members.map(member => (
                       <span key={member.id} style={{
