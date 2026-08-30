@@ -97,7 +97,16 @@ function App() {
 
   const handleUpdateTask = async (taskId, updates) => {
     try {
-      await axios.put(`${API_URL}/tasks/${taskId}`, updates);
+      const dataToSend = { ...updates };
+
+      if (dataToSend.due_date) {
+        const [year, month, day] = dataToSend.due_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        console.log(`⏰ Adjusting update date for UTC-3: ${updates.due_date} → ${dataToSend.due_date}`);
+      }
+
+      await axios.put(`${API_URL}/tasks/${taskId}`, dataToSend);
       await loadTasks();
     } catch (error) {
       alert('Erro ao atualizar tarefa: ' + error.response?.data?.error);
