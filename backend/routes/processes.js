@@ -12,8 +12,6 @@ processesRoutes.get('/', async (req, res) => {
        ORDER BY p.created_at ASC`
     );
 
-    console.log('🔍 DEBUG: Processos do BD:', processes.map(p => ({ name: p.name, due_date: p.due_date, type: typeof p.due_date })));
-
     for (let process of processes) {
       const members = await allAsync(
         `SELECT DISTINCT mb.id, mb.name FROM process_completion_status pcs
@@ -78,16 +76,11 @@ processesRoutes.post('/', async (req, res) => {
       safeDueDate = String(due_date).trim();
     }
 
-    console.log(`📝 INSERT: name="${name}", safeDueDate="${safeDueDate}" (type: ${typeof safeDueDate})`);
-
     await runAsync(
       `INSERT INTO processes (id, name, description, owner_id, due_date, category, depends_on_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [id, name, description, owner_id, safeDueDate, category, depends_on_id || null]
     );
-
-    const checkProcess = await getAsync('SELECT name, due_date FROM processes WHERE id = $1', [id]);
-    console.log(`✅ Verificação POST: ${checkProcess.name} - due_date="${checkProcess.due_date}"`);
 
     for (let member_id of responsible_ids) {
       await runAsync(

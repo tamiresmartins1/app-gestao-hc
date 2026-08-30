@@ -9,8 +9,29 @@ const formatDueDate = (dueDate) => {
   if (!dueDate) return null;
 
   try {
-    const date = new Date(dueDate + 'T00:00:00');
-    if (isNaN(date.getTime())) return null;
+    let date;
+
+    // Tenta vários formatos
+    if (typeof dueDate === 'string') {
+      if (dueDate.includes('T')) {
+        date = new Date(dueDate);
+      } else if (dueDate.includes('/')) {
+        // DD/MM/YYYY
+        const [day, month, year] = dueDate.split('/');
+        date = new Date(year, month - 1, day);
+      } else {
+        // YYYY-MM-DD
+        date = new Date(dueDate + 'T00:00:00');
+      }
+    } else {
+      date = new Date(dueDate);
+    }
+
+    if (isNaN(date.getTime())) {
+      console.warn('Data inválida:', dueDate);
+      return null;
+    }
+
     return date.toLocaleDateString('pt-BR');
   } catch (error) {
     console.error('Erro ao formatar data:', dueDate, error);
