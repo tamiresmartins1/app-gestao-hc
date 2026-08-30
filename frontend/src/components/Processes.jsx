@@ -109,7 +109,13 @@ export default function Processes({ members }) {
     if (!formData.name) return;
 
     try {
-      await axios.post(`${API_URL}/processes`, formData);
+      const dataToSend = { ...formData };
+      if (dataToSend.due_date) {
+        const [year, month, day] = dataToSend.due_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      }
+      await axios.post(`${API_URL}/processes`, dataToSend);
       setFormData({
         name: '',
         description: '',
@@ -441,7 +447,13 @@ export default function Processes({ members }) {
               <button
                 onClick={async () => {
                   try {
-                    await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
+                    const dataToSend = { ...editingProcess };
+                    if (dataToSend.due_date) {
+                      const [year, month, day] = dataToSend.due_date.split('-');
+                      const dayNum = parseInt(day) + 1;
+                      dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+                    }
+                    await axios.put(`${API_URL}/processes/${editingProcess.id}`, dataToSend);
                     loadProcesses();
                     setEditingProcess(null);
                   } catch (error) {
