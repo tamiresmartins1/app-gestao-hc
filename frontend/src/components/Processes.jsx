@@ -48,7 +48,15 @@ export default function Processes({ members }) {
   const loadProcessDetails = async (processId) => {
     try {
       const res = await axios.get(`${API_URL}/processes/${processId}`);
-      setSelectedProcessDetails(res.data);
+      const processData = res.data;
+
+      if (res.data.completion_status) {
+        const responsibleIds = res.data.completion_status.map(s => s.member_id);
+        processData.responsible_ids = responsibleIds;
+      }
+
+      setSelectedProcessDetails(processData);
+      return processData;
     } catch (error) {
       console.error('Erro ao carregar detalhes:', error);
     }
@@ -407,14 +415,7 @@ export default function Processes({ members }) {
               <button
                 onClick={async () => {
                   try {
-                    console.log('💾 Salvando processo com dados:', {
-                      id: editingProcess.id,
-                      name: editingProcess.name,
-                      due_date: editingProcess.due_date,
-                      status: editingProcess.status
-                    });
-                    const res = await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
-                    console.log('✅ Resposta do servidor:', res.data);
+                    await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
                     loadProcesses();
                     setEditingProcess(null);
                   } catch (error) {
@@ -675,9 +676,12 @@ export default function Processes({ members }) {
                 <div style={{ display: 'flex', gap: '5px', flexShrink: 0 }}>
                   <button
                     className="btn-edit"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation();
-                      setEditingProcess(process);
+                      const fullData = await loadProcessDetails(process.id);
+                      if (fullData) {
+                        setEditingProcess(fullData);
+                      }
                     }}
                     style={{ padding: '6px 10px', background: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
