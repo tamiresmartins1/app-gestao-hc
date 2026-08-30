@@ -76,11 +76,6 @@ export default function Processes({ members }) {
 
     try {
       const dataToSend = { ...formData };
-      if (dataToSend.due_date) {
-        const [year, month, day] = dataToSend.due_date.split('-');
-        const dayNum = parseInt(day) + 1;
-        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
-      }
 
       await axios.post(`${API_URL}/processes`, dataToSend);
       setFormData({
