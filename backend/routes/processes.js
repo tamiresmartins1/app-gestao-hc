@@ -236,6 +236,7 @@ processesRoutes.delete('/:id', async (req, res) => {
     const processId = req.params.id;
 
     await runAsync('DELETE FROM process_notifications WHERE process_id = $1', [processId]);
+    await runAsync('DELETE FROM process_completion_status WHERE process_id = $1', [processId]);
     await runAsync('DELETE FROM process_members WHERE process_id = $1', [processId]);
     await runAsync('DELETE FROM process_tasks WHERE process_id = $1', [processId]);
     await runAsync('UPDATE processes SET depends_on_id = NULL WHERE depends_on_id = $1', [processId]);

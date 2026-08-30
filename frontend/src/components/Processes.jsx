@@ -18,6 +18,7 @@ export default function Processes({ members }) {
     depends_on_id: null
   });
   const [selectedProcess, setSelectedProcess] = useState(null);
+  const [editingProcess, setEditingProcess] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
 
@@ -98,6 +99,67 @@ export default function Processes({ members }) {
         </button>
       </div>
 
+      {editingProcess && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }} onClick={() => setEditingProcess(null)}>
+          <div style={{
+            background: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            maxWidth: '400px',
+            width: '90%'
+          }} onClick={(e) => e.stopPropagation()}>
+            <h3>Editar Processo</h3>
+            <input
+              type="text"
+              placeholder="Nome"
+              value={editingProcess.name}
+              onChange={(e) => setEditingProcess({ ...editingProcess, name: e.target.value })}
+              style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
+            />
+            <textarea
+              placeholder="Descrição"
+              value={editingProcess.description || ''}
+              onChange={(e) => setEditingProcess({ ...editingProcess, description: e.target.value })}
+              rows="3"
+              style={{ width: '100%', padding: '8px', marginBottom: '10px', boxSizing: 'border-box' }}
+            />
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                onClick={async () => {
+                  try {
+                    await axios.put(`${API_URL}/processes/${editingProcess.id}`, editingProcess);
+                    loadProcesses();
+                    setEditingProcess(null);
+                  } catch (error) {
+                    alert('Erro ao atualizar: ' + error.response?.data?.error);
+                  }
+                }}
+                style={{ flex: 1, padding: '10px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Salvar
+              </button>
+              <button
+                onClick={() => setEditingProcess(null)}
+                style={{ flex: 1, padding: '10px', background: '#ccc', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {showForm && (
         <form className="process-form" onSubmit={handleSubmit}>
           <h3>Criar Novo Processo</h3>
@@ -144,7 +206,7 @@ export default function Processes({ members }) {
           </label>
           <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
             {members.map(m => (
-              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '8px' }}>
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '12px' }}>
                 <input
                   type="checkbox"
                   id={`responsible-${m.id}`}
@@ -162,9 +224,9 @@ export default function Processes({ members }) {
                       });
                     }
                   }}
-                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  style={{ width: '16px', height: '16px', cursor: 'pointer', flexShrink: 0, marginTop: '2px' }}
                 />
-                <label htmlFor={`responsible-${m.id}`} style={{ cursor: 'pointer', margin: 0 }}>
+                <label htmlFor={`responsible-${m.id}`} style={{ cursor: 'pointer', margin: 0, lineHeight: '1.4' }}>
                   {m.name}
                 </label>
               </div>
@@ -176,7 +238,7 @@ export default function Processes({ members }) {
           </label>
           <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
             {members.map(m => (
-              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '8px' }}>
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '12px' }}>
                 <input
                   type="checkbox"
                   id={`participant-${m.id}`}
@@ -194,9 +256,9 @@ export default function Processes({ members }) {
                       });
                     }
                   }}
-                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  style={{ width: '16px', height: '16px', cursor: 'pointer', flexShrink: 0, marginTop: '2px' }}
                 />
-                <label htmlFor={`participant-${m.id}`} style={{ cursor: 'pointer', margin: 0 }}>
+                <label htmlFor={`participant-${m.id}`} style={{ cursor: 'pointer', margin: 0, lineHeight: '1.4' }}>
                   {m.name}
                 </label>
               </div>
@@ -228,15 +290,27 @@ export default function Processes({ members }) {
             >
               <div className="process-header">
                 <h4>{process.name}</h4>
-                <button
-                  className="btn-delete"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(process.id);
-                  }}
-                >
-                  <FiTrash2 />
-                </button>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  <button
+                    className="btn-edit"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingProcess(process);
+                    }}
+                    style={{ padding: '6px 10px', background: '#2196F3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    className="btn-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(process.id);
+                    }}
+                  >
+                    <FiTrash2 />
+                  </button>
+                </div>
               </div>
 
               {process.description && (
