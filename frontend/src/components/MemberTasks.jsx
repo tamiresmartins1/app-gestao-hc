@@ -6,7 +6,6 @@ import '../styles/member-tasks.css';
 
 export default function MemberTasks({ member, tasks, members, onAddTask, onUpdateTask, onDeleteTask }) {
   const [showForm, setShowForm] = useState(false);
-  const [viewMode, setViewMode] = useState('list');
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterPriority, setFilterPriority] = useState('all');
 
@@ -26,13 +25,17 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
     completed: tasks.filter(t => t.status === 'concluída').length
   };
 
-  const filteredTasks = tasks.filter(task => {
-    const statusMatch = filterStatus === 'all' || task.status === filterStatus;
-    const priorityMatch = filterPriority === 'all' || task.priority === filterPriority;
-    return statusMatch && priorityMatch;
-  });
-
-  const getTasksByStatus = (status) => filteredTasks.filter(t => t.status === status);
+  const filteredTasks = tasks
+    .filter(task => {
+      const statusMatch = filterStatus === 'all' || task.status === filterStatus;
+      const priorityMatch = filterPriority === 'all' || task.priority === filterPriority;
+      return statusMatch && priorityMatch;
+    })
+    .sort((a, b) => {
+      if (!a.due_date) return 1;
+      if (!b.due_date) return -1;
+      return new Date(a.due_date) - new Date(b.due_date);
+    });
 
   return (
     <div className="member-tasks">
@@ -78,21 +81,6 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
       </div>
 
       <div className="tasks-controls">
-        <div className="view-modes">
-          <button
-            className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
-            onClick={() => setViewMode('list')}
-          >
-            Lista
-          </button>
-          <button
-            className={`view-btn ${viewMode === 'calendar' ? 'active' : ''}`}
-            onClick={() => setViewMode('calendar')}
-          >
-            Calendário
-          </button>
-        </div>
-
         <div className="filters">
           <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
             <option value="all">Todos os status</option>
@@ -110,26 +98,11 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
         </div>
       </div>
 
-      {viewMode === 'list' && (
-        <TaskList
-          tasks={filteredTasks}
-          onUpdate={onUpdateTask}
-          onDelete={onDeleteTask}
-        />
-      )}
-
-{viewMode === 'calendar' && (
-        <div className="calendar-view">
-          <p>📅 Visualização de calendário (próximas tarefas ordenadas por data)</p>
-          <TaskList
-            tasks={[...filteredTasks].sort((a, b) =>
-              new Date(a.due_date) - new Date(b.due_date)
-            )}
-            onUpdate={onUpdateTask}
-            onDelete={onDeleteTask}
-          />
-        </div>
-      )}
+      <TaskList
+        tasks={filteredTasks}
+        onUpdate={onUpdateTask}
+        onDelete={onDeleteTask}
+      />
     </div>
   );
 }
