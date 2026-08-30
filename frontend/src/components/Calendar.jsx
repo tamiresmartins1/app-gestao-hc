@@ -9,6 +9,7 @@ export default function Calendar({ member, members }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [tasks, setTasks] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDateStr, setSelectedDateStr] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
@@ -49,26 +50,21 @@ export default function Calendar({ member, members }) {
 
   const handleDateClick = (day) => {
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const date = new Date(dateStr + 'T00:00:00');
-    setSelectedDate(date);
+    setSelectedDateStr(dateStr);
+    setSelectedDate(new Date(dateStr + 'T00:00:00'));
     setShowForm(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const day = String(selectedDate.getDate()).padStart(2, '0');
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-      const year = selectedDate.getFullYear();
-      const due_date = `${year}-${month}-${day}`;
-
       await axios.post(`${API_URL}/tasks`, {
         title: formData.title,
         description: formData.description,
         priority: formData.priority,
         assigned_to: member.id,
         created_by: member.id,
-        due_date: due_date,
+        due_date: selectedDateStr,
         recurrence_type: formData.recurrence_type,
         recurrence_end_date: formData.recurrence_end_date || null
       });
