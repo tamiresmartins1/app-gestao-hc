@@ -34,15 +34,15 @@
 }
 
 .stat-card.active {
-  background: linear-gradient(135deg, #ffa500 0%, #ffb84d 100%);
+  background: linear-gradient(135deg, #ffa500 0%, #ffcc33 100%);
 }
 
 .stat-card.completed {
-  background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+  background: linear-gradient(135deg, #4CAF50 0%, #81C784 100%);
 }
 
 .stat-card.overdue {
-  background: linear-gradient(135deg, #f44336 0%, #ef5350 100%);
+  background: linear-gradient(135deg, #f44336 0%, #ff6b6b 100%);
 }
 
 .stat-number {
