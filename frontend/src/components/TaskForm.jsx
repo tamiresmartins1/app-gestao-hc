@@ -13,7 +13,13 @@ export default function TaskForm({ member, members, onSubmit, onCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.title) return;
-    onSubmit(formData);
+
+    const submitData = { ...formData };
+    if (submitData.due_date) {
+      submitData.due_date = submitData.due_date.trim();
+    }
+
+    onSubmit(submitData);
     setFormData({
       title: '',
       description: '',

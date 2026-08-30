@@ -6,14 +6,11 @@ export const taskRoutes = express.Router();
 
 const markOverdueTasks = async () => {
   try {
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    const todayStr = today.toISOString().split('T')[0];
     await runAsync(
       `UPDATE tasks
        SET status = 'atrasada'
-       WHERE due_date < $1 AND status = 'ativa'`,
-      [todayStr]
+       WHERE due_date < CURRENT_DATE AND status = 'ativa'`,
+      []
     );
   } catch (error) {
     console.error('Erro ao marcar tarefas atrasadas:', error);
@@ -74,13 +71,20 @@ taskRoutes.post('/', async (req, res) => {
     const { title, description, assigned_to, created_by, due_date, priority = 'média' } = req.body;
     const id = uuidv4();
 
+    let safeDueDate = due_date;
+    if (due_date) {
+      safeDueDate = String(due_date).trim();
+      console.log(`📅 Due date received: "${due_date}" → sanitized: "${safeDueDate}"`);
+    }
+
     await runAsync(
       `INSERT INTO tasks (id, title, description, assigned_to, created_by, due_date, priority)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [id, title, description, assigned_to, created_by, due_date, priority]
+      [id, title, description, assigned_to, created_by, safeDueDate, priority]
     );
 
     const task = await getAsync('SELECT * FROM tasks WHERE id = $1', [id]);
+    console.log(`✅ Task created: "${title}" with due_date: "${task.due_date}"`);
     res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
