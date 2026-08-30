@@ -40,7 +40,7 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
   return (
     <div className="member-tasks">
       <div className="tasks-header">
-        <h2>Tarefas de {member.name}</h2>
+        <h2>👋 Olá, {member.name}!</h2>
         <button
           className="btn-primary"
           onClick={() => setShowForm(!showForm)}
