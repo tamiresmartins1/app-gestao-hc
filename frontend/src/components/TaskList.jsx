@@ -85,7 +85,7 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
                 fontWeight: 600
               }}
             >
-              {task.priority}
+              {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
             </span>
 
             <div className="status-dropdown">
