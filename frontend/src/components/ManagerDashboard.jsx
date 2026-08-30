@@ -20,7 +20,6 @@ export default function ManagerDashboard({ members }) {
           const res = await fetch(`${API_URL}/members/${member.id}/stats`);
           if (res.ok) {
             const data = await res.json();
-            console.log(`📊 Stats de ${name}:`, data);
             stats[name] = data;
           }
         } catch (error) {
@@ -67,12 +66,12 @@ export default function ManagerDashboard({ members }) {
         <div className="member-stats-grid">
           {teamMembers.map(name => {
             const stats = teamStats[name] || {};
-            const total = stats.total_tasks || 0;
-            const active = stats.active_tasks || 0;
-            const overdue = stats.overdue_tasks || 0;
-            const completed = stats.completed_tasks || 0;
+            const total = parseInt(stats.total_tasks) || 0;
+            const active = parseInt(stats.active_tasks) || 0;
+            const overdue = parseInt(stats.overdue_tasks) || 0;
+            const completed = parseInt(stats.completed_tasks) || 0;
 
-            console.log(`🔍 ${name}: total=${total}, completed=${completed}, %=${total > 0 ? (completed / total) * 100 : 0}%`);
+            const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 0;
 
             return (
               <div key={name} className="member-stat-card">
@@ -94,12 +93,18 @@ export default function ManagerDashboard({ members }) {
                   <span className="value completed">{completed}</span>
                 </div>
                 {total > 0 && (
-                  <div className="progress-bar">
-                    <div
-                      className="progress-fill"
-                      style={{ width: `${(completed / total) * 100}%` }}
-                    ></div>
-                  </div>
+                  <>
+                    <div className="stat-row">
+                      <span>Progresso:</span>
+                      <span className="value">{progressPercent}%</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div
+                        className="progress-fill"
+                        style={{ width: `${progressPercent}%` }}
+                      ></div>
+                    </div>
+                  </>
                 )}
               </div>
             );
