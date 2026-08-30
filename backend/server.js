@@ -34,8 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-initDatabase();
-
 app.use('/api/tasks', taskRoutes);
 app.use('/api/members', membersRoutes);
 app.use('/api/messages', messagesRoutes);
@@ -45,12 +43,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Servidor rodando na porta ${PORT}`);
-  console.log(`📋 Ambiente: ${NODE_ENV}`);
-  console.log(`📋 Frontend em: http://localhost:5173`);
-  console.log(`🔗 API pronta em: http://localhost:${PORT}/api`);
-});
+const start = async () => {
+  try {
+    await initDatabase();
+    const server = app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Servidor rodando na porta ${PORT}`);
+      console.log(`📋 Ambiente: ${NODE_ENV}`);
+      console.log(`📋 Frontend em: http://localhost:5173`);
+      console.log(`🔗 API pronta em: http://localhost:${PORT}/api`);
+    });
+  } catch (error) {
+    console.error('❌ Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+};
+
+start();
 
 process.on('unhandledRejection', (err) => {
   console.error('❌ Erro não tratado:', err);
