@@ -114,10 +114,14 @@ export default function Calendar({ member, members }) {
 
       <div className="calendar-days">
         {days.map((day, idx) => (
-          <div key={idx} className={`calendar-day ${day ? '' : 'empty'}`}>
+          <div
+            key={idx}
+            className={`calendar-day ${day ? '' : 'empty'}`}
+            onClick={() => day && handleDateClick(day)}
+          >
             {day && (
               <>
-                <div className="day-number" onClick={() => handleDateClick(day)}>
+                <div className="day-number">
                   {day}
                 </div>
                 <div className="day-tasks">
