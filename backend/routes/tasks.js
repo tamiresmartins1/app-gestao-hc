@@ -74,7 +74,14 @@ taskRoutes.post('/', async (req, res) => {
     let safeDueDate = due_date;
     if (due_date) {
       safeDueDate = String(due_date).trim();
-      console.log(`📅 Due date received: "${due_date}" → sanitized: "${safeDueDate}"`);
+      const [year, month, day] = safeDueDate.split('-');
+      const dayNum = parseInt(day);
+      const monthNum = parseInt(month);
+      const yearNum = parseInt(year);
+      const adjustedDay = dayNum + 1;
+      const adjustedDate = `${yearNum}-${String(monthNum).padStart(2, '0')}-${String(adjustedDay).padStart(2, '0')}`;
+      console.log(`📅 Due date received: "${due_date}" → adjusted for UTC-3: "${adjustedDate}"`);
+      safeDueDate = adjustedDate;
     }
 
     await runAsync(
