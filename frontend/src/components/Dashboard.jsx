@@ -174,7 +174,7 @@ export default function Dashboard({ members }) {
                         }[task.priority],
                         color: 'white'
                       }}>
-                        {task.priority}
+                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                       </span>
                     </div>
                   ))}
