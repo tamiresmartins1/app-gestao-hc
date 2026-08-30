@@ -8,7 +8,6 @@ import ManagerDashboard from './components/ManagerDashboard';
 import Messages from './components/Messages';
 import Processes from './components/Processes';
 import QuickLinks from './components/QuickLinks';
-import Calendar from './components/Calendar';
 import './styles/app.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -152,10 +151,6 @@ function App() {
 
             {activeTab === 'links' && (
               <QuickLinks />
-            )}
-
-            {activeTab === 'calendario' && currentMember && (
-              <Calendar member={currentMember} members={members} />
             )}
           </>
         )}

@@ -1,12 +1,11 @@
 import React from 'react';
-import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink, FiCalendar } from 'react-icons/fi';
+import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink } from 'react-icons/fi';
 import '../styles/navigation.css';
 
 export default function Navigation({ activeTab, onTabChange }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2 },
     { id: 'tarefas', label: 'Minhas Tarefas', icon: FiCheckSquare },
-    { id: 'calendario', label: 'Calendário', icon: FiCalendar },
     { id: 'recados', label: 'Recados', icon: FiMail },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
     { id: 'links', label: 'Links Rápidos', icon: FiLink }
