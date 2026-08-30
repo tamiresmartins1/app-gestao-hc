@@ -273,62 +273,116 @@ export default function Processes({ members }) {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.5)',
+          background: 'rgba(0,0,0,0.7)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 1000,
+          padding: '20px',
           overflowY: 'auto'
         }} onClick={() => setEditingProcess(null)}>
           <div style={{
             background: 'white',
-            padding: '30px',
+            padding: '40px',
             borderRadius: '8px',
-            maxWidth: '600px',
-            width: '95%',
-            maxHeight: '90vh',
+            maxWidth: '800px',
+            width: '100%',
+            maxHeight: '95vh',
             overflowY: 'auto',
-            margin: '20px auto'
+            margin: 'auto'
           }} onClick={(e) => e.stopPropagation()}>
-            <h2 style={{ marginBottom: '20px' }}>✏️ Editar Processo</h2>
+            <h2 style={{ marginBottom: '30px', borderBottom: '2px solid #4CAF50', paddingBottom: '15px' }}>✏️ Editar Processo</h2>
 
-            <input
-              type="text"
-              placeholder="Nome do processo"
-              value={editingProcess.name}
-              onChange={(e) => setEditingProcess({ ...editingProcess, name: e.target.value })}
-              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
-            />
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📝 Nome:</label>
+              <input
+                type="text"
+                placeholder="Nome do processo"
+                value={editingProcess.name}
+                onChange={(e) => setEditingProcess({ ...editingProcess, name: e.target.value })}
+                style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
+              />
+            </div>
 
-            <textarea
-              placeholder="Descrição (opcional)"
-              value={editingProcess.description || ''}
-              onChange={(e) => setEditingProcess({ ...editingProcess, description: e.target.value })}
-              rows="4"
-              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
-            />
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📄 Descrição:</label>
+              <textarea
+                placeholder="Descrição (opcional)"
+                value={editingProcess.description || ''}
+                onChange={(e) => setEditingProcess({ ...editingProcess, description: e.target.value })}
+                rows="4"
+                style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
+              />
+            </div>
 
-            <input
-              type="date"
-              value={editingProcess.due_date || ''}
-              onChange={(e) => setEditingProcess({ ...editingProcess, due_date: e.target.value })}
-              style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
-            />
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📂 Categoria:</label>
+              <input
+                type="text"
+                value={editingProcess.category || ''}
+                onChange={(e) => setEditingProcess({ ...editingProcess, category: e.target.value })}
+                style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
+              />
+            </div>
 
-            <label style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold' }}>
-              Status:
-            </label>
-            <select
-              value={editingProcess.status}
-              onChange={(e) => setEditingProcess({ ...editingProcess, status: e.target.value })}
-              style={{ width: '100%', padding: '10px', marginBottom: '20px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
-            >
-              <option value="em_progresso">Em Progresso</option>
-              <option value="pausado">Pausado</option>
-              <option value="concluido">Concluído</option>
-            </select>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📅 Prazo:</label>
+              <input
+                type="date"
+                value={editingProcess.due_date || ''}
+                onChange={(e) => setEditingProcess({ ...editingProcess, due_date: e.target.value })}
+                style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
+              />
+            </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>📊 Status:</label>
+              <select
+                value={editingProcess.status}
+                onChange={(e) => setEditingProcess({ ...editingProcess, status: e.target.value })}
+                style={{ width: '100%', padding: '12px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd', fontSize: '16px' }}
+              >
+                <option value="em_progresso">Em Progresso</option>
+                <option value="pausado">Pausado</option>
+                <option value="concluido">Concluído</option>
+              </select>
+            </div>
+
+            <div style={{ marginBottom: '30px', paddingTop: '20px', borderTop: '1px solid #eee' }}>
+              <label style={{ display: 'block', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
+                👨‍💼 Responsáveis (pode selecionar várias):
+              </label>
+              <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '4px', background: '#f9f9f9' }}>
+                {members.map(m => (
+                  <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '12px', gap: '12px' }}>
+                    <input
+                      type="checkbox"
+                      id={`edit-resp-${m.id}`}
+                      checked={editingProcess.responsible_ids?.includes(m.id) || false}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setEditingProcess({
+                            ...editingProcess,
+                            responsible_ids: [...(editingProcess.responsible_ids || []), m.id]
+                          });
+                        } else {
+                          setEditingProcess({
+                            ...editingProcess,
+                            responsible_ids: (editingProcess.responsible_ids || []).filter(id => id !== m.id)
+                          });
+                        }
+                      }}
+                      style={{ width: '18px', height: '18px', cursor: 'pointer', flexShrink: 0 }}
+                    />
+                    <label htmlFor={`edit-resp-${m.id}`} style={{ cursor: 'pointer', margin: 0, flex: 1 }}>
+                      {m.name}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '15px' }}>
               <button
                 onClick={async () => {
                   try {
@@ -339,13 +393,13 @@ export default function Processes({ members }) {
                     alert('Erro ao atualizar: ' + error.response?.data?.error);
                   }
                 }}
-                style={{ flex: 1, padding: '12px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
+                style={{ flex: 1, padding: '14px', background: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
               >
-                💾 Salvar
+                💾 Salvar Tudo
               </button>
               <button
                 onClick={() => setEditingProcess(null)}
-                style={{ flex: 1, padding: '12px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
+                style={{ flex: 1, padding: '14px', background: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }}
               >
                 ❌ Cancelar
               </button>

@@ -110,9 +110,10 @@ processesRoutes.post('/', async (req, res) => {
 
 processesRoutes.put('/:id', async (req, res) => {
   try {
-    const { name, description, status, due_date } = req.body;
+    const { name, description, status, due_date, category, responsible_ids = [] } = req.body;
     if (name) await runAsync('UPDATE processes SET name = $1 WHERE id = $2', [name, req.params.id]);
-    if (description) await runAsync('UPDATE processes SET description = $1 WHERE id = $2', [description, req.params.id]);
+    if (description !== undefined) await runAsync('UPDATE processes SET description = $1 WHERE id = $2', [description, req.params.id]);
+    if (category) await runAsync('UPDATE processes SET category = $1 WHERE id = $2', [category, req.params.id]);
     if (status) {
       await runAsync('UPDATE processes SET status = $1 WHERE id = $2', [status, req.params.id]);
 
@@ -144,6 +145,23 @@ processesRoutes.put('/:id', async (req, res) => {
     if (due_date) {
       const safeDueDate = String(due_date).trim();
       await runAsync('UPDATE processes SET due_date = $1 WHERE id = $2', [safeDueDate, req.params.id]);
+    }
+
+    if (responsible_ids && responsible_ids.length > 0) {
+      await runAsync('DELETE FROM process_members WHERE process_id = $1', [req.params.id]);
+      await runAsync('DELETE FROM process_completion_status WHERE process_id = $1', [req.params.id]);
+
+      for (let member_id of responsible_ids) {
+        await runAsync(
+          `INSERT INTO process_members (id, process_id, member_id) VALUES ($1, $2, $3)`,
+          [uuidv4(), req.params.id, member_id]
+        );
+
+        await runAsync(
+          `INSERT INTO process_completion_status (id, process_id, member_id, completed) VALUES ($1, $2, $3, false)`,
+          [uuidv4(), req.params.id, member_id]
+        );
+      }
     }
 
     const process = await getAsync('SELECT * FROM processes WHERE id = $1', [req.params.id]);
