@@ -5,6 +5,19 @@ import '../styles/processes.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+const formatDueDate = (dueDate) => {
+  if (!dueDate) return null;
+
+  try {
+    const date = new Date(dueDate + 'T00:00:00');
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('pt-BR');
+  } catch (error) {
+    console.error('Erro ao formatar data:', dueDate, error);
+    return null;
+  }
+};
+
 export default function Processes({ members }) {
   const [processes, setProcesses] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -138,9 +151,9 @@ export default function Processes({ members }) {
               </p>
             )}
 
-            {selectedProcessDetails.due_date && selectedProcessDetails.due_date !== 'Invalid Date' ? (
+            {formatDueDate(selectedProcessDetails.due_date) ? (
               <div style={{ marginBottom: '20px', padding: '10px', background: '#fff3cd', borderRadius: '4px' }}>
-                📅 <strong>Prazo:</strong> {new Date(selectedProcessDetails.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}
+                📅 <strong>Prazo:</strong> {formatDueDate(selectedProcessDetails.due_date)}
               </div>
             ) : (
               <div style={{ marginBottom: '20px', padding: '10px', background: '#f0f0f0', borderRadius: '4px', color: '#666' }}>
@@ -443,12 +456,11 @@ export default function Processes({ members }) {
 
               <div className="process-meta" style={{ alignItems: 'flex-start', gap: '10px' }}>
                 <div style={{ flex: 1 }}>
-                  {process.due_date && process.due_date !== 'Invalid Date' && (
+                  {formatDueDate(process.due_date) ? (
                     <div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#d32f2f' }}>
-                      📅 Prazo: {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}
+                      📅 Prazo: {formatDueDate(process.due_date)}
                     </div>
-                  )}
-                  {!process.due_date && (
+                  ) : (
                     <div style={{ marginBottom: '8px', fontSize: '12px', color: '#999' }}>
                       ⏰ Sem prazo definido
                     </div>
