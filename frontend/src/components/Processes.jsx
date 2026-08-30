@@ -11,7 +11,9 @@ export default function Processes({ members }) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    owner_id: members[0]?.id || ''
+    owner_id: members[0]?.id || '',
+    due_date: '',
+    assigned_member_ids: []
   });
   const [selectedProcess, setSelectedProcess] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,11 +39,20 @@ export default function Processes({ members }) {
     if (!formData.name) return;
 
     try {
-      await axios.post(`${API_URL}/processes`, formData);
+      const dataToSend = { ...formData };
+      if (dataToSend.due_date) {
+        const [year, month, day] = dataToSend.due_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      }
+
+      await axios.post(`${API_URL}/processes`, dataToSend);
       setFormData({
         name: '',
         description: '',
-        owner_id: members[0]?.id || ''
+        owner_id: members[0]?.id || '',
+        due_date: '',
+        assigned_member_ids: []
       });
       setShowForm(false);
       loadProcesses();
@@ -101,16 +112,40 @@ export default function Processes({ members }) {
             rows="3"
           />
 
-          <select
-            value={formData.owner_id}
-            onChange={(e) => setFormData({ ...formData, owner_id: e.target.value })}
-          >
+          <input
+            type="date"
+            placeholder="Prazo"
+            value={formData.due_date}
+            onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+          />
+
+          <label style={{ display: 'block', marginTop: '10px' }}>
+            👥 Pessoas que vão auditar (pode selecionar várias):
+          </label>
+          <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
             {members.map(m => (
-              <option key={m.id} value={m.id}>
+              <label key={m.id} style={{ display: 'block', marginBottom: '8px' }}>
+                <input
+                  type="checkbox"
+                  checked={formData.assigned_member_ids.includes(m.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFormData({
+                        ...formData,
+                        assigned_member_ids: [...formData.assigned_member_ids, m.id]
+                      });
+                    } else {
+                      setFormData({
+                        ...formData,
+                        assigned_member_ids: formData.assigned_member_ids.filter(id => id !== m.id)
+                      });
+                    }
+                  }}
+                />
                 {m.name}
-              </option>
+              </label>
             ))}
-          </select>
+          </div>
 
           <div className="form-actions">
             <button type="submit" className="btn-primary">Criar</button>
@@ -154,6 +189,9 @@ export default function Processes({ members }) {
 
               <div className="process-meta">
                 <span>👤 {process.owner_name}</span>
+                {process.due_date && (
+                  <span>📅 {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}</span>
+                )}
                 <select
                   value={process.status}
                   onChange={(e) => {
@@ -167,6 +205,24 @@ export default function Processes({ members }) {
                   <option value="concluido">Concluído</option>
                 </select>
               </div>
+
+              {process.assigned_members && process.assigned_members.length > 0 && (
+                <div className="process-members">
+                  <h5>👥 Auditando ({process.assigned_members.length})</h5>
+                  <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+                    {process.assigned_members.map(member => (
+                      <span key={member.id} style={{
+                        background: '#e3f2fd',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px'
+                      }}>
+                        {member.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {process.tasks && process.tasks.length > 0 && (
                 <div className="process-tasks">

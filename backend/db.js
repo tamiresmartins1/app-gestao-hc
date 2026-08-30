@@ -91,10 +91,17 @@ export const initDatabase = async () => {
         description TEXT,
         status TEXT DEFAULT 'em_progresso',
         owner_id TEXT NOT NULL,
+        due_date DATE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (owner_id) REFERENCES members(id)
       )
     `);
+
+    try {
+      await pool.query(`ALTER TABLE processes ADD COLUMN due_date DATE;`);
+    } catch (error) {
+      // Coluna já existe
+    }
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS process_tasks (
@@ -104,6 +111,16 @@ export const initDatabase = async () => {
         dependency_order INTEGER DEFAULT 0,
         FOREIGN KEY (process_id) REFERENCES processes(id),
         FOREIGN KEY (task_id) REFERENCES tasks(id)
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS process_members (
+        id TEXT PRIMARY KEY,
+        process_id TEXT NOT NULL,
+        member_id TEXT NOT NULL,
+        FOREIGN KEY (process_id) REFERENCES processes(id),
+        FOREIGN KEY (member_id) REFERENCES members(id)
       )
     `);
 
