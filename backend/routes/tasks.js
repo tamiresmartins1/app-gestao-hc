@@ -16,15 +16,15 @@ taskRoutes.get('/', async (req, res) => {
     const params = [];
 
     if (member_id) {
-      sql += ` AND t.assigned_to = ?`;
+      sql += ` AND t.assigned_to = $${params.length + 1}`;
       params.push(member_id);
     }
     if (status) {
-      sql += ` AND t.status = ?`;
+      sql += ` AND t.status = $${params.length + 1}`;
       params.push(status);
     }
     if (priority) {
-      sql += ` AND t.priority = ?`;
+      sql += ` AND t.priority = $${params.length + 1}`;
       params.push(priority);
     }
 
@@ -41,7 +41,7 @@ taskRoutes.get('/:id', async (req, res) => {
   try {
     const task = await getAsync(
       `SELECT t.*, m.name as assigned_to_name FROM tasks t
-       LEFT JOIN members m ON t.assigned_to = m.id WHERE t.id = ?`,
+       LEFT JOIN members m ON t.assigned_to = m.id WHERE t.id = $1`,
       [req.params.id]
     );
     if (!task) return res.status(404).json({ error: 'Tarefa não encontrada' });
@@ -58,11 +58,11 @@ taskRoutes.post('/', async (req, res) => {
 
     await runAsync(
       `INSERT INTO tasks (id, title, description, assigned_to, created_by, due_date, priority)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [id, title, description, assigned_to, created_by, due_date, priority]
     );
 
-    const task = await getAsync('SELECT * FROM tasks WHERE id = ?', [id]);
+    const task = await getAsync('SELECT * FROM tasks WHERE id = $1', [id]);
     res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -74,25 +74,26 @@ taskRoutes.put('/:id', async (req, res) => {
     const { title, description, status, priority, due_date } = req.body;
     const updates = [];
     const params = [];
+    let paramIndex = 1;
 
     if (title !== undefined) {
-      updates.push('title = ?');
+      updates.push(`title = $${paramIndex++}`);
       params.push(title);
     }
     if (description !== undefined) {
-      updates.push('description = ?');
+      updates.push(`description = $${paramIndex++}`);
       params.push(description);
     }
     if (status !== undefined) {
-      updates.push('status = ?');
+      updates.push(`status = $${paramIndex++}`);
       params.push(status);
     }
     if (priority !== undefined) {
-      updates.push('priority = ?');
+      updates.push(`priority = $${paramIndex++}`);
       params.push(priority);
     }
     if (due_date !== undefined) {
-      updates.push('due_date = ?');
+      updates.push(`due_date = $${paramIndex++}`);
       params.push(due_date);
     }
 
@@ -101,12 +102,12 @@ taskRoutes.put('/:id', async (req, res) => {
       params.push(req.params.id);
 
       await runAsync(
-        `UPDATE tasks SET ${updates.join(', ')} WHERE id = ?`,
+        `UPDATE tasks SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
         params
       );
     }
 
-    const task = await getAsync('SELECT * FROM tasks WHERE id = ?', [req.params.id]);
+    const task = await getAsync('SELECT * FROM tasks WHERE id = $1', [req.params.id]);
     res.json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -115,7 +116,7 @@ taskRoutes.put('/:id', async (req, res) => {
 
 taskRoutes.delete('/:id', async (req, res) => {
   try {
-    await runAsync('DELETE FROM tasks WHERE id = ?', [req.params.id]);
+    await runAsync('DELETE FROM tasks WHERE id = $1', [req.params.id]);
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
