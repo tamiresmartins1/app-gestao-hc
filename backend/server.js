@@ -77,3 +77,4 @@ process.on('unhandledRejection', (err) => {
   console.error('❌ Erro não tratado:', err);
   process.exit(1);
 });
+// Redeploy Sun Aug 30 20:25:23     2026
