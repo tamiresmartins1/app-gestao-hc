@@ -57,7 +57,7 @@ export default function Processes({ members }) {
     participant_ids: [],
     depends_on_id: null
   });
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('');
   const [customCategory, setCustomCategory] = useState('');
 
   const defaultCategories = [
@@ -640,7 +640,7 @@ export default function Processes({ members }) {
 
           <div className="processes-grid">
           {processes
-            .filter(p => filter === 'all' || p.category === filter)
+            .filter(p => filter && p.category === filter)
             .sort((a, b) => {
               const dateA = a.due_date ? new Date(a.due_date) : new Date('9999-12-31');
               const dateB = b.due_date ? new Date(b.due_date) : new Date('9999-12-31');
