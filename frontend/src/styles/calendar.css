@@ -115,6 +115,43 @@
   background: #2196F3;
 }
 
+.calendar-task {
+  background: white;
+  border-left: 3px solid #667eea;
+  padding: 4px 6px;
+  margin-bottom: 3px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: #2c3e50;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.calendar-task:hover {
+  background: #f0f0f0;
+  border-left-width: 4px;
+}
+
+.calendar-task.ativa {
+  border-left-color: #4CAF50;
+  background: #f1f8f4;
+}
+
+.calendar-task.atrasada {
+  border-left-color: #f44336;
+  background: #ffebee;
+}
+
+.calendar-task.concluída {
+  border-left-color: #2196F3;
+  background: #e3f2fd;
+  text-decoration: line-through;
+  color: #999;
+}
+
 /* Modal */
 .modal-overlay {
   position: fixed;

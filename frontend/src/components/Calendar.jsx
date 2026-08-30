@@ -126,7 +126,13 @@ export default function Calendar({ member, members }) {
                 </div>
                 <div className="day-tasks">
                   {getTasksForDate(day).map(task => (
-                    <div key={task.id} className={`task-dot ${task.status}`} title={task.title} />
+                    <div
+                      key={task.id}
+                      className={`calendar-task ${task.status}`}
+                      title={task.title}
+                    >
+                      {task.title}
+                    </div>
                   ))}
                 </div>
               </>
