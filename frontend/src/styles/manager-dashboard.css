@@ -1,0 +1,148 @@
+.manager-dashboard {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.manager-dashboard h2 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.team-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.overview-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.overview-card h3 {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.big-number {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2196F3;
+}
+
+.big-number.active {
+  color: #4CAF50;
+}
+
+.big-number.overdue {
+  color: #FF9800;
+}
+
+.big-number.completed {
+  color: #8BC34A;
+}
+
+.team-members-stats {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.team-members-stats h3 {
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.member-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.member-stat-card {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #2196F3;
+}
+
+.member-stat-card h4 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row span:first-child {
+  color: #666;
+}
+
+.stat-row .value {
+  font-weight: 600;
+  color: #2196F3;
+}
+
+.stat-row .value.active {
+  color: #4CAF50;
+}
+
+.stat-row .value.overdue {
+  color: #FF9800;
+}
+
+.stat-row .value.completed {
+  color: #8BC34A;
+}
+
+.progress-bar {
+  margin-top: 15px;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8BC34A 0%, #4CAF50 100%);
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .manager-dashboard {
+    padding: 15px;
+  }
+
+  .team-overview {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .member-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .big-number {
+    font-size: 28px;
+  }
+}

@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Navigation from './components/Navigation';
 import MemberTasks from './components/MemberTasks';
 import Dashboard from './components/Dashboard';
+import ManagerDashboard from './components/ManagerDashboard';
 import Messages from './components/Messages';
 import Processes from './components/Processes';
 import './styles/app.css';
@@ -109,7 +110,13 @@ function App() {
           <div className="loading">Carregando...</div>
         ) : (
           <>
-            {activeTab === 'dashboard' && (
+            {activeTab === 'dashboard' && currentMember?.role === 'chefe' && (
+              <ManagerDashboard members={members} />
+            )}
+            {activeTab === 'dashboard' && currentMember?.role !== 'chefe' && (
+              <Dashboard members={members} onAddMember={handleAddMember} />
+            )}
+            {activeTab === 'dashboard' && !currentMember?.role && (
               <Dashboard members={members} onAddMember={handleAddMember} />
             )}
 
