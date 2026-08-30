@@ -48,7 +48,8 @@ export default function Calendar({ member, members }) {
   };
 
   const handleDateClick = (day) => {
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const date = new Date(dateStr + 'T00:00:00');
     setSelectedDate(date);
     setShowForm(true);
   };
@@ -81,7 +82,7 @@ export default function Calendar({ member, members }) {
   };
 
   const getTasksForDate = (day) => {
-    const dateStr = new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toISOString().split('T')[0];
+    const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     return tasks.filter(t => t.due_date === dateStr);
   };
 
