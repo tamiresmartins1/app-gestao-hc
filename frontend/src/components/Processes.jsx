@@ -26,10 +26,12 @@ export default function Processes({ members }) {
     description: '',
     owner_id: members[0]?.id || '',
     due_date: '',
+    category: 'auditoria',
     responsible_ids: [],
     participant_ids: [],
     depends_on_id: null
   });
+  const [filter, setFilter] = useState('all');
   const [selectedProcess, setSelectedProcess] = useState(null);
   const [selectedProcessDetails, setSelectedProcessDetails] = useState(null);
   const [editingProcess, setEditingProcess] = useState(null);
@@ -79,6 +81,7 @@ export default function Processes({ members }) {
         description: '',
         owner_id: members[0]?.id || '',
         due_date: '',
+        category: 'auditoria',
         responsible_ids: [],
         participant_ids: [],
         depends_on_id: null
@@ -367,6 +370,21 @@ export default function Processes({ members }) {
             rows="3"
           />
 
+          <label style={{ display: 'block', marginTop: '15px', fontWeight: 'bold', marginBottom: '5px' }}>
+            📂 Categoria:
+          </label>
+          <select
+            value={formData.category}
+            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
+          >
+            <option value="auditoria">🔍 Auditoria</option>
+            <option value="selecao">📋 Seleção</option>
+            <option value="revisao">👀 Revisão</option>
+            <option value="processamento">⚙️ Processamento</option>
+            <option value="outro">📌 Outro</option>
+          </select>
+
           <input
             type="date"
             placeholder="Prazo"
@@ -469,8 +487,84 @@ export default function Processes({ members }) {
           <p>Nenhum processo criado ainda</p>
         </div>
       ) : (
-        <div className="processes-grid">
-          {processes.map(process => (
+        <>
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setFilter('all')}
+              style={{
+                padding: '8px 15px',
+                background: filter === 'all' ? '#4CAF50' : '#f0f0f0',
+                color: filter === 'all' ? 'white' : '#333',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              📊 Todos
+            </button>
+            <button
+              onClick={() => setFilter('auditoria')}
+              style={{
+                padding: '8px 15px',
+                background: filter === 'auditoria' ? '#4CAF50' : '#f0f0f0',
+                color: filter === 'auditoria' ? 'white' : '#333',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              🔍 Auditoria
+            </button>
+            <button
+              onClick={() => setFilter('selecao')}
+              style={{
+                padding: '8px 15px',
+                background: filter === 'selecao' ? '#4CAF50' : '#f0f0f0',
+                color: filter === 'selecao' ? 'white' : '#333',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              📋 Seleção
+            </button>
+            <button
+              onClick={() => setFilter('revisao')}
+              style={{
+                padding: '8px 15px',
+                background: filter === 'revisao' ? '#4CAF50' : '#f0f0f0',
+                color: filter === 'revisao' ? 'white' : '#333',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              👀 Revisão
+            </button>
+            <button
+              onClick={() => setFilter('processamento')}
+              style={{
+                padding: '8px 15px',
+                background: filter === 'processamento' ? '#4CAF50' : '#f0f0f0',
+                color: filter === 'processamento' ? 'white' : '#333',
+                border: 'none',
+                borderRadius: '20px',
+                cursor: 'pointer',
+                fontWeight: 'bold'
+              }}
+            >
+              ⚙️ Processamento
+            </button>
+          </div>
+
+          <div className="processes-grid">
+          {processes
+            .filter(p => filter === 'all' || p.category === filter)
+            .map(process => (
             <div
               key={process.id}
               className="process-card"
@@ -479,9 +573,27 @@ export default function Processes({ members }) {
                 loadProcessDetails(process.id);
               }}
             >
-              <div className="process-header">
-                <h4>{process.name}</h4>
-                <div style={{ display: 'flex', gap: '5px' }}>
+              <div className="process-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ flex: 1 }}>
+                  <h4 style={{ margin: '0 0 8px 0' }}>{process.name}</h4>
+                  <span style={{
+                    display: 'inline-block',
+                    background: '#e3f2fd',
+                    padding: '4px 12px',
+                    borderRadius: '12px',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    color: '#1976D2',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {process.category === 'auditoria' && '🔍 Auditoria'}
+                    {process.category === 'selecao' && '📋 Seleção'}
+                    {process.category === 'revisao' && '👀 Revisão'}
+                    {process.category === 'processamento' && '⚙️ Processamento'}
+                    {process.category === 'outro' && '📌 Outro'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '5px', flexShrink: 0 }}>
                   <button
                     className="btn-edit"
                     onClick={(e) => {
@@ -581,7 +693,8 @@ export default function Processes({ members }) {
               )}
             </div>
           ))}
-        </div>
+          </div>
+        </>
       )}
 
       <div className="info-section">

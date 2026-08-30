@@ -89,6 +89,7 @@ export const initDatabase = async () => {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         description TEXT,
+        category TEXT DEFAULT 'auditoria',
         status TEXT DEFAULT 'em_progresso',
         owner_id TEXT NOT NULL,
         due_date DATE,
@@ -98,6 +99,12 @@ export const initDatabase = async () => {
         FOREIGN KEY (depends_on_id) REFERENCES processes(id)
       )
     `);
+
+    try {
+      await pool.query(`ALTER TABLE processes ADD COLUMN category TEXT DEFAULT 'auditoria';`);
+    } catch (error) {
+      // Coluna já existe
+    }
 
     try {
       await pool.query(`ALTER TABLE processes ADD COLUMN depends_on_id TEXT REFERENCES processes(id);`);

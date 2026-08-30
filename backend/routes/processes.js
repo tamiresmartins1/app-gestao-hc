@@ -68,7 +68,7 @@ processesRoutes.get('/:id', async (req, res) => {
 
 processesRoutes.post('/', async (req, res) => {
   try {
-    const { name, description, owner_id, due_date, responsible_ids = [], participant_ids = [], depends_on_id } = req.body;
+    const { name, description, owner_id, due_date, category = 'auditoria', responsible_ids = [], participant_ids = [], depends_on_id } = req.body;
     const id = uuidv4();
 
     let safeDueDate = due_date;
@@ -77,9 +77,9 @@ processesRoutes.post('/', async (req, res) => {
     }
 
     await runAsync(
-      `INSERT INTO processes (id, name, description, owner_id, due_date, depends_on_id)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
-      [id, name, description, owner_id, safeDueDate, depends_on_id || null]
+      `INSERT INTO processes (id, name, description, owner_id, due_date, category, depends_on_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [id, name, description, owner_id, safeDueDate, category, depends_on_id || null]
     );
 
     for (let member_id of responsible_ids) {
