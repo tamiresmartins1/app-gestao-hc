@@ -52,7 +52,7 @@ processesRoutes.get('/:id', async (req, res) => {
 
 processesRoutes.post('/', async (req, res) => {
   try {
-    const { name, description, owner_id, due_date, assigned_member_ids = [], depends_on_id } = req.body;
+    const { name, description, owner_id, due_date, responsible_ids = [], participant_ids = [], depends_on_id } = req.body;
     const id = uuidv4();
 
     let safeDueDate = due_date;
@@ -68,7 +68,19 @@ processesRoutes.post('/', async (req, res) => {
       [id, name, description, owner_id, safeDueDate, depends_on_id || null]
     );
 
-    for (let member_id of assigned_member_ids) {
+    for (let member_id of responsible_ids) {
+      await runAsync(
+        `INSERT INTO process_members (id, process_id, member_id) VALUES ($1, $2, $3)`,
+        [uuidv4(), id, member_id]
+      );
+
+      await runAsync(
+        `INSERT INTO process_completion_status (id, process_id, member_id, completed) VALUES ($1, $2, $3, false)`,
+        [uuidv4(), id, member_id]
+      );
+    }
+
+    for (let member_id of participant_ids) {
       await runAsync(
         `INSERT INTO process_members (id, process_id, member_id) VALUES ($1, $2, $3)`,
         [uuidv4(), id, member_id]
@@ -150,6 +162,52 @@ processesRoutes.put('/notifications/:notification_id/read', async (req, res) => 
       `UPDATE process_notifications SET read = true WHERE id = $1`,
       [req.params.notification_id]
     );
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
+  try {
+    const { processId, memberId } = { processId: req.params.id, memberId: req.params.member_id };
+
+    await runAsync(
+      `UPDATE process_completion_status SET completed = true WHERE process_id = $1 AND member_id = $2`,
+      [processId, memberId]
+    );
+
+    const allCompleted = await getAsync(
+      `SELECT COUNT(*) as total, SUM(CASE WHEN completed = true THEN 1 ELSE 0 END) as completed
+       FROM process_completion_status WHERE process_id = $1`,
+      [processId]
+    );
+
+    if (parseInt(allCompleted.total) === parseInt(allCompleted.completed)) {
+      await runAsync('UPDATE processes SET status = $1 WHERE id = $2', ['concluido', processId]);
+
+      const dependentProcesses = await allAsync(
+        `SELECT * FROM processes WHERE depends_on_id = $1`,
+        [processId]
+      );
+
+      for (let depProcess of dependentProcesses) {
+        const members = await allAsync(
+          `SELECT member_id FROM process_members WHERE process_id = $1`,
+          [depProcess.id]
+        );
+
+        for (let { member_id } of members) {
+          const currentProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
+          await runAsync(
+            `INSERT INTO process_notifications (id, process_id, member_id, message)
+             VALUES ($1, $2, $3, $4)`,
+            [uuidv4(), depProcess.id, member_id, `O processo "${currentProcess.name}" foi concluído por todos! Sua etapa "${depProcess.name}" pode começar!`]
+          );
+        }
+      }
+    }
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });

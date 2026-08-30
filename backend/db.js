@@ -139,6 +139,17 @@ export const initDatabase = async () => {
       )
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS process_completion_status (
+        id TEXT PRIMARY KEY,
+        process_id TEXT NOT NULL,
+        member_id TEXT NOT NULL,
+        completed BOOLEAN DEFAULT false,
+        FOREIGN KEY (process_id) REFERENCES processes(id),
+        FOREIGN KEY (member_id) REFERENCES members(id)
+      )
+    `);
+
     console.log('📊 Tabelas criadas/verificadas com sucesso');
   } catch (error) {
     console.error('Erro ao inicializar banco:', error);

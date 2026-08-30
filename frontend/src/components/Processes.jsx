@@ -13,7 +13,8 @@ export default function Processes({ members }) {
     description: '',
     owner_id: members[0]?.id || '',
     due_date: '',
-    assigned_member_ids: [],
+    responsible_ids: [],
+    participant_ids: [],
     depends_on_id: null
   });
   const [selectedProcess, setSelectedProcess] = useState(null);
@@ -54,7 +55,8 @@ export default function Processes({ members }) {
         description: '',
         owner_id: members[0]?.id || '',
         due_date: '',
-        assigned_member_ids: [],
+        responsible_ids: [],
+        participant_ids: [],
         depends_on_id: null
       });
       setShowForm(false);
@@ -137,31 +139,67 @@ export default function Processes({ members }) {
               ))}
           </select>
 
-          <label style={{ display: 'block', marginTop: '15px' }}>
-            👥 Pessoas que participam do processo (pode selecionar várias):
+          <label style={{ display: 'block', marginTop: '15px', fontWeight: 'bold' }}>
+            👨‍💼 Responsáveis pelo processo (executam o trabalho - pode selecionar várias):
           </label>
           <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
             {members.map(m => (
-              <label key={m.id} style={{ display: 'block', marginBottom: '8px' }}>
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '8px' }}>
                 <input
                   type="checkbox"
-                  checked={formData.assigned_member_ids.includes(m.id)}
+                  id={`responsible-${m.id}`}
+                  checked={formData.responsible_ids.includes(m.id)}
                   onChange={(e) => {
                     if (e.target.checked) {
                       setFormData({
                         ...formData,
-                        assigned_member_ids: [...formData.assigned_member_ids, m.id]
+                        responsible_ids: [...formData.responsible_ids, m.id]
                       });
                     } else {
                       setFormData({
                         ...formData,
-                        assigned_member_ids: formData.assigned_member_ids.filter(id => id !== m.id)
+                        responsible_ids: formData.responsible_ids.filter(id => id !== m.id)
                       });
                     }
                   }}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
                 />
-                {m.name}
-              </label>
+                <label htmlFor={`responsible-${m.id}`} style={{ cursor: 'pointer', margin: 0 }}>
+                  {m.name}
+                </label>
+              </div>
+            ))}
+          </div>
+
+          <label style={{ display: 'block', marginTop: '15px', fontWeight: 'bold' }}>
+            👥 Participantes da próxima etapa (recebem alerta quando responsáveis terminam):
+          </label>
+          <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '4px', marginTop: '5px' }}>
+            {members.map(m => (
+              <div key={m.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px', gap: '8px' }}>
+                <input
+                  type="checkbox"
+                  id={`participant-${m.id}`}
+                  checked={formData.participant_ids.includes(m.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setFormData({
+                        ...formData,
+                        participant_ids: [...formData.participant_ids, m.id]
+                      });
+                    } else {
+                      setFormData({
+                        ...formData,
+                        participant_ids: formData.participant_ids.filter(id => id !== m.id)
+                      });
+                    }
+                  }}
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                />
+                <label htmlFor={`participant-${m.id}`} style={{ cursor: 'pointer', margin: 0 }}>
+                  {m.name}
+                </label>
+              </div>
             ))}
           </div>
 
