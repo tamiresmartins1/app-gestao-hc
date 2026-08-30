@@ -6,10 +6,10 @@ export default function Navigation({ activeTab, onTabChange, unreadMessagesCount
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2 },
     { id: 'tarefas', label: 'Minhas Tarefas', icon: FiCheckSquare },
-    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null },
     { id: 'recados', label: 'Recados', icon: FiMail, badge: unreadMessagesCount > 0 ? unreadMessagesCount : null },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
-    { id: 'links', label: 'Links Rápidos', icon: FiLink }
+    { id: 'links', label: 'Links Rápidos', icon: FiLink },
+    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null }
   ];
 
   return (
