@@ -67,14 +67,14 @@ membersRoutes.get('/:id/stats', async (req, res) => {
   try {
     const stats = await getAsync(
       `SELECT
-        COUNT(*) as total_tasks,
-        SUM(CASE WHEN status = 'ativa' THEN 1 ELSE 0 END) as active_tasks,
-        SUM(CASE WHEN status = 'atrasada' THEN 1 ELSE 0 END) as overdue_tasks,
-        SUM(CASE WHEN status = 'concluída' THEN 1 ELSE 0 END) as completed_tasks
+        COUNT(*)::INTEGER as total_tasks,
+        COALESCE(SUM(CASE WHEN status = 'ativa' THEN 1 ELSE 0 END), 0)::INTEGER as active_tasks,
+        COALESCE(SUM(CASE WHEN status = 'atrasada' THEN 1 ELSE 0 END), 0)::INTEGER as overdue_tasks,
+        COALESCE(SUM(CASE WHEN status = 'concluída' THEN 1 ELSE 0 END), 0)::INTEGER as completed_tasks
        FROM tasks WHERE assigned_to = $1`,
       [req.params.id]
     );
-    res.json(stats);
+    res.json(stats || { total_tasks: 0, active_tasks: 0, overdue_tasks: 0, completed_tasks: 0 });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
