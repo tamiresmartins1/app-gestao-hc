@@ -202,6 +202,46 @@ export default function Processes({ members }) {
               )}
             </div>
 
+            <div style={{ marginTop: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '4px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold' }}>
+                📅 Editar Prazo:
+              </label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <input
+                  type="date"
+                  value={selectedProcessDetails.due_date || ''}
+                  onChange={(e) => {
+                    setSelectedProcessDetails({ ...selectedProcessDetails, due_date: e.target.value });
+                  }}
+                  style={{ flex: 1, padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+                />
+                <button
+                  onClick={async () => {
+                    try {
+                      await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}`, {
+                        due_date: selectedProcessDetails.due_date
+                      });
+                      loadProcessDetails(selectedProcessDetails.id);
+                      loadProcesses();
+                    } catch (error) {
+                      alert('Erro ao atualizar prazo: ' + error.response?.data?.error);
+                    }
+                  }}
+                  style={{
+                    padding: '8px 15px',
+                    background: '#4CAF50',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  Salvar
+                </button>
+              </div>
+            </div>
+
             <button
               onClick={() => setSelectedProcessDetails(null)}
               style={{
