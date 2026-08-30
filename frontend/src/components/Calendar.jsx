@@ -56,11 +56,10 @@ export default function Calendar({ member, members }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const day = parseInt(selectedDate.getDate());
-      const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-      const year = currentDate.getFullYear();
-      const dayStr = String(day).padStart(2, '0');
-      const due_date = `${year}-${month}-${dayStr}`;
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const year = selectedDate.getFullYear();
+      const due_date = `${year}-${month}-${day}`;
 
       await axios.post(`${API_URL}/tasks`, {
         title: formData.title,
