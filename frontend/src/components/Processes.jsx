@@ -6,21 +6,12 @@ import '../styles/processes.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const formatDueDate = (dueDate) => {
-  if (!dueDate) {
-    console.log('❌ due_date vazio:', dueDate);
-    return null;
-  }
+  if (!dueDate) return null;
 
   try {
-    console.log(`🔄 Formatando due_date: "${dueDate}"`);
     const date = new Date(dueDate + 'T00:00:00');
-    if (isNaN(date.getTime())) {
-      console.log(`❌ Data inválida: ${dueDate}`);
-      return null;
-    }
-    const formatted = date.toLocaleDateString('pt-BR');
-    console.log(`✅ Data formatada: ${formatted}`);
-    return formatted;
+    if (isNaN(date.getTime())) return null;
+    return date.toLocaleDateString('pt-BR');
   } catch (error) {
     console.error('Erro ao formatar data:', dueDate, error);
     return null;
@@ -71,10 +62,6 @@ export default function Processes({ members }) {
     try {
       setLoading(true);
       const res = await axios.get(`${API_URL}/processes`);
-      console.log('📊 Processos carregados:', res.data);
-      res.data.forEach(p => {
-        console.log(`Processo: ${p.name} - due_date: ${p.due_date} (tipo: ${typeof p.due_date})`);
-      });
       setProcesses(res.data);
     } catch (error) {
       console.error('Erro ao carregar processos:', error);
@@ -88,9 +75,7 @@ export default function Processes({ members }) {
     if (!formData.name) return;
 
     try {
-      const dataToSend = { ...formData };
-
-      await axios.post(`${API_URL}/processes`, dataToSend);
+      await axios.post(`${API_URL}/processes`, formData);
       setFormData({
         name: '',
         description: '',

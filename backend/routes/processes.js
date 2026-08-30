@@ -111,6 +111,8 @@ processesRoutes.post('/', async (req, res) => {
 processesRoutes.put('/:id', async (req, res) => {
   try {
     const { name, description, status, due_date, category, responsible_ids = [] } = req.body;
+    console.log(`🔧 Editando processo ${req.params.id} - due_date recebido: "${due_date}"`);
+
     if (name) await runAsync('UPDATE processes SET name = $1 WHERE id = $2', [name, req.params.id]);
     if (description !== undefined) await runAsync('UPDATE processes SET description = $1 WHERE id = $2', [description, req.params.id]);
     if (category) await runAsync('UPDATE processes SET category = $1 WHERE id = $2', [category, req.params.id]);
