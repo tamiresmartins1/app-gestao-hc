@@ -37,10 +37,15 @@ export const initDatabase = async () => {
         assigned_to TEXT NOT NULL,
         created_by TEXT NOT NULL,
         due_date DATE,
+        recurrence_type TEXT DEFAULT 'none',
+        recurrence_end_date DATE,
+        recurrence_day_of_week INTEGER,
+        parent_task_id TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (assigned_to) REFERENCES members(id),
-        FOREIGN KEY (created_by) REFERENCES members(id)
+        FOREIGN KEY (created_by) REFERENCES members(id),
+        FOREIGN KEY (parent_task_id) REFERENCES tasks(id)
       )
     `);
 
