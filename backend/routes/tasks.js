@@ -4,8 +4,24 @@ import { runAsync, getAsync, allAsync } from '../db.js';
 
 export const taskRoutes = express.Router();
 
+const markOverdueTasks = async () => {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    await runAsync(
+      `UPDATE tasks
+       SET status = 'atrasada'
+       WHERE due_date < $1 AND status = 'ativa'`,
+      [today]
+    );
+  } catch (error) {
+    console.error('Erro ao marcar tarefas atrasadas:', error);
+  }
+};
+
 taskRoutes.get('/', async (req, res) => {
   try {
+    await markOverdueTasks();
+
     const { member_id, status, priority, view = 'list' } = req.query;
     let sql = `
       SELECT t.*, m.name as assigned_to_name

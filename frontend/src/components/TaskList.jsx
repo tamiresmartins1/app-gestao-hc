@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { FiTrash2, FiEdit2, FiCheck } from 'react-icons/fi';
+import { FiTrash2, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
 import '../styles/task-list.css';
 
 export default function TaskList({ tasks, onUpdate, onDelete, compact = false }) {
   const [editingId, setEditingId] = useState(null);
   const [editStatus, setEditStatus] = useState('');
+  const [editingTask, setEditingTask] = useState(null);
+  const [editForm, setEditForm] = useState({});
 
   const priorityColor = {
     alta: '#f44336',
@@ -30,6 +32,22 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
   const handleStatusChange = async (taskId, newStatus) => {
     await onUpdate(taskId, { status: newStatus });
     setEditingId(null);
+  };
+
+  const openEditModal = (task) => {
+    setEditingTask(task.id);
+    setEditForm({
+      title: task.title,
+      description: task.description || '',
+      priority: task.priority,
+      due_date: task.due_date || ''
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    await onUpdate(editingTask, editForm);
+    setEditingTask(null);
+    setEditForm({});
   };
 
   if (tasks.length === 0) {
@@ -103,6 +121,14 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
             </div>
 
             <button
+              className="btn-edit"
+              onClick={() => openEditModal(task)}
+              title="Editar tarefa"
+            >
+              <FiEdit2 />
+            </button>
+
+            <button
               className="btn-delete"
               onClick={() => onDelete(task.id)}
               title="Deletar tarefa"
@@ -112,6 +138,67 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
           </div>
         </div>
       ))}
+
+      {editingTask && (
+        <div className="modal-overlay" onClick={() => setEditingTask(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Editar Tarefa</h3>
+              <button className="close-btn" onClick={() => setEditingTask(null)}>
+                <FiX />
+              </button>
+            </div>
+
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveEdit(); }}>
+              <div className="form-group">
+                <label>Título *</label>
+                <input
+                  type="text"
+                  value={editForm.title}
+                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Descrição</label>
+                <textarea
+                  value={editForm.description}
+                  onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                  rows="3"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Prioridade</label>
+                <select value={editForm.priority} onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}>
+                  <option value="baixa">Baixa</option>
+                  <option value="média">Média</option>
+                  <option value="alta">Alta</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Data de Vencimento</label>
+                <input
+                  type="date"
+                  value={editForm.due_date}
+                  onChange={(e) => setEditForm({ ...editForm, due_date: e.target.value })}
+                />
+              </div>
+
+              <div className="modal-buttons">
+                <button type="button" className="btn-secondary" onClick={() => setEditingTask(null)}>
+                  Cancelar
+                </button>
+                <button type="submit" className="btn-primary">
+                  Salvar Alterações
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
