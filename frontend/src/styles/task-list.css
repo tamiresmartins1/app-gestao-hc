@@ -71,13 +71,17 @@
   align-items: center;
   gap: 12px;
   flex-wrap: nowrap;
+  justify-content: flex-end;
 }
 
 .badge {
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 4px;
   font-size: 12px;
   white-space: nowrap;
+  min-width: 60px;
+  text-align: center;
+  font-weight: 500;
 }
 
 .status-dropdown {
@@ -93,6 +97,8 @@
   white-space: nowrap;
   font-size: 12px;
   transition: all 0.2s;
+  min-width: 100px;
+  text-align: center;
 }
 
 .status-btn:hover {
