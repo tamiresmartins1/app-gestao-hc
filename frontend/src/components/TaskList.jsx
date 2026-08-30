@@ -18,6 +18,15 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
     concluída: '✅ Concluída'
   };
 
+  const isOverdue = (task) => {
+    if (task.status === 'concluída') return false;
+    if (!task.due_date) return false;
+    const dueDate = new Date(task.due_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dueDate < today;
+  };
+
   const handleStatusChange = async (taskId, newStatus) => {
     await onUpdate(taskId, { status: newStatus });
     setEditingId(null);
@@ -34,7 +43,7 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
   return (
     <div className={`task-list ${compact ? 'compact' : ''}`}>
       {tasks.map((task) => (
-        <div key={task.id} className="task-item">
+        <div key={task.id} className={`task-item ${isOverdue(task) ? 'overdue' : ''}`}>
           <div className="task-left">
             <div className="task-title">{task.title}</div>
             {task.description && (

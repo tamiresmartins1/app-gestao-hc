@@ -29,14 +29,23 @@ function App() {
       setLoading(true);
       const res = await axios.get(`${API_URL}/members`);
       setMembers(res.data);
-      if (res.data.length > 0) {
-        setCurrentMember(res.data[0]);
+
+      const savedMemberId = localStorage.getItem('selectedMemberId');
+      const member = res.data.find(m => m.id === savedMemberId) || res.data[0];
+
+      if (member) {
+        setCurrentMember(member);
       }
     } catch (error) {
       console.error('Erro ao carregar membros:', error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleMemberChange = (member) => {
+    setCurrentMember(member);
+    localStorage.setItem('selectedMemberId', member.id);
   };
 
   const loadTasks = async (memberId = currentMember?.id) => {
@@ -100,7 +109,7 @@ function App() {
     <div className="app">
       <Header
         currentMember={currentMember}
-        onMemberChange={setCurrentMember}
+        onMemberChange={handleMemberChange}
         members={members}
         onAddMember={handleAddMember}
       />

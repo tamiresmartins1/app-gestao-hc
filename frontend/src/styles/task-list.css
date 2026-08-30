@@ -29,6 +29,11 @@
   border-color: #4CAF50;
 }
 
+.task-item.overdue {
+  background: #ffebee;
+  border-color: #ef5350;
+}
+
 .task-left {
   flex: 1;
   min-width: 0;
