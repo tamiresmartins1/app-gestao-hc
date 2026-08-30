@@ -76,15 +76,14 @@ processesRoutes.post('/', async (req, res) => {
       safeDueDate = String(due_date).trim();
     }
 
-    console.log(`📌 POST Processo: name=${name}, due_date=${due_date}, safeDueDate=${safeDueDate}`);
-
     await runAsync(
       `INSERT INTO processes (id, name, description, owner_id, due_date, category, depends_on_id)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [id, name, description, owner_id, safeDueDate, category, depends_on_id || null]
     );
 
-    console.log(`✅ Processo criado com ID ${id}`);
+    const saved = await getAsync('SELECT * FROM processes WHERE id = $1', [id]);
+    console.log(`✅ Processo salvo - due_date no BD: ${saved.due_date}`);
 
     for (let member_id of responsible_ids) {
       await runAsync(
