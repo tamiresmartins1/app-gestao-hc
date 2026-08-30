@@ -3,7 +3,7 @@ import { FiExternalLink, FiPhone } from 'react-icons/fi';
 import '../styles/quick-links.css';
 
 export default function QuickLinks() {
-  const [expandedCategory, setExpandedCategory] = useState('auditoria');
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const resources = {
     auditoria: {
