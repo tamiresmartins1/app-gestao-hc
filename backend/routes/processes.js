@@ -14,9 +14,9 @@ processesRoutes.get('/', async (req, res) => {
 
     for (let process of processes) {
       const members = await allAsync(
-        `SELECT mb.id, mb.name FROM process_members pm
-         JOIN members mb ON pm.member_id = mb.id
-         WHERE pm.process_id = $1`,
+        `SELECT DISTINCT mb.id, mb.name FROM process_completion_status pcs
+         JOIN members mb ON pcs.member_id = mb.id
+         WHERE pcs.process_id = $1`,
         [process.id]
       );
       process.assigned_members = members;
@@ -45,9 +45,9 @@ processesRoutes.get('/:id', async (req, res) => {
     );
 
     const members = await allAsync(
-      `SELECT mb.id, mb.name FROM process_members pm
-       JOIN members mb ON pm.member_id = mb.id
-       WHERE pm.process_id = $1`,
+      `SELECT DISTINCT mb.id, mb.name FROM process_completion_status pcs
+       JOIN members mb ON pcs.member_id = mb.id
+       WHERE pcs.process_id = $1`,
       [req.params.id]
     );
     process.assigned_members = members;
