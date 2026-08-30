@@ -1,11 +1,12 @@
 import React from 'react';
-import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink } from 'react-icons/fi';
+import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink, FiBell } from 'react-icons/fi';
 import '../styles/navigation.css';
 
-export default function Navigation({ activeTab, onTabChange, unreadMessagesCount = 0 }) {
+export default function Navigation({ activeTab, onTabChange, unreadMessagesCount = 0, unreadNotificationsCount = 0 }) {
   const tabs = [
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2 },
     { id: 'tarefas', label: 'Minhas Tarefas', icon: FiCheckSquare },
+    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null },
     { id: 'recados', label: 'Recados', icon: FiMail, badge: unreadMessagesCount > 0 ? unreadMessagesCount : null },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
     { id: 'links', label: 'Links Rápidos', icon: FiLink }

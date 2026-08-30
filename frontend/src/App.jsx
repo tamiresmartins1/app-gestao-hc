@@ -6,6 +6,7 @@ import MemberTasks from './components/MemberTasks';
 import Dashboard from './components/Dashboard';
 import ManagerDashboard from './components/ManagerDashboard';
 import Messages from './components/Messages';
+import Notifications from './components/Notifications';
 import Processes from './components/Processes';
 import QuickLinks from './components/QuickLinks';
 import './styles/app.css';
@@ -21,6 +22,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
@@ -133,6 +135,10 @@ function App() {
     setUnreadMessagesCount(count);
   };
 
+  const handleUnreadNotificationsUpdate = (count) => {
+    setUnreadNotificationsCount(count);
+  };
+
   return (
     <div className="app">
       <Header
@@ -142,7 +148,7 @@ function App() {
         onAddMember={handleAddMember}
       />
 
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} unreadNotificationsCount={unreadNotificationsCount} />
 
       <div className="app-content">
         {loading ? (
@@ -168,6 +174,10 @@ function App() {
                 onUpdateTask={handleUpdateTask}
                 onDeleteTask={handleDeleteTask}
               />
+            )}
+
+            {activeTab === 'notificacoes' && currentMember && (
+              <Notifications member={currentMember} onUnreadUpdate={handleUnreadNotificationsUpdate} />
             )}
 
             {activeTab === 'recados' && currentMember && (
