@@ -11,6 +11,7 @@ export default function Header({ currentMember, onMemberChange, members, onAddMe
   const [editingMember, setEditingMember] = useState(null);
   const [editName, setEditName] = useState('');
   const [editEmail, setEditEmail] = useState('');
+  const [editRole, setEditRole] = useState('');
   const [newMemberName, setNewMemberName] = useState('');
   const [newMemberEmail, setNewMemberEmail] = useState('');
 
@@ -27,6 +28,7 @@ export default function Header({ currentMember, onMemberChange, members, onAddMe
     setEditingMember(member);
     setEditName(member.name);
     setEditEmail(member.email);
+    setEditRole(member.role || 'membro');
     setShowEditMember(true);
     setShowMenu(false);
   };
@@ -38,10 +40,10 @@ export default function Header({ currentMember, onMemberChange, members, onAddMe
       const res = await fetch(`${API_URL}/members/${editingMember.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: editName, email: editEmail })
+        body: JSON.stringify({ name: editName, email: editEmail, role: editRole })
       });
       if (res.ok) {
-        onMemberChange({ ...editingMember, name: editName, email: editEmail });
+        onMemberChange({ ...editingMember, name: editName, email: editEmail, role: editRole });
         setShowEditMember(false);
         window.location.reload();
       }
@@ -123,6 +125,14 @@ export default function Header({ currentMember, onMemberChange, members, onAddMe
               onChange={(e) => setEditEmail(e.target.value)}
               required
             />
+            <select
+              value={editRole}
+              onChange={(e) => setEditRole(e.target.value)}
+              style={{ color: '#333' }}
+            >
+              <option value="membro">Membro</option>
+              <option value="chefe">Chefe/Gerenciador</option>
+            </select>
             <div className="modal-buttons">
               <button type="submit" className="btn-primary">Salvar</button>
               <button
