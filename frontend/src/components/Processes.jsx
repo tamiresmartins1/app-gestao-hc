@@ -18,9 +18,19 @@ export default function Processes({ members }) {
     depends_on_id: null
   });
   const [selectedProcess, setSelectedProcess] = useState(null);
+  const [selectedProcessDetails, setSelectedProcessDetails] = useState(null);
   const [editingProcess, setEditingProcess] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState([]);
+
+  const loadProcessDetails = async (processId) => {
+    try {
+      const res = await axios.get(`${API_URL}/processes/${processId}`);
+      setSelectedProcessDetails(res.data);
+    } catch (error) {
+      console.error('Erro ao carregar detalhes:', error);
+    }
+  };
 
   useEffect(() => {
     loadProcesses();
@@ -98,6 +108,100 @@ export default function Processes({ members }) {
           <FiPlus /> Novo Processo
         </button>
       </div>
+
+      {selectedProcessDetails && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 999
+        }} onClick={() => setSelectedProcessDetails(null)}>
+          <div style={{
+            background: 'white',
+            padding: '30px',
+            borderRadius: '8px',
+            maxWidth: '500px',
+            width: '90%',
+            maxHeight: '80vh',
+            overflowY: 'auto'
+          }} onClick={(e) => e.stopPropagation()}>
+            <h2>{selectedProcessDetails.name}</h2>
+            {selectedProcessDetails.description && (
+              <p style={{ color: '#666', marginBottom: '20px' }}>
+                {selectedProcessDetails.description}
+              </p>
+            )}
+
+            {selectedProcessDetails.due_date && (
+              <div style={{ marginBottom: '20px', padding: '10px', background: '#fff3cd', borderRadius: '4px' }}>
+                📅 <strong>Prazo:</strong> {new Date(selectedProcessDetails.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}
+              </div>
+            )}
+
+            <h3 style={{ marginTop: '20px', marginBottom: '15px' }}>
+              👨‍💼 Responsáveis - Marque quando terminar:
+            </h3>
+
+            <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '4px' }}>
+              {selectedProcessDetails.completion_status && selectedProcessDetails.completion_status.length > 0 ? (
+                selectedProcessDetails.completion_status.map(status => (
+                  <div key={status.member_id} style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                    padding: '10px',
+                    marginBottom: '10px',
+                    background: status.completed ? '#e8f5e9' : '#f5f5f5',
+                    borderRadius: '4px'
+                  }}>
+                    <input
+                      type="checkbox"
+                      checked={status.completed}
+                      onChange={async (e) => {
+                        try {
+                          await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}/member-complete/${status.member_id}`);
+                          loadProcessDetails(selectedProcessDetails.id);
+                          loadProcesses();
+                        } catch (error) {
+                          alert('Erro ao marcar conclusão: ' + error.response?.data?.error);
+                        }
+                      }}
+                      style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+                    />
+                    <span style={{ flex: 1, fontWeight: status.completed ? 'bold' : 'normal' }}>
+                      {status.name}
+                    </span>
+                    {status.completed && <span style={{ color: '#4CAF50' }}>✓ Concluído</span>}
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#999' }}>Nenhum responsável atribuído</p>
+              )}
+            </div>
+
+            <button
+              onClick={() => setSelectedProcessDetails(null)}
+              style={{
+                marginTop: '20px',
+                padding: '10px 20px',
+                background: '#f5f5f5',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                width: '100%'
+              }}
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
 
       {editingProcess && (
         <div style={{
@@ -286,7 +390,10 @@ export default function Processes({ members }) {
             <div
               key={process.id}
               className="process-card"
-              onClick={() => setSelectedProcess(process.id)}
+              onClick={() => {
+                setSelectedProcess(process.id);
+                loadProcessDetails(process.id);
+              }}
             >
               <div className="process-header">
                 <h4>{process.name}</h4>

@@ -44,6 +44,22 @@ processesRoutes.get('/:id', async (req, res) => {
       [req.params.id]
     );
 
+    const members = await allAsync(
+      `SELECT mb.id, mb.name FROM process_members pm
+       JOIN members mb ON pm.member_id = mb.id
+       WHERE pm.process_id = $1`,
+      [req.params.id]
+    );
+    process.assigned_members = members;
+
+    const completionStatus = await allAsync(
+      `SELECT pcs.member_id, pcs.completed, m.name FROM process_completion_status pcs
+       JOIN members m ON pcs.member_id = m.id
+       WHERE pcs.process_id = $1`,
+      [req.params.id]
+    );
+    process.completion_status = completionStatus;
+
     res.json({ ...process, tasks });
   } catch (error) {
     res.status(500).json({ error: error.message });
