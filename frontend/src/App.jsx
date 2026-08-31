@@ -143,6 +143,14 @@ function App() {
     const messageInterval = setInterval(pollData, 1000);
     console.log(`⏱️ Polling iniciado - a cada 1 segundo`);
 
+    // Listeners para eventos de refresh imediato
+    const handleRefreshMessages = () => {
+      console.log(`🔄 Evento refreshMessages recebido - recarregando mensagens`);
+      if (currentMemberRef.current) {
+        loadMessages(currentMemberRef.current.id);
+      }
+    };
+
     const handleVisibilityChange = () => {
       if (document.hidden) {
         console.log(`👁️ Aba escondida`);
@@ -154,11 +162,13 @@ function App() {
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('refreshMessages', handleRefreshMessages);
 
     return () => {
       console.log(`🛑 Limpando polling`);
       clearInterval(messageInterval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('refreshMessages', handleRefreshMessages);
     };
   }, []);
 

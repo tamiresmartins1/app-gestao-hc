@@ -37,7 +37,9 @@ export default function Messages({ member, members, messages: messagesFromProps,
       setContent('');
       setShowCompose(false);
       setSelectedRecipients([]);
-      // Mensagens serão recarregadas pelo polling global no App.jsx
+      // Força recarregar mensagens imediatamente
+      setTimeout(() => window.dispatchEvent(new CustomEvent('refreshMessages')), 100);
+      setTimeout(() => window.dispatchEvent(new CustomEvent('refreshMessages')), 300);
     } catch (error) {
       alert('Erro ao enviar mensagem: ' + error.response?.data?.error);
     }
