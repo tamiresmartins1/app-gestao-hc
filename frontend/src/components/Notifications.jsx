@@ -18,16 +18,22 @@ export default function Notifications({ member, onUnreadUpdate }) {
           clearInterval(interval);
         } else {
           loadNotifications();
-          interval = setInterval(loadNotifications, 3000);
+          interval = setInterval(loadNotifications, 2000);
         }
       };
 
-      interval = setInterval(loadNotifications, 3000);
+      const handleRefresh = () => {
+        loadNotifications();
+      };
+
+      interval = setInterval(loadNotifications, 2000);
       document.addEventListener('visibilitychange', handleVisibilityChange);
+      window.addEventListener('refreshNotifications', handleRefresh);
 
       return () => {
         clearInterval(interval);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('refreshNotifications', handleRefresh);
       };
     }
   }, [member]);

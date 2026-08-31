@@ -235,6 +235,8 @@ export default function Processes({ members }) {
 
                           if (isCompleting && res.data && res.data.status === 'concluido') {
                             alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas para os próximos responsáveis!`);
+                            // Força recarregar notificações imediatamente
+                            window.dispatchEvent(new CustomEvent('refreshNotifications'));
                           }
 
                           loadProcessDetails(selectedProcessDetails.id);
@@ -740,7 +742,6 @@ export default function Processes({ members }) {
                     style={{ width: '100%' }}
                   >
                     <option value="em_progresso">Em Progresso</option>
-                    <option value="pausado">Pausado</option>
                     <option value="concluido">Concluído</option>
                   </select>
                 </div>
