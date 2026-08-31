@@ -123,17 +123,21 @@ function App() {
   };
 
   useEffect(() => {
+    console.log(`⚙️ useEffect rodou, currentMember:`, currentMember?.id);
     if (currentMember) {
+      console.log(`🔄 Iniciando polling para ${currentMember.id}`);
       // Carrega mensagens imediatamente
       loadMessages(currentMember.id);
       loadNotifications(currentMember.id);
 
       // Carrega novamente em 100ms e 300ms (para garantir que chegou)
       const timeout1 = setTimeout(() => {
+        console.log(`⏱️ Retry 1 - carregando mensagens`);
         loadMessages(currentMember.id);
         loadNotifications(currentMember.id);
       }, 100);
       const timeout2 = setTimeout(() => {
+        console.log(`⏱️ Retry 2 - carregando mensagens`);
         loadMessages(currentMember.id);
         loadNotifications(currentMember.id);
       }, 300);
@@ -142,9 +146,11 @@ function App() {
 
       const handleVisibilityChange = () => {
         if (document.hidden) {
+          console.log(`👁️ Aba escondida - parando polling`);
           clearInterval(messageInterval);
           clearInterval(notificationInterval);
         } else {
+          console.log(`👁️ Aba visível - retomando polling`);
           loadMessages(currentMember.id);
           loadNotifications(currentMember.id);
           messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
@@ -154,9 +160,11 @@ function App() {
 
       messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
       notificationInterval = setInterval(() => loadNotifications(currentMember.id), 1000);
+      console.log(`🔄 Polling iniciado - a cada 1 segundo`);
       document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
+        console.log(`🛑 Limpando polling`);
         clearTimeout(timeout1);
         clearTimeout(timeout2);
         clearInterval(messageInterval);
