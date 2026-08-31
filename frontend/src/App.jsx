@@ -21,6 +21,7 @@ function App() {
   const [currentMember, setCurrentMember] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -102,33 +103,60 @@ function App() {
     }
   };
 
+  const loadNotifications = async (memberId = currentMember?.id) => {
+    if (!memberId) return;
+    try {
+      const res = await axios.get(`${API_URL}/processes/notifications/${memberId}`);
+      setNotifications(res.data);
+      console.log(`🔔 Notificações carregadas (GLOBAL): ${res.data.length}`);
+
+      const unreadCount = res.data.filter(n => !n.read).length;
+      console.log(`🔔 Não lidas: ${unreadCount}`);
+      setUnreadNotificationsCount(unreadCount);
+    } catch (error) {
+      console.error('Erro ao carregar notificações:', error);
+    }
+  };
+
   useEffect(() => {
     if (currentMember) {
-      // Carrega imediatamente
+      // Carrega mensagens imediatamente
       loadMessages(currentMember.id);
+      loadNotifications(currentMember.id);
 
       // Carrega novamente em 100ms e 300ms (para garantir que chegou)
-      const timeout1 = setTimeout(() => loadMessages(currentMember.id), 100);
-      const timeout2 = setTimeout(() => loadMessages(currentMember.id), 300);
+      const timeout1 = setTimeout(() => {
+        loadMessages(currentMember.id);
+        loadNotifications(currentMember.id);
+      }, 100);
+      const timeout2 = setTimeout(() => {
+        loadMessages(currentMember.id);
+        loadNotifications(currentMember.id);
+      }, 300);
 
-      let interval;
+      let messageInterval, notificationInterval;
 
       const handleVisibilityChange = () => {
         if (document.hidden) {
-          clearInterval(interval);
+          clearInterval(messageInterval);
+          clearInterval(notificationInterval);
         } else {
           loadMessages(currentMember.id);
-          interval = setInterval(() => loadMessages(currentMember.id), 1000);
+          loadNotifications(currentMember.id);
+          messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
+          notificationInterval = setInterval(() => loadNotifications(currentMember.id), 1000);
         }
       };
 
-      interval = setInterval(() => loadMessages(currentMember.id), 1000);
+      messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
+      notificationInterval = setInterval(() => loadNotifications(currentMember.id), 1000);
       document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
         clearTimeout(timeout1);
         clearTimeout(timeout2);
-        clearInterval(interval);
+        clearInterval(messageInterval);
+        clearInterval(notificationInterval);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
     }
@@ -242,7 +270,7 @@ function App() {
             )}
 
             {activeTab === 'notificacoes' && currentMember && (
-              <Notifications member={currentMember} onUnreadUpdate={handleUnreadNotificationsUpdate} />
+              <Notifications member={currentMember} notifications={notifications} onUnreadUpdate={handleUnreadNotificationsUpdate} />
             )}
 
             {activeTab === 'recados' && currentMember && (

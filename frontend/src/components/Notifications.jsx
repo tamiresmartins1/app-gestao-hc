@@ -4,64 +4,24 @@ import '../styles/notifications.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-export default function Notifications({ member, onUnreadUpdate }) {
-  const [notifications, setNotifications] = useState([]);
+export default function Notifications({ member, notifications: notificationsFromProps, onUnreadUpdate }) {
+  const [notifications, setNotifications] = useState(notificationsFromProps || []);
   const [loading, setLoading] = useState(false);
 
+  // Sincroniza notificações da prop (carregadas globalmente no App.jsx)
   useEffect(() => {
-    if (member) {
-      loadNotifications();
-      let interval;
+    setNotifications(notificationsFromProps || []);
 
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          clearInterval(interval);
-        } else {
-          loadNotifications();
-          interval = setInterval(loadNotifications, 1000);
-        }
-      };
-
-      const handleRefresh = () => {
-        loadNotifications();
-      };
-
-      interval = setInterval(loadNotifications, 1000);
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      window.addEventListener('refreshNotifications', handleRefresh);
-
-      return () => {
-        clearInterval(interval);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        window.removeEventListener('refreshNotifications', handleRefresh);
-      };
+    const unreadCount = (notificationsFromProps || []).filter(n => !n.read).length;
+    if (onUnreadUpdate) {
+      onUnreadUpdate(unreadCount);
     }
-  }, [member]);
-
-  const loadNotifications = async () => {
-    if (!member) return;
-    try {
-      setLoading(true);
-      const res = await axios.get(`${API_URL}/processes/notifications/${member.id}`);
-      setNotifications(res.data);
-      console.log(`🔔 Notificações carregadas: ${res.data.length} (member: ${member.id})`);
-
-      const unreadCount = res.data.filter(n => !n.read).length;
-      console.log(`🔔 Não lidas: ${unreadCount}`);
-      if (onUnreadUpdate) {
-        onUnreadUpdate(unreadCount);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar notificações:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [notificationsFromProps, onUnreadUpdate]);
 
   const markAsRead = async (notificationId) => {
     try {
       await axios.put(`${API_URL}/processes/notifications/${notificationId}/read`);
-      loadNotifications();
+      // Notificações serão recarregadas pelo polling global no App.jsx
     } catch (error) {
       console.error('Erro ao marcar como lido:', error);
     }
