@@ -235,7 +235,6 @@ export default function Processes({ members }) {
 
                           if (isCompleting && res.data && res.data.status === 'concluido') {
                             console.log(`🎉 Processo concluído: ${selectedProcessDetails.name}`);
-                            alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas! Verifique em Notificações!`);
                             // Força recarregar notificações com delay e múltiplas tentativas
                             setTimeout(() => {
                               console.log(`🔄 Refresh notificações - tentativa 1`);
