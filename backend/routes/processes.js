@@ -232,6 +232,21 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
       console.log(`📢 Encontrados ${participants.length} participantes para notificar`);
       console.log(`📋 Query: Buscando em process_members onde NÃO estão em process_completion_status`);
 
+      // Debug: mostrar todos os membros do processo
+      const allProcessMembers = await allAsync(
+        `SELECT pm.member_id, m.name FROM process_members pm
+         LEFT JOIN members m ON pm.member_id = m.id
+         WHERE pm.process_id = $1`,
+        [processId]
+      );
+      console.log(`👥 Todos os membros do processo:`, allProcessMembers);
+
+      const responsibles = await allAsync(
+        `SELECT member_id, completed FROM process_completion_status WHERE process_id = $1`,
+        [processId]
+      );
+      console.log(`✅ Responsáveis:`, responsibles);
+
       // Se não tem participantes, notifica TODOS os outros membros
       let recipientsToNotify = participants;
       if (recipientsToNotify.length === 0) {
