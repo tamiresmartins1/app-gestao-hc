@@ -9,7 +9,7 @@ messagesRoutes.get('/inbox/:recipient_id', async (req, res) => {
     const messages = await allAsync(
       `SELECT m.*, s.name as sender_name FROM messages m
        LEFT JOIN members s ON m.sender_id = s.id
-       WHERE m.recipient_id = $1 OR m.sender_id = $1
+       WHERE m.recipient_id = $1
        ORDER BY m.created_at DESC`,
       [req.params.recipient_id]
     );
