@@ -49,4 +49,34 @@
   .app-content {
     padding: 10px;
   }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 3px;
+  }
+
+  .loading-spinner p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    min-height: 100vh;
+  }
+
+  .app-content {
+    padding: 8px;
+  }
+
+  .spinner {
+    width: 35px;
+    height: 35px;
+    border-width: 2px;
+  }
+
+  .loading-spinner p {
+    font-size: 14px;
+  }
 }
