@@ -230,13 +230,26 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
       );
 
       console.log(`📢 Encontrados ${participants.length} participantes para notificar`);
+      console.log(`📋 Query: Buscando em process_members onde NÃO estão em process_completion_status`);
 
-      for (let { member_id } of participants) {
+      // Se não tem participantes, notifica TODOS os outros membros
+      let recipientsToNotify = participants;
+      if (recipientsToNotify.length === 0) {
+        console.log(`⚠️ Nenhum participante encontrado! Notificando TODOS os membros...`);
+        const allMembers = await allAsync(
+          `SELECT id FROM members WHERE id != $1`,
+          [memberId]
+        );
+        recipientsToNotify = allMembers.map(m => ({ member_id: m.id }));
+        console.log(`📢 Alterado: notificando ${recipientsToNotify.length} membros`);
+      }
+
+      for (let { member_id } of recipientsToNotify) {
         const notifId = uuidv4();
         await runAsync(
           `INSERT INTO process_notifications (id, process_id, member_id, message)
            VALUES ($1, $2, $3, $4)`,
-          [notifId, processId, member_id, `O processo "${currentProcess.name}" foi concluído! Agora é a sua vez!`]
+          [notifId, processId, member_id, `✅ O processo "${currentProcess.name}" foi CONCLUÍDO! Notificação enviada em ${new Date().toLocaleTimeString('pt-BR')}`]
         );
         console.log(`📩 Notificação criada para ${member_id}: ${notifId}`);
       }

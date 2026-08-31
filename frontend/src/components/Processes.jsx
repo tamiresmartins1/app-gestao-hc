@@ -234,16 +234,20 @@ export default function Processes({ members }) {
                           const res = await axios.put(`${API_URL}/processes/${selectedProcessDetails.id}${endpoint}`);
 
                           if (isCompleting && res.data && res.data.status === 'concluido') {
-                            alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas para os próximos responsáveis!`);
+                            console.log(`🎉 Processo concluído: ${selectedProcessDetails.name}`);
+                            alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas! Verifique em Notificações!`);
                             // Força recarregar notificações com delay e múltiplas tentativas
                             setTimeout(() => {
+                              console.log(`🔄 Refresh notificações - tentativa 1`);
                               window.dispatchEvent(new CustomEvent('refreshNotifications'));
                             }, 200);
                             // Tenta novamente em 500ms e 1s para garantir
                             setTimeout(() => {
+                              console.log(`🔄 Refresh notificações - tentativa 2`);
                               window.dispatchEvent(new CustomEvent('refreshNotifications'));
                             }, 500);
                             setTimeout(() => {
+                              console.log(`🔄 Refresh notificações - tentativa 3`);
                               window.dispatchEvent(new CustomEvent('refreshNotifications'));
                             }, 1000);
                           }
