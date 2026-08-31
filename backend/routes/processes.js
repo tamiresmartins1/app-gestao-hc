@@ -220,12 +220,10 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
       const currentProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
       console.log(`✅ Processo concluído: ${currentProcess.name} (ID: ${processId})`);
 
-      // Notificar participants do processo atual
+      // Notificar TODOS os membros do processo (responsáveis + participantes)
       const participants = await allAsync(
         `SELECT DISTINCT pm.member_id FROM process_members pm
-         WHERE pm.process_id = $1 AND pm.member_id NOT IN (
-           SELECT member_id FROM process_completion_status WHERE process_id = $1
-         )`,
+         WHERE pm.process_id = $1`,
         [processId]
       );
 
