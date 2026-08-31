@@ -18,7 +18,7 @@ export default function Notifications({ member, onUnreadUpdate }) {
           clearInterval(interval);
         } else {
           loadNotifications();
-          interval = setInterval(loadNotifications, 2000);
+          interval = setInterval(loadNotifications, 1000);
         }
       };
 
@@ -26,7 +26,7 @@ export default function Notifications({ member, onUnreadUpdate }) {
         loadNotifications();
       };
 
-      interval = setInterval(loadNotifications, 2000);
+      interval = setInterval(loadNotifications, 1000);
       document.addEventListener('visibilitychange', handleVisibilityChange);
       window.addEventListener('refreshNotifications', handleRefresh);
 

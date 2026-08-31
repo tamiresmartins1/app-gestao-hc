@@ -235,8 +235,17 @@ export default function Processes({ members }) {
 
                           if (isCompleting && res.data && res.data.status === 'concluido') {
                             alert(`✅ ${selectedProcessDetails.name} foi concluído!\n\n📢 Notificações enviadas para os próximos responsáveis!`);
-                            // Força recarregar notificações imediatamente
-                            window.dispatchEvent(new CustomEvent('refreshNotifications'));
+                            // Força recarregar notificações com delay e múltiplas tentativas
+                            setTimeout(() => {
+                              window.dispatchEvent(new CustomEvent('refreshNotifications'));
+                            }, 200);
+                            // Tenta novamente em 500ms e 1s para garantir
+                            setTimeout(() => {
+                              window.dispatchEvent(new CustomEvent('refreshNotifications'));
+                            }, 500);
+                            setTimeout(() => {
+                              window.dispatchEvent(new CustomEvent('refreshNotifications'));
+                            }, 1000);
                           }
 
                           loadProcessDetails(selectedProcessDetails.id);
