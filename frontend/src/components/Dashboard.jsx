@@ -17,14 +17,22 @@ export default function Dashboard({ members }) {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
+
       const tasksRes = await axios.get(`${API_URL}/tasks`);
       setAllTasks(tasksRes.data);
 
-      const memberStats = {};
-      for (const member of members) {
-        const res = await axios.get(`${API_URL}/members/${member.id}/stats`);
-        memberStats[member.id] = res.data;
-      }
+      // Fazer todas as requisições em paralelo, não sequencial
+      const statsPromises = members.map(member =>
+        axios.get(`${API_URL}/members/${member.id}/stats`)
+          .then(res => ({ [member.id]: res.data }))
+          .catch(err => {
+            console.error(`Erro ao carregar stats do ${member.name}:`, err);
+            return { [member.id]: {} };
+          })
+      );
+
+      const statsResults = await Promise.all(statsPromises);
+      const memberStats = Object.assign({}, ...statsResults);
       setStats(memberStats);
     } catch (error) {
       console.error('Erro ao carregar dashboard:', error);

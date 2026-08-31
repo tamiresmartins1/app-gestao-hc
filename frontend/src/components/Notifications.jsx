@@ -11,8 +11,24 @@ export default function Notifications({ member, onUnreadUpdate }) {
   useEffect(() => {
     if (member) {
       loadNotifications();
-      const interval = setInterval(loadNotifications, 3000);
-      return () => clearInterval(interval);
+      let interval;
+
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          clearInterval(interval);
+        } else {
+          loadNotifications();
+          interval = setInterval(loadNotifications, 3000);
+        }
+      };
+
+      interval = setInterval(loadNotifications, 3000);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      return () => {
+        clearInterval(interval);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
     }
   }, [member]);
 

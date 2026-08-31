@@ -35,18 +35,35 @@ function App() {
   const loadMembers = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`${API_URL}/members`);
-      setMembers(res.data);
+
+      // Tenta usar cache primeiro
+      const cachedMembers = localStorage.getItem('membersCache');
+      const cacheTime = localStorage.getItem('membersCacheTime');
+      const now = Date.now();
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+      let members = null;
+      if (cachedMembers && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+        members = JSON.parse(cachedMembers);
+        setLoading(false);
+      } else {
+        const res = await axios.get(`${API_URL}/members`);
+        members = res.data;
+        localStorage.setItem('membersCache', JSON.stringify(members));
+        localStorage.setItem('membersCacheTime', now.toString());
+        setLoading(false);
+      }
+
+      setMembers(members);
 
       const savedMemberId = localStorage.getItem('selectedMemberId');
-      const member = res.data.find(m => m.id === savedMemberId) || res.data[0];
+      const member = members.find(m => m.id === savedMemberId) || members[0];
 
       if (member) {
         setCurrentMember(member);
       }
     } catch (error) {
       console.error('Erro ao carregar membros:', error);
-    } finally {
       setLoading(false);
     }
   };
@@ -152,7 +169,10 @@ function App() {
 
       <div className="app-content">
         {loading ? (
-          <div className="loading">Carregando...</div>
+          <div className="loading-spinner">
+            <div className="spinner"></div>
+            <p>Carregando aplicação...</p>
+          </div>
         ) : (
           <>
             {activeTab === 'dashboard' && currentMember?.role === 'chefe' && (
