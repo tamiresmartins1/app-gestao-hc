@@ -103,7 +103,13 @@ function App() {
 
   useEffect(() => {
     if (currentMember) {
+      // Carrega imediatamente
       loadMessages(currentMember.id);
+
+      // Carrega novamente em 100ms e 300ms (para garantir que chegou)
+      const timeout1 = setTimeout(() => loadMessages(currentMember.id), 100);
+      const timeout2 = setTimeout(() => loadMessages(currentMember.id), 300);
+
       let interval;
 
       const handleVisibilityChange = () => {
@@ -119,6 +125,8 @@ function App() {
       document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
         clearInterval(interval);
         document.removeEventListener('visibilitychange', handleVisibilityChange);
       };
