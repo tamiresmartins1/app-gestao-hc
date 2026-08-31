@@ -18,6 +18,24 @@ export default function Messages({ member, members, onUnreadUpdate }) {
   useEffect(() => {
     if (member) {
       loadMessages();
+      let interval;
+
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          clearInterval(interval);
+        } else {
+          loadMessages();
+          interval = setInterval(loadMessages, 2000);
+        }
+      };
+
+      interval = setInterval(loadMessages, 2000);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      return () => {
+        clearInterval(interval);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
     }
   }, [member, view]);
 
