@@ -231,6 +231,20 @@ function App() {
     }
   };
 
+  // Calcula unread count GLOBALMENTE quando mensagens mudam
+  useEffect(() => {
+    const unreadCount = messages.filter(m => !m.read).length;
+    setUnreadMessagesCount(unreadCount);
+    console.log(`📬 Mensagens não-lidas: ${unreadCount}`);
+  }, [messages]);
+
+  // Calcula unread count GLOBALMENTE quando notificações mudam
+  useEffect(() => {
+    const unreadCount = notifications.filter(n => !n.read).length;
+    setUnreadNotificationsCount(unreadCount);
+    console.log(`🔔 Notificações não-lidas: ${unreadCount}`);
+  }, [notifications]);
+
   const handleUnreadUpdate = (count) => {
     setUnreadMessagesCount(count);
   };
