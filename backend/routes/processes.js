@@ -260,18 +260,25 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
         [processId]
       );
 
+      console.log(`🔗 Processos dependentes encontrados: ${dependentProcesses.length}`);
+
       for (let depProcess of dependentProcesses) {
+        console.log(`📋 Processo dependente: ${depProcess.name} (ID: ${depProcess.id})`);
         const members = await allAsync(
           `SELECT member_id FROM process_members WHERE process_id = $1`,
           [depProcess.id]
         );
 
+        console.log(`👥 Responsáveis do próximo processo: ${members.length}`);
+
         for (let { member_id } of members) {
+          const notifId = uuidv4();
           await runAsync(
             `INSERT INTO process_notifications (id, process_id, member_id, message)
              VALUES ($1, $2, $3, $4)`,
-            [uuidv4(), depProcess.id, member_id, `O processo "${currentProcess.name}" foi concluído por todos! Sua etapa "${depProcess.name}" pode começar!`]
+            [notifId, depProcess.id, member_id, `🔗 O processo "${currentProcess.name}" foi concluído! Sua etapa "${depProcess.name}" pode começar!`]
           );
+          console.log(`📩 Notificação criada para responsável ${member_id} de ${depProcess.name}: ${notifId}`);
         }
       }
     }
