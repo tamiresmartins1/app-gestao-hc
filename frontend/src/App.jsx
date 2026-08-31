@@ -93,13 +93,17 @@ function App() {
   }, [currentMember]);
 
   const loadMessages = async (memberId = currentMember?.id) => {
-    if (!memberId) return;
+    if (!memberId) {
+      console.warn(`⚠️ memberId vazio em loadMessages`);
+      return;
+    }
     try {
+      console.log(`📬 Tentando carregar mensagens para member: ${memberId}`);
       const res = await axios.get(`${API_URL}/messages/inbox/${memberId}`);
       setMessages(res.data);
-      console.log(`📬 Mensagens carregadas: ${res.data.length}`);
+      console.log(`✅ Mensagens carregadas: ${res.data.length}`);
     } catch (error) {
-      console.error('Erro ao carregar mensagens:', error);
+      console.error(`❌ Erro ao carregar mensagens:`, error);
     }
   };
 
