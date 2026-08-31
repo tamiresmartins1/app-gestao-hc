@@ -276,7 +276,8 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
       }
     }
 
-    res.json({ success: true });
+    const updatedProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
+    res.json({ success: true, status: updatedProcess.status });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
