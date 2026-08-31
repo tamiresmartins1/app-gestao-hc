@@ -5,8 +5,8 @@ import '../styles/messages.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-export default function Messages({ member, members, onUnreadUpdate }) {
-  const [messages, setMessages] = useState([]);
+export default function Messages({ member, members, messages: messagesFromProps, onUnreadUpdate }) {
+  const [messages, setMessages] = useState(messagesFromProps || []);
   const [selectedRecipients, setSelectedRecipients] = useState([]);
   const [showCompose, setShowCompose] = useState(false);
   const [subject, setSubject] = useState('');
@@ -15,38 +15,10 @@ export default function Messages({ member, members, onUnreadUpdate }) {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [replyContent, setReplyContent] = useState('');
 
+  // Sincroniza mensagens da prop
   useEffect(() => {
-    if (member) {
-      loadMessages();
-      let interval;
-
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          clearInterval(interval);
-        } else {
-          loadMessages();
-          interval = setInterval(loadMessages, 2000);
-        }
-      };
-
-      interval = setInterval(loadMessages, 2000);
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      return () => {
-        clearInterval(interval);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      };
-    }
-  }, [member, view]);
-
-  const loadMessages = async () => {
-    try {
-      const res = await axios.get(`${API_URL}/messages/inbox/${member.id}`);
-      setMessages(res.data);
-    } catch (error) {
-      console.error('Erro ao carregar mensagens:', error);
-    }
-  };
+    setMessages(messagesFromProps || []);
+  }, [messagesFromProps]);
 
   const handleSend = async (e) => {
     e.preventDefault();
@@ -65,7 +37,7 @@ export default function Messages({ member, members, onUnreadUpdate }) {
       setContent('');
       setShowCompose(false);
       setSelectedRecipients([]);
-      loadMessages();
+      // Mensagens serão recarregadas pelo polling global no App.jsx
     } catch (error) {
       alert('Erro ao enviar mensagem: ' + error.response?.data?.error);
     }
@@ -75,7 +47,7 @@ export default function Messages({ member, members, onUnreadUpdate }) {
     if (!window.confirm('Deseja deletar este recado?')) return;
     try {
       await axios.delete(`${API_URL}/messages/${messageId}`);
-      loadMessages();
+      // Mensagens serão recarregadas pelo polling global
     } catch (error) {
       alert('Erro ao deletar recado: ' + error.response?.data?.error);
     }
@@ -84,7 +56,7 @@ export default function Messages({ member, members, onUnreadUpdate }) {
   const handleMarkAsRead = async (messageId) => {
     try {
       await axios.put(`${API_URL}/messages/${messageId}/read`);
-      loadMessages();
+      // Mensagens serão recarregadas pelo polling global
     } catch (error) {
       console.error('Erro ao marcar como lido:', error);
     }
@@ -127,7 +99,7 @@ export default function Messages({ member, members, onUnreadUpdate }) {
 
       setReplyContent('');
       handleCloseModal();
-      loadMessages();
+      // Mensagens serão recarregadas pelo polling global
     } catch (error) {
       alert('Erro ao enviar resposta: ' + error.response?.data?.error);
     }

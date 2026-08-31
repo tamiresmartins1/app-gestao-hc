@@ -20,6 +20,7 @@ function App() {
   const [members, setMembers] = useState([]);
   const [currentMember, setCurrentMember] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -86,6 +87,41 @@ function App() {
   useEffect(() => {
     if (currentMember) {
       loadTasks(currentMember.id);
+      loadMessages(currentMember.id);
+    }
+  }, [currentMember]);
+
+  const loadMessages = async (memberId = currentMember?.id) => {
+    if (!memberId) return;
+    try {
+      const res = await axios.get(`${API_URL}/messages/inbox/${memberId}`);
+      setMessages(res.data);
+    } catch (error) {
+      console.error('Erro ao carregar mensagens:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (currentMember) {
+      loadMessages(currentMember.id);
+      let interval;
+
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          clearInterval(interval);
+        } else {
+          loadMessages(currentMember.id);
+          interval = setInterval(() => loadMessages(currentMember.id), 1000);
+        }
+      };
+
+      interval = setInterval(() => loadMessages(currentMember.id), 1000);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
+      return () => {
+        clearInterval(interval);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
     }
   }, [currentMember]);
 
@@ -201,7 +237,7 @@ function App() {
             )}
 
             {activeTab === 'recados' && currentMember && (
-              <Messages member={currentMember} members={members} onUnreadUpdate={handleUnreadUpdate} />
+              <Messages member={currentMember} members={members} messages={messages} onUnreadUpdate={handleUnreadUpdate} />
             )}
 
             {activeTab === 'processos' && (
