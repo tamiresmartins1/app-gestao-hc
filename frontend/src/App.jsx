@@ -25,6 +25,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+  const currentMemberRef = React.useRef(currentMember);
 
   useEffect(() => {
     localStorage.setItem('activeTab', activeTab);
@@ -86,9 +87,11 @@ function App() {
   };
 
   useEffect(() => {
+    currentMemberRef.current = currentMember;
     if (currentMember) {
       loadTasks(currentMember.id);
       loadMessages(currentMember.id);
+      loadNotifications(currentMember.id);
     }
   }, [currentMember]);
 
@@ -122,57 +125,42 @@ function App() {
     }
   };
 
+  // Polling global - roda UMA VEZ quando app monta
   useEffect(() => {
-    console.log(`⚙️ useEffect rodou, currentMember:`, currentMember?.id);
-    if (currentMember) {
-      console.log(`🔄 Iniciando polling para ${currentMember.id}`);
-      // Carrega mensagens imediatamente
-      loadMessages(currentMember.id);
-      loadNotifications(currentMember.id);
+    console.log(`🚀 App montado - iniciando polling global`);
 
-      // Carrega novamente em 100ms e 300ms (para garantir que chegou)
-      const timeout1 = setTimeout(() => {
-        console.log(`⏱️ Retry 1 - carregando mensagens`);
-        loadMessages(currentMember.id);
-        loadNotifications(currentMember.id);
-      }, 100);
-      const timeout2 = setTimeout(() => {
-        console.log(`⏱️ Retry 2 - carregando mensagens`);
-        loadMessages(currentMember.id);
-        loadNotifications(currentMember.id);
-      }, 300);
+    const pollData = () => {
+      if (currentMemberRef.current) {
+        loadMessages(currentMemberRef.current.id);
+        loadNotifications(currentMemberRef.current.id);
+      }
+    };
 
-      let messageInterval, notificationInterval;
+    // Carrega imediatamente
+    pollData();
 
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          console.log(`👁️ Aba escondida - parando polling`);
-          clearInterval(messageInterval);
-          clearInterval(notificationInterval);
-        } else {
-          console.log(`👁️ Aba visível - retomando polling`);
-          loadMessages(currentMember.id);
-          loadNotifications(currentMember.id);
-          messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
-          notificationInterval = setInterval(() => loadNotifications(currentMember.id), 1000);
-        }
-      };
+    // Polling a cada 1 segundo
+    const messageInterval = setInterval(pollData, 1000);
+    console.log(`⏱️ Polling iniciado - a cada 1 segundo`);
 
-      messageInterval = setInterval(() => loadMessages(currentMember.id), 1000);
-      notificationInterval = setInterval(() => loadNotifications(currentMember.id), 1000);
-      console.log(`🔄 Polling iniciado - a cada 1 segundo`);
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      return () => {
-        console.log(`🛑 Limpando polling`);
-        clearTimeout(timeout1);
-        clearTimeout(timeout2);
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        console.log(`👁️ Aba escondida`);
         clearInterval(messageInterval);
-        clearInterval(notificationInterval);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-      };
-    }
-  }, [currentMember]);
+      } else {
+        console.log(`👁️ Aba visível - retomando polling`);
+        pollData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      console.log(`🛑 Limpando polling`);
+      clearInterval(messageInterval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   const handleAddMember = async (name, email) => {
     try {
