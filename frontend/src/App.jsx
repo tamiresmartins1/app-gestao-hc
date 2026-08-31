@@ -96,6 +96,7 @@ function App() {
     try {
       const res = await axios.get(`${API_URL}/messages/inbox/${memberId}`);
       setMessages(res.data);
+      console.log(`📬 Mensagens carregadas: ${res.data.length}`);
     } catch (error) {
       console.error('Erro ao carregar mensagens:', error);
     }

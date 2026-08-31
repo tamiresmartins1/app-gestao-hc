@@ -44,8 +44,10 @@ export default function Notifications({ member, onUnreadUpdate }) {
       setLoading(true);
       const res = await axios.get(`${API_URL}/processes/notifications/${member.id}`);
       setNotifications(res.data);
+      console.log(`🔔 Notificações carregadas: ${res.data.length} (member: ${member.id})`);
 
       const unreadCount = res.data.filter(n => !n.read).length;
+      console.log(`🔔 Não lidas: ${unreadCount}`);
       if (onUnreadUpdate) {
         onUnreadUpdate(unreadCount);
       }
