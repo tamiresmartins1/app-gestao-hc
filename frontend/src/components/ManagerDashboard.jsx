@@ -78,19 +78,19 @@ export default function ManagerDashboard({ members }) {
             {Object.values(teamStats).reduce((sum, s) => sum + (s.total_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card active clickable-card" onClick={() => setModal({ open: true, type: 'ativas-all', memberName: null })}>
+        <div className="overview-card active">
           <h3>Tarefas Ativas</h3>
           <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.active_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card overdue clickable-card" onClick={() => setModal({ open: true, type: 'atrasadas-all', memberName: null })}>
+        <div className="overview-card overdue">
           <h3>Tarefas Atrasadas</h3>
           <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.overdue_tasks || 0), 0)}
           </div>
         </div>
-        <div className="overview-card completed clickable-card" onClick={() => setModal({ open: true, type: 'concluidas-all', memberName: null })}>
+        <div className="overview-card completed">
           <h3>Tarefas Concluídas</h3>
           <div className="big-number">
             {Object.values(teamStats).reduce((sum, s) => sum + (s.completed_tasks || 0), 0)}
@@ -98,6 +98,56 @@ export default function ManagerDashboard({ members }) {
         </div>
       </div>
 
+      <div className="team-members-stats">
+        <h3>📈 Carga de Trabalho por Membro</h3>
+        <div className="member-stats-grid">
+          {teamMembers.map(name => {
+            const stats = teamStats[name] || {};
+            const total = parseInt(stats.total_tasks) || 0;
+            const active = parseInt(stats.active_tasks) || 0;
+            const overdue = parseInt(stats.overdue_tasks) || 0;
+            const completed = parseInt(stats.completed_tasks) || 0;
+
+            const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            return (
+              <div key={name} className="member-stat-card">
+                <h4>{name}</h4>
+                <div className="stat-row">
+                  <span>Total:</span>
+                  <span className="value">{total}</span>
+                </div>
+                <div className="stat-row clickable" onClick={() => openTaskModal(name, 'ativas')}>
+                  <span>Ativas:</span>
+                  <span className="value active">{active}</span>
+                </div>
+                <div className="stat-row clickable" onClick={() => openTaskModal(name, 'atrasadas')}>
+                  <span>Atrasadas:</span>
+                  <span className="value overdue">{overdue}</span>
+                </div>
+                <div className="stat-row clickable" onClick={() => openTaskModal(name, 'concluidas')}>
+                  <span>Concluídas:</span>
+                  <span className="value completed">{completed}</span>
+                </div>
+                {total > 0 && (
+                  <>
+                    <div className="stat-row">
+                      <span>Progresso:</span>
+                      <span className="value">{progressPercent}%</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div
+                        className="progress-fill"
+                        style={{ width: `${progressPercent}%` }}
+                      ></div>
+                    </div>
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
 
       {modal.open && (
         <div className="modal-overlay" onClick={closeModal}>
