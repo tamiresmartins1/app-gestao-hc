@@ -157,7 +157,6 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
                 <option value="all">Todos os status</option>
                 <option value="ativa">Ativas</option>
                 <option value="atrasada">Atrasadas</option>
-                <option value="concluída">Concluídas</option>
               </select>
 
               <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
