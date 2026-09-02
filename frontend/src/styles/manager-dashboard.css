@@ -120,6 +120,18 @@
   border-bottom: none;
 }
 
+.stat-row.clickable {
+  cursor: pointer;
+  padding: 8px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.stat-row.clickable:hover {
+  background: #f0f0f0;
+  padding: 8px 8px;
+}
+
 .stat-row span:first-child {
   color: #666;
 }
@@ -155,6 +167,132 @@
   transition: width 0.3s ease;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #eee;
+  position: sticky;
+  top: 0;
+  background: white;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 18px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 40px 20px;
+}
+
+.task-list-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.task-modal-item {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.task-modal-item:hover {
+  background: #f0f0f0;
+  border-color: #4caf50;
+}
+
+.task-title {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.task-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  font-size: 12px;
+}
+
+.meta-member,
+.meta-date,
+.meta-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+}
+
+.meta-priority {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.meta-priority.alta {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.meta-priority.média {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.meta-priority.baixa {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
 @media (max-width: 768px) {
   .manager-dashboard {
     padding: 15px;
@@ -170,5 +308,14 @@
 
   .big-number {
     font-size: 28px;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
+
+  .task-meta {
+    flex-direction: column;
+    gap: 8px;
   }
 }
