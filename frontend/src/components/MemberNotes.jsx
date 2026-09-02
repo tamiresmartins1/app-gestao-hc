@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import '../styles/member-notes.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -8,6 +10,21 @@ export default function MemberNotes({ member }) {
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
+
+  const modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['clean']
+    ]
+  };
+
+  const formats = [
+    'bold', 'italic', 'underline',
+    'color', 'background',
+    'list', 'bullet'
+  ];
 
   // Carrega notas ao montar o componente ou quando muda de membro
   useEffect(() => {
@@ -76,11 +93,13 @@ export default function MemberNotes({ member }) {
         </div>
       </div>
 
-      <textarea
-        className="notes-textarea"
+      <ReactQuill
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={setContent}
+        modules={modules}
+        formats={formats}
         placeholder="Escreva suas anotações e passo a passo aqui... (salva automaticamente)"
+        className="notes-editor"
       />
     </div>
   );
