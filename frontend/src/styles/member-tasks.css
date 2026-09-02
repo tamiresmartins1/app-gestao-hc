@@ -94,9 +94,41 @@
 
 .tasks-controls {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 15px;
   margin-bottom: 20px;
+}
+
+.view-tabs {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.view-tab {
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  color: #999;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.view-tab:hover {
+  color: #333;
+}
+
+.view-tab.active {
+  color: #4caf50;
+  border-bottom-color: #4caf50;
+}
+
+.filters-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
   flex-wrap: wrap;
 }
 
@@ -165,7 +197,51 @@
   border-radius: 8px;
 }
 
+.tasks-layout {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  min-height: calc(100vh - 300px);
+}
+
+.tasks-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 60%;
+  min-width: 300px;
+}
+
+.notes-column {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 350px;
+  min-height: 400px;
+}
+
+@media (max-width: 1200px) {
+  .tasks-column {
+    flex: 1 1 50%;
+  }
+
+  .notes-column {
+    flex: 0 0 300px;
+    min-height: 300px;
+  }
+}
+
 @media (max-width: 768px) {
+  .tasks-layout {
+    flex-direction: column;
+  }
+
+  .tasks-column {
+    flex: 1 1 100%;
+  }
+
+  .notes-column {
+    flex: 1 1 100%;
+    min-height: 300px;
+  }
   .tasks-header {
     flex-direction: column;
     gap: 10px;

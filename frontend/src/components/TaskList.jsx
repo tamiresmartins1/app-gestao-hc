@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FiTrash2, FiEdit2, FiCheck, FiX } from 'react-icons/fi';
 import '../styles/task-list.css';
 
-export default function TaskList({ tasks, onUpdate, onDelete, compact = false }) {
+export default function TaskList({ tasks, onUpdate, onDelete, compact = false, isTaskDueToday }) {
   const [editingId, setEditingId] = useState(null);
   const [editStatus, setEditStatus] = useState('');
   const [editingTask, setEditingTask] = useState(null);
@@ -70,7 +70,12 @@ export default function TaskList({ tasks, onUpdate, onDelete, compact = false })
             {!compact && (
               <div className="task-meta">
                 {task.due_date && (
-                  <span className="meta-item">📅 {new Date(task.due_date).toLocaleDateString('pt-BR')}</span>
+                  <>
+                    <span className="meta-item">📅 {new Date(task.due_date).toLocaleDateString('pt-BR')}</span>
+                    {isTaskDueToday && isTaskDueToday(task) && (
+                      <span className="meta-badge-today">🔔 Vence hoje</span>
+                    )}
+                  </>
                 )}
               </div>
             )}
