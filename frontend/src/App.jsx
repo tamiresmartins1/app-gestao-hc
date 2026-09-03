@@ -281,6 +281,21 @@ function App() {
     return () => clearInterval(glpiInterval);
   }, []);
 
+  // Processa tarefas programadas uma vez ao carregar
+  useEffect(() => {
+    const processScheduledTasks = async () => {
+      try {
+        await axios.post(`${API_URL}/scheduled-tasks/process/all`);
+        console.log('✅ Tarefas programadas processadas');
+        await loadTasks();
+      } catch (error) {
+        console.error('Erro ao processar tarefas programadas:', error);
+      }
+    };
+
+    processScheduledTasks();
+  }, []);
+
   return (
     <div className="app">
       <Header

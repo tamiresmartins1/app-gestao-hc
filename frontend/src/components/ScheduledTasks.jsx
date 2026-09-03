@@ -8,6 +8,7 @@ export default function ScheduledTasks({ member }) {
   const [scheduledTasks, setScheduledTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -35,12 +36,16 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dataToSend = {
-        member_id: member.id,
-        ...formData
-      };
+      if (editingId) {
+        await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, formData);
+      } else {
+        const dataToSend = {
+          member_id: member.id,
+          ...formData
+        };
+        await axios.post(`${API_URL}/scheduled-tasks`, dataToSend);
+      }
 
-      await axios.post(`${API_URL}/scheduled-tasks`, dataToSend);
       setFormData({
         title: '',
         description: '',
@@ -48,12 +53,25 @@ export default function ScheduledTasks({ member }) {
         start_date: '',
         end_date: ''
       });
+      setEditingId(null);
       setShowForm(false);
       loadScheduledTasks();
     } catch (error) {
-      console.error('Erro ao criar tarefa programada:', error);
-      alert('Erro ao criar tarefa: ' + error.response?.data?.error);
+      console.error('Erro ao salvar tarefa programada:', error);
+      alert('Erro ao salvar: ' + error.response?.data?.error);
     }
+  };
+
+  const handleEdit = (task) => {
+    setEditingId(task.id);
+    setFormData({
+      title: task.title,
+      description: task.description || '',
+      recurrence: task.recurrence,
+      start_date: task.start_date,
+      end_date: task.end_date
+    });
+    setShowForm(true);
   };
 
   const handleUpdate = async (id, updates) => {
@@ -94,7 +112,19 @@ export default function ScheduledTasks({ member }) {
         <h3>📋 Tarefas Programadas</h3>
         <button
           className="btn-new-scheduled"
-          onClick={() => setShowForm(!showForm)}
+          onClick={() => {
+            if (editingId) {
+              setEditingId(null);
+              setFormData({
+                title: '',
+                description: '',
+                recurrence: 'semanal',
+                start_date: '',
+                end_date: ''
+              });
+            }
+            setShowForm(!showForm);
+          }}
         >
           {showForm ? '✕ Cancelar' : '+ Nova Programação'}
         </button>
@@ -191,12 +221,7 @@ export default function ScheduledTasks({ member }) {
               <div className="scheduled-actions">
                 <button
                   className="btn-edit"
-                  onClick={() => {
-                    const newTitle = prompt('Novo título:', task.title);
-                    if (newTitle) {
-                      handleUpdate(task.id, { title: newTitle });
-                    }
-                  }}
+                  onClick={() => handleEdit(task)}
                   title="Editar"
                 >
                   ✏️
