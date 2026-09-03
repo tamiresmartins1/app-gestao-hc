@@ -36,13 +36,26 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const dataToSend = editingId ? { ...formData } : {
+        member_id: member.id,
+        ...formData
+      };
+
+      // Ajusta datas para UTC-3 (adiciona 1 dia)
+      if (dataToSend.start_date) {
+        const [year, month, day] = dataToSend.start_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.start_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      }
+      if (dataToSend.end_date) {
+        const [year, month, day] = dataToSend.end_date.split('-');
+        const dayNum = parseInt(day) + 1;
+        dataToSend.end_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+      }
+
       if (editingId) {
-        await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, formData);
+        await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
       } else {
-        const dataToSend = {
-          member_id: member.id,
-          ...formData
-        };
         await axios.post(`${API_URL}/scheduled-tasks`, dataToSend);
       }
 
