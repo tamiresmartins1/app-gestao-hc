@@ -3,6 +3,7 @@ import { FiPlus, FiTrash2, FiEdit2 } from 'react-icons/fi';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import MemberNotes from './MemberNotes';
+import ScheduledTasks from './ScheduledTasks';
 import '../styles/member-tasks.css';
 
 export default function MemberTasks({ member, tasks, members, onAddTask, onUpdateTask, onDeleteTask }) {
@@ -152,6 +153,12 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
               >
                 ✅ Concluídas
               </button>
+              <button
+                className={`view-tab ${viewMode === 'programadas' ? 'active' : ''}`}
+                onClick={() => setViewMode('programadas')}
+              >
+                🔔 Programadas
+              </button>
             </div>
 
             <div className="filters-row">
@@ -170,12 +177,16 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
             </div>
           </div>
 
-          <TaskList
-            tasks={filteredTasks}
-            onUpdate={onUpdateTask}
-            onDelete={onDeleteTask}
-            isTaskDueToday={isTaskDueToday}
-          />
+          {viewMode === 'programadas' ? (
+            <ScheduledTasks member={member} />
+          ) : (
+            <TaskList
+              tasks={filteredTasks}
+              onUpdate={onUpdateTask}
+              onDelete={onDeleteTask}
+              isTaskDueToday={isTaskDueToday}
+            />
+          )}
         </div>
 
         <div className="notes-column">
