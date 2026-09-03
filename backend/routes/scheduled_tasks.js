@@ -147,6 +147,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
       if (shouldCreate) {
         // Create task
+        console.log(`   ✅ Creating task for ${scheduledTask.member_id}`);
         await pool.query(
           `INSERT INTO tasks (id, title, description, assigned_to, created_by, due_date, priority)
            VALUES ($1, $2, $3, $4, $5, $6, $7)`,
@@ -155,7 +156,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
             scheduledTask.title,
             scheduledTask.description || '',
             scheduledTask.member_id,
-            'system',
+            null,
             today,
             'média'
           ]
