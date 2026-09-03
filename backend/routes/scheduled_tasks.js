@@ -100,6 +100,7 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
+    console.log(`🔄 Processing scheduled tasks for date: ${today}`);
 
     // Get all scheduled tasks that should create a task today
     const scheduledResult = await pool.query(
@@ -109,10 +110,15 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
       [today]
     );
 
+    console.log(`📋 Found ${scheduledResult.rows.length} scheduled tasks to check`);
+
     const scheduledTasks = scheduledResult.rows;
     let createdCount = 0;
 
     for (const scheduledTask of scheduledTasks) {
+      console.log(`\n📌 Task: "${scheduledTask.title}"`);
+      console.log(`   Start: ${scheduledTask.start_date}, End: ${scheduledTask.end_date}, Last created: ${scheduledTask.last_created_date}`);
+
       // Check if we should create a task based on recurrence
       let shouldCreate = false;
       const lastCreatedDate = scheduledTask.last_created_date
@@ -122,6 +128,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
       const diffTime = todayDate - lastCreatedDate;
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      console.log(`   Diff days: ${diffDays}, Recurrence: ${scheduledTask.recurrence}`);
 
       switch (scheduledTask.recurrence) {
         case 'diario':
