@@ -18,8 +18,16 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
     return localStorage.getItem(`filterPriority_${member.id}`) || 'all';
   };
 
-  const [filterStatus, setFilterStatus] = useState(getStoredFilterStatus());
-  const [filterPriority, setFilterPriority] = useState(getStoredFilterPriority());
+  const [filterStatus, setFilterStatus] = useState(() => getStoredFilterStatus());
+  const [filterPriority, setFilterPriority] = useState(() => getStoredFilterPriority());
+
+  // Recarrega filtros quando muda de membro
+  useEffect(() => {
+    const newStatus = localStorage.getItem(`filterStatus_${member.id}`) || 'all';
+    const newPriority = localStorage.getItem(`filterPriority_${member.id}`) || 'all';
+    setFilterStatus(newStatus);
+    setFilterPriority(newPriority);
+  }, [member.id]);
 
   // Salva filtros quando mudam
   useEffect(() => {
@@ -29,12 +37,6 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
   useEffect(() => {
     localStorage.setItem(`filterPriority_${member.id}`, filterPriority);
   }, [filterPriority, member.id]);
-
-  // Recarrega filtros quando muda de membro
-  useEffect(() => {
-    setFilterStatus(getStoredFilterStatus());
-    setFilterPriority(getStoredFilterPriority());
-  }, [member.id]);
 
   const isTaskOverdue = (task) => {
     if (task.status === 'concluída') return false;
