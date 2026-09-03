@@ -126,36 +126,6 @@ export default function Dashboard({ members }) {
 
           <div className="dashboard-grid">
             <div className="dashboard-section">
-              <h3>Carga de Trabalho por Membro</h3>
-              <div className="members-load">
-                {members.map((member) => {
-                  const memberStat = stats[member.id] || {};
-                  const percentage = totalStats.total > 0
-                    ? ((memberStat.total_tasks || 0) / totalStats.total * 100).toFixed(0)
-                    : 0;
-
-                  return (
-                    <div key={member.id} className="member-load-item">
-                      <div className="member-load-info">
-                        <div className="member-name">{member.name}</div>
-                        <div className="load-stats">
-                          {memberStat.active_tasks || 0} ativas | {memberStat.overdue_tasks || 0} atrasadas | {memberStat.completed_tasks || 0} concluídas
-                        </div>
-                      </div>
-                      <div className="progress-bar">
-                        <div
-                          className="progress-fill"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                      <div className="percentage">{percentage}%</div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="dashboard-section">
               <h3>Tarefas Atrasadas</h3>
               {overdueTasks.length === 0 ? (
                 <p className="empty-message">✨ Nenhuma tarefa atrasada!</p>
