@@ -156,7 +156,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
             scheduledTask.title,
             scheduledTask.description || '',
             scheduledTask.member_id,
-            null,
+            scheduledTask.member_id,
             today,
             'média'
           ]
