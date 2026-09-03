@@ -91,11 +91,12 @@ export default function ScheduledTasks({ member }) {
 
   const handleUpdate = async (id, updates) => {
     try {
-      await axios.patch(`${API_URL}/scheduled-tasks/${id}`, updates);
+      const res = await axios.patch(`${API_URL}/scheduled-tasks/${id}`, updates);
+      console.log('✅ Atualização bem-sucedida:', res.data);
       loadScheduledTasks();
     } catch (error) {
-      console.error('Erro ao atualizar tarefa programada:', error);
-      alert('Erro ao atualizar: ' + error.response?.data?.error);
+      console.error('Erro ao atualizar tarefa programada:', error.message);
+      alert('❌ Erro ao atualizar: ' + (error.response?.data?.error || error.message));
     }
   };
 
