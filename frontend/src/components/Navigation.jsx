@@ -14,8 +14,11 @@ export default function Navigation({ activeTab, onTabChange, unreadMessagesCount
 
   // Filtra o Dashboard para apenas chefe
   const tabs = allTabs.filter(tab => {
-    if (tab.onlyChefe) {
-      return currentMember?.role === 'chefe';
+    if (tab.onlyChefe && currentMember) {
+      return currentMember.role === 'chefe';
+    }
+    if (tab.onlyChefe && !currentMember) {
+      return false; // Esconde se ainda não carregou
     }
     return true;
   });
