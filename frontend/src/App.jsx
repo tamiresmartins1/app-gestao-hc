@@ -31,6 +31,13 @@ function App() {
     localStorage.setItem('activeTab', activeTab);
   }, [activeTab]);
 
+  // Redireciona pra tarefas se não-chefe tentar acessar dashboard
+  useEffect(() => {
+    if (activeTab === 'dashboard' && currentMember && currentMember.role !== 'chefe') {
+      setActiveTab('tarefas');
+    }
+  }, [activeTab, currentMember]);
+
   useEffect(() => {
     loadMembers();
   }, []);
@@ -274,12 +281,6 @@ function App() {
           <>
             {activeTab === 'dashboard' && currentMember?.role === 'chefe' && (
               <ManagerDashboard members={members} />
-            )}
-            {activeTab === 'dashboard' && currentMember?.role !== 'chefe' && (
-              <Dashboard members={members} onAddMember={handleAddMember} />
-            )}
-            {activeTab === 'dashboard' && !currentMember?.role && (
-              <Dashboard members={members} onAddMember={handleAddMember} />
             )}
 
             {activeTab === 'tarefas' && currentMember && (
