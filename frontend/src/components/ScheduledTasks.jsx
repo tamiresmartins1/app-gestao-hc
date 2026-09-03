@@ -41,16 +41,18 @@ export default function ScheduledTasks({ member }) {
         ...formData
       };
 
-      // Ajusta datas para UTC-3 (adiciona 1 dia)
+      // Ajusta datas para UTC-3 (adiciona 1 dia) usando Date object
+      const addOneDay = (dateStr) => {
+        const date = new Date(dateStr + 'T00:00:00');
+        date.setDate(date.getDate() + 1);
+        return date.toISOString().split('T')[0];
+      };
+
       if (dataToSend.start_date) {
-        const [year, month, day] = dataToSend.start_date.split('-');
-        const dayNum = parseInt(day) + 1;
-        dataToSend.start_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        dataToSend.start_date = addOneDay(dataToSend.start_date);
       }
       if (dataToSend.end_date) {
-        const [year, month, day] = dataToSend.end_date.split('-');
-        const dayNum = parseInt(day) + 1;
-        dataToSend.end_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        dataToSend.end_date = addOneDay(dataToSend.end_date);
       }
 
       if (editingId) {
