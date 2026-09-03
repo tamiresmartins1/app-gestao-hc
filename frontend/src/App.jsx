@@ -262,7 +262,7 @@ function App() {
         onAddMember={handleAddMember}
       />
 
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} unreadNotificationsCount={unreadNotificationsCount} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} unreadNotificationsCount={unreadNotificationsCount} currentMember={currentMember} />
 
       <div className="app-content">
         {loading ? (
