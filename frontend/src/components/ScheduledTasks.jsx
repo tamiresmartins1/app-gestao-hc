@@ -123,24 +123,41 @@ export default function ScheduledTasks({ member }) {
     <div className="scheduled-tasks-container">
       <div className="scheduled-header">
         <h3>📋 Tarefas Programadas</h3>
-        <button
-          className="btn-new-scheduled"
-          onClick={() => {
-            if (editingId) {
-              setEditingId(null);
-              setFormData({
-                title: '',
-                description: '',
-                recurrence: 'semanal',
-                start_date: '',
-                end_date: ''
-              });
-            }
-            setShowForm(!showForm);
-          }}
-        >
-          {showForm ? '✕ Cancelar' : '+ Nova Programação'}
-        </button>
+        <div className="scheduled-buttons">
+          <button
+            className="btn-process"
+            onClick={async () => {
+              try {
+                const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`);
+                alert('✅ ' + res.data.message);
+                loadScheduledTasks();
+              } catch (error) {
+                alert('❌ Erro: ' + error.response?.data?.error);
+              }
+            }}
+            title="Processa tarefas programadas agora"
+          >
+            🔄 Processar
+          </button>
+          <button
+            className="btn-new-scheduled"
+            onClick={() => {
+              if (editingId) {
+                setEditingId(null);
+                setFormData({
+                  title: '',
+                  description: '',
+                  recurrence: 'semanal',
+                  start_date: '',
+                  end_date: ''
+                });
+              }
+              setShowForm(!showForm);
+            }}
+          >
+            {showForm ? '✕ Cancelar' : '+ Nova Programação'}
+          </button>
+        </div>
       </div>
 
       {showForm && (
