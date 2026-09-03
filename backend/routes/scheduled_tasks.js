@@ -165,7 +165,8 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
     res.json({ created: createdCount, message: `${createdCount} tarefas criadas` });
   } catch (error) {
-    console.error('Erro ao processar tarefas programadas:', error);
-    res.status(500).json({ error: 'Erro ao processar tarefas programadas' });
+    console.error('Erro ao processar tarefas programadas:', error.message);
+    console.error('Stack:', error.stack);
+    res.status(500).json({ error: error.message || 'Erro ao processar tarefas programadas' });
   }
 });
