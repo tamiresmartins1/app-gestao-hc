@@ -1,19 +1,16 @@
 import express from 'express';
-import supabase from '../supabase.js';
+import { runAsync, getAsync, allAsync } from '../db.js';
 
-const router = express.Router();
+export const glpiRoutes = express.Router();
 
 // GET all GLPI tickets
-router.get('/', async (req, res) => {
+glpiRoutes.get('/', async (req, res) => {
   try {
-    const { data, error } = await supabase
-      .from('glpi_tickets')
-      .select('*')
-      .order('opened_at', { ascending: false });
-
-    if (error) throw error;
-
-    res.json(data || []);
+    const tickets = await allAsync(
+      'SELECT * FROM glpi_tickets ORDER BY opened_at DESC',
+      []
+    );
+    res.json(tickets);
   } catch (error) {
     console.error('Erro ao carregar GLPI tickets:', error);
     res.status(500).json({ error: 'Erro ao carregar GLPI tickets' });
@@ -21,7 +18,7 @@ router.get('/', async (req, res) => {
 });
 
 // POST new GLPI ticket
-router.post('/', async (req, res) => {
+glpiRoutes.post('/', async (req, res) => {
   try {
     const { glpi_number, description, status = 'ativa', opened_at } = req.body;
 
@@ -29,19 +26,20 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'glpi_number e description são obrigatórios' });
     }
 
-    const { data, error } = await supabase
-      .from('glpi_tickets')
-      .insert({
-        glpi_number,
-        description,
-        status,
-        opened_at: opened_at || new Date().toISOString()
-      })
-      .select();
+    const insertDate = opened_at || new Date().toISOString();
 
-    if (error) throw error;
+    await runAsync(
+      `INSERT INTO glpi_tickets (glpi_number, description, status, opened_at, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [glpi_number, description, status, insertDate, new Date().toISOString(), new Date().toISOString()]
+    );
 
-    res.status(201).json(data[0]);
+    const ticket = await getAsync(
+      'SELECT * FROM glpi_tickets WHERE glpi_number = ?',
+      [glpi_number]
+    );
+
+    res.status(201).json(ticket);
   } catch (error) {
     console.error('Erro ao criar GLPI ticket:', error);
     res.status(500).json({ error: 'Erro ao criar GLPI ticket' });
@@ -49,7 +47,7 @@ router.post('/', async (req, res) => {
 });
 
 // PATCH update GLPI ticket status
-router.patch('/:id', async (req, res) => {
+glpiRoutes.patch('/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
@@ -58,15 +56,17 @@ router.patch('/:id', async (req, res) => {
       return res.status(400).json({ error: 'status é obrigatório' });
     }
 
-    const { data, error } = await supabase
-      .from('glpi_tickets')
-      .update({ status })
-      .eq('id', id)
-      .select();
+    await runAsync(
+      'UPDATE glpi_tickets SET status = ?, updated_at = ? WHERE id = ?',
+      [status, new Date().toISOString(), id]
+    );
 
-    if (error) throw error;
+    const ticket = await getAsync(
+      'SELECT * FROM glpi_tickets WHERE id = ?',
+      [id]
+    );
 
-    res.json(data[0]);
+    res.json(ticket);
   } catch (error) {
     console.error('Erro ao atualizar GLPI ticket:', error);
     res.status(500).json({ error: 'Erro ao atualizar GLPI ticket' });
@@ -74,16 +74,14 @@ router.patch('/:id', async (req, res) => {
 });
 
 // DELETE GLPI ticket
-router.delete('/:id', async (req, res) => {
+glpiRoutes.delete('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { error } = await supabase
-      .from('glpi_tickets')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
+    await runAsync(
+      'DELETE FROM glpi_tickets WHERE id = ?',
+      [id]
+    );
 
     res.json({ success: true });
   } catch (error) {
@@ -92,4 +90,3 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-export default router;
