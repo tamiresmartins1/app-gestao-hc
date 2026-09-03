@@ -9,6 +9,7 @@ import Messages from './components/Messages';
 import Notifications from './components/Notifications';
 import Processes from './components/Processes';
 import QuickLinks from './components/QuickLinks';
+import GLPI from './components/GLPI';
 import './styles/app.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -296,6 +297,10 @@ function App() {
 
             {activeTab === 'notificacoes' && currentMember && (
               <Notifications member={currentMember} notifications={notifications} onUnreadUpdate={handleUnreadNotificationsUpdate} />
+            )}
+
+            {activeTab === 'glpi' && (
+              <GLPI />
             )}
 
             {activeTab === 'recados' && currentMember && (

@@ -7,6 +7,7 @@ import { membersRoutes } from './routes/members.js';
 import { messagesRoutes } from './routes/messages.js';
 import { processesRoutes } from './routes/processes.js';
 import { notesRoutes } from './routes/notes.js';
+import glpiRoutes from './routes/glpi.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -53,6 +54,7 @@ app.use('/api/members', membersRoutes);
 app.use('/api/messages', messagesRoutes);
 app.use('/api/processes', processesRoutes);
 app.use('/api/notes', notesRoutes);
+app.use('/api/glpi', glpiRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });

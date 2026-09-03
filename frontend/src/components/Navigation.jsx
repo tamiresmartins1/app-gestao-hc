@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink, FiBell } from 'react-icons/fi';
+import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink, FiBell, FiTool } from 'react-icons/fi';
 import '../styles/navigation.css';
 
 export default function Navigation({ activeTab, onTabChange, unreadMessagesCount = 0, unreadNotificationsCount = 0, currentMember }) {
@@ -9,7 +9,8 @@ export default function Navigation({ activeTab, onTabChange, unreadMessagesCount
     { id: 'recados', label: 'Recados', icon: FiMail, badge: unreadMessagesCount > 0 ? unreadMessagesCount : null },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
     { id: 'links', label: 'Links Rápidos', icon: FiLink },
-    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null }
+    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null },
+    { id: 'glpi', label: 'GLPI', icon: FiTool }
   ];
 
   // Filtra o Dashboard para apenas chefe
