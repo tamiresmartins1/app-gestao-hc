@@ -23,6 +23,7 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [messages, setMessages] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [glpiTickets, setGlpiTickets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
@@ -253,6 +254,9 @@ function App() {
     console.log(`🔔 Notificações não-lidas: ${unreadCount}`);
   }, [notifications]);
 
+  // Calcula count de GLPI ativos
+  const glpiActiveCount = glpiTickets.filter(t => t.status === 'ativa').length;
+
   const handleUnreadUpdate = (count) => {
     setUnreadMessagesCount(count);
   };
@@ -260,6 +264,22 @@ function App() {
   const handleUnreadNotificationsUpdate = (count) => {
     setUnreadNotificationsCount(count);
   };
+
+  const loadGlpiTickets = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/glpi`);
+      setGlpiTickets(res.data);
+    } catch (error) {
+      console.error('Erro ao carregar GLPI tickets:', error);
+    }
+  };
+
+  // Polling para GLPI
+  useEffect(() => {
+    loadGlpiTickets();
+    const glpiInterval = setInterval(loadGlpiTickets, 5000);
+    return () => clearInterval(glpiInterval);
+  }, []);
 
   return (
     <div className="app">
@@ -270,7 +290,7 @@ function App() {
         onAddMember={handleAddMember}
       />
 
-      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} unreadNotificationsCount={unreadNotificationsCount} currentMember={currentMember} />
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} unreadMessagesCount={unreadMessagesCount} unreadNotificationsCount={unreadNotificationsCount} glpiActiveCount={glpiActiveCount} currentMember={currentMember} />
 
       <div className="app-content">
         {loading ? (
