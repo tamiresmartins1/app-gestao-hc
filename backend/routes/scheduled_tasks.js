@@ -74,8 +74,9 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error('Erro ao atualizar tarefa programada:', error);
-    res.status(500).json({ error: 'Erro ao atualizar tarefa programada' });
+    console.error('❌ Erro ao atualizar tarefa programada:', error.message);
+    console.error('Stack:', error.stack);
+    res.status(500).json({ error: error.message || 'Erro ao atualizar tarefa programada' });
   }
 });
 
