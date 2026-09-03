@@ -67,6 +67,10 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
       [title, description, recurrence, start_date, end_date, id]
     );
 
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: 'Tarefa programada não encontrada' });
+    }
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Erro ao atualizar tarefa programada:', error);
