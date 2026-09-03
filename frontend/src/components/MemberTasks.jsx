@@ -161,20 +161,22 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
               </button>
             </div>
 
-            <div className="filters-row">
-              <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                <option value="all">Todos os status</option>
-                <option value="ativa">Ativas</option>
-                <option value="atrasada">Atrasadas</option>
-              </select>
+            {viewMode === 'ativas' && (
+              <div className="filters-row">
+                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                  <option value="all">Todos os status</option>
+                  <option value="ativa">Ativas</option>
+                  <option value="atrasada">Atrasadas</option>
+                </select>
 
-              <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
-                <option value="all">Todas as prioridades</option>
-                <option value="alta">Alta</option>
-                <option value="média">Média</option>
-                <option value="baixa">Baixa</option>
-              </select>
-            </div>
+                <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
+                  <option value="all">Todas as prioridades</option>
+                  <option value="alta">Alta</option>
+                  <option value="média">Média</option>
+                  <option value="baixa">Baixa</option>
+                </select>
+              </div>
+            )}
           </div>
 
           {viewMode === 'programadas' ? (
