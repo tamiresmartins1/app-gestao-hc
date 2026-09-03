@@ -125,7 +125,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
       switch (scheduledTask.recurrence) {
         case 'diario':
-          shouldCreate = diffDays >= 1;
+          shouldCreate = diffDays >= 0;
           break;
         case 'semanal':
           shouldCreate = diffDays >= 7;
