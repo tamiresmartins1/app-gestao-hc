@@ -2,6 +2,7 @@ import React from 'react';
 import { FiBarChart2, FiCheckSquare, FiMail, FiGitBranch, FiLink, FiBell, FiTool } from 'react-icons/fi';
 import '../styles/navigation.css';
 
+// Deploy 2026-09-20 - FINAL
 export default function Navigation({ activeTab, onTabChange, unreadMessagesCount = 0, unreadNotificationsCount = 0, glpiActiveCount = 0, currentMember }) {
   const allTabs = [
     { id: 'dashboard', label: 'Dashboard', icon: FiBarChart2, onlyChefe: true },
