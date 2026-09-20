@@ -109,6 +109,13 @@ export default function ScheduledTasks({ member }) {
     }
   };
 
+  const formatDateDisplay = (dateStr) => {
+    // ADD 1 dia porque new Date() interpreta como UTC
+    const d = new Date(dateStr + 'T00:00:00Z');
+    d.setDate(d.getDate() + 1);
+    return d.toLocaleDateString('pt-BR');
+  };
+
   const getRecurrenceLabel = (rec) => {
     const labels = {
       'diario': '📅 Diário',
@@ -228,7 +235,7 @@ export default function ScheduledTasks({ member }) {
               </div>
 
               <div className="scheduled-dates">
-                <span>📅 {new Date(task.start_date).toLocaleDateString('pt-BR')} até {new Date(task.end_date).toLocaleDateString('pt-BR')}</span>
+                <span>📅 {formatDateDisplay(task.start_date)} até {formatDateDisplay(task.end_date)}</span>
               </div>
 
               <div className="scheduled-actions">

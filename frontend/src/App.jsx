@@ -286,10 +286,9 @@ function App() {
   useEffect(() => {
     const processScheduledTasks = async () => {
       try {
-        // DESABILITADO TEMPORARIAMENTE PARA DEBUG
-        // await axios.post(`${API_URL}/scheduled-tasks/process/all`);
-        // console.log('✅ Tarefas programadas processadas');
-        // await loadTasks();
+        await axios.post(`${API_URL}/scheduled-tasks/process/all`);
+        console.log('✅ Tarefas programadas processadas');
+        await loadTasks();
       } catch (error) {
         console.error('Erro ao processar tarefas programadas:', error);
       }
