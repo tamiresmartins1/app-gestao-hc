@@ -200,15 +200,16 @@
 .tasks-layout {
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   min-height: calc(100vh - 300px);
+  align-items: flex-start;
 }
 
 .tasks-column {
   display: flex;
   flex-direction: column;
-  flex: 1 1 60%;
-  min-width: 300px;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .notes-column {
@@ -216,6 +217,8 @@
   flex-direction: column;
   flex: 0 0 350px;
   min-height: 400px;
+  position: sticky;
+  top: 20px;
 }
 
 @media (max-width: 1200px) {
