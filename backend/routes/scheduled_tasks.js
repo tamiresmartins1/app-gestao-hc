@@ -104,11 +104,13 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
     const now = new Date();
     const brazilDate = new Date(now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }));
     const today = brazilDate.toISOString().split('T')[0];
+    console.log(`\n🔄 ===== INICIANDO PROCESSO =====`);
     console.log(`🔄 NOW UTC: ${now.toISOString()}`);
     console.log(`🔄 BRAZIL DATE: ${brazilDate.toISOString()}`);
-    console.log(`🔄 TODAY: ${today}`);
+    console.log(`🔄 TODAY (para comparação): ${today}`);
 
     // Get all scheduled tasks that should create a task today
+    console.log(`\n📋 Buscando tarefas com: start_date <= ${today} AND end_date >= ${today}`);
     const scheduledResult = await pool.query(
       `SELECT * FROM scheduled_tasks
        WHERE start_date <= $1 AND end_date >= $1
@@ -116,7 +118,13 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
       [today]
     );
 
-    console.log(`📋 Found ${scheduledResult.rows.length} scheduled tasks to check`);
+    console.log(`📋 Encontradas ${scheduledResult.rows.length} tarefas`);
+    if (scheduledResult.rows.length === 0) {
+      console.log(`⚠️ Nenhuma tarefa encontrada! Verificar:
+        - start_date está <= ${today}?
+        - end_date está >= ${today}?
+        - last_created_date é NULL ou < ${today}?`);
+    }
 
     const scheduledTasks = scheduledResult.rows;
     let createdCount = 0;
