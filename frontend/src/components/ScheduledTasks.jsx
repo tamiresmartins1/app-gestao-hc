@@ -110,8 +110,9 @@ export default function ScheduledTasks({ member }) {
   };
 
   const formatDateDisplay = (dateStr) => {
-    // Exibe a data como está (sem conversão)
-    return new Date(dateStr + 'T00:00:00').toLocaleDateString('pt-BR');
+    // Parse direto sem conversão de timezone
+    const [year, month, day] = dateStr.split('-');
+    return `${day}/${month}/${year}`;
   };
 
   const getRecurrenceLabel = (rec) => {
