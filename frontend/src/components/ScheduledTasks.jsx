@@ -41,31 +41,7 @@ export default function ScheduledTasks({ member }) {
         ...formData
       };
 
-      const addOneDay = (dateStr) => {
-        const date = new Date(dateStr + 'T00:00:00');
-        date.setDate(date.getDate() + 1);
-        return date.toISOString().split('T')[0];
-      };
-
-      const subtractOneDay = (dateStr) => {
-        const date = new Date(dateStr + 'T00:00:00');
-        date.setDate(date.getDate() - 1);
-        return date.toISOString().split('T')[0];
-      };
-
-      if (editingId) {
-        // EDIÇÃO: subtract 1 dia (porque foi added no handleEdit)
-        dataToSend.start_date = subtractOneDay(dataToSend.start_date);
-        dataToSend.end_date = subtractOneDay(dataToSend.end_date);
-      } else {
-        // CRIAÇÃO: add 1 dia
-        if (dataToSend.start_date) {
-          dataToSend.start_date = addOneDay(dataToSend.start_date);
-        }
-        if (dataToSend.end_date) {
-          dataToSend.end_date = addOneDay(dataToSend.end_date);
-        }
-      }
+      // SEM ajuste de data - usa exatamente como o user coloca
 
       if (editingId) {
         await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
@@ -90,19 +66,13 @@ export default function ScheduledTasks({ member }) {
   };
 
   const handleEdit = (task) => {
-    const addDay = (dateStr) => {
-      const d = new Date(dateStr + 'T00:00:00Z');
-      d.setDate(d.getDate() + 1);
-      return d.toISOString().split('T')[0];
-    };
-
     setEditingId(task.id);
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: addDay(task.start_date),
-      end_date: addDay(task.end_date)
+      start_date: task.start_date,
+      end_date: task.end_date
     });
     setShowForm(true);
   };
