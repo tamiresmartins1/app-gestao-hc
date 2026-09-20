@@ -4,6 +4,21 @@ import { runAsync, getAsync, allAsync } from '../db.js';
 
 export const messagesRoutes = express.Router();
 
+messagesRoutes.get('/all/:member_id', async (req, res) => {
+  try {
+    const messages = await allAsync(
+      `SELECT m.*, s.name as sender_name FROM messages m
+       LEFT JOIN members s ON m.sender_id = s.id
+       WHERE m.recipient_id = $1 OR m.sender_id = $1
+       ORDER BY m.created_at DESC`,
+      [req.params.member_id]
+    );
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 messagesRoutes.get('/inbox/:recipient_id', async (req, res) => {
   try {
     const messages = await allAsync(
