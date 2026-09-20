@@ -102,11 +102,12 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
 
-    // Buscar todas tarefas programadas ativas hoje
+    // Buscar tarefas programadas ativas hoje que NÃO foram criadas hoje ainda
     const result = await pool.query(
       `SELECT * FROM scheduled_tasks
        WHERE start_date::text <= $1
-       AND end_date::text >= $1`,
+       AND end_date::text >= $1
+       AND (last_created_date IS NULL OR last_created_date::text != $1)`,
       [today]
     );
 
@@ -138,6 +139,12 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
         createdCount++;
       }
+
+      // Atualizar last_created_date
+      await pool.query(
+        `UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2`,
+        [today, task.id]
+      );
     }
 
     res.json({ created: createdCount, message: `${createdCount} tarefas criadas para ${today}` });
