@@ -63,6 +63,10 @@ glpiRoutes.patch('/:id', async (req, res) => {
       [status, new Date().toISOString(), id]
     );
 
+    if (!result.rows[0]) {
+      return res.status(404).json({ error: 'Ticket não encontrado' });
+    }
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Erro ao atualizar GLPI ticket:', error);

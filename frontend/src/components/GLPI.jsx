@@ -49,6 +49,7 @@ export default function GLPI() {
       loadTickets();
     } catch (error) {
       console.error('Erro ao atualizar status:', error);
+      alert('❌ Erro ao atualizar: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -59,9 +60,13 @@ export default function GLPI() {
         loadTickets();
       } catch (error) {
         console.error('Erro ao deletar ticket:', error);
+        alert('❌ Erro ao deletar: ' + (error.response?.data?.error || error.message));
       }
     }
   };
+
+  const activeTickets = tickets.filter(t => t.status === 'ativa');
+  const resolvedTickets = tickets.filter(t => t.status === 'concluída');
 
   return (
     <div className="glpi-container">
@@ -121,49 +126,105 @@ export default function GLPI() {
           <p>✨ Nenhum chamado GLPI no momento!</p>
         </div>
       ) : (
-        <div className="glpi-list">
-          {tickets.map((ticket) => (
-            <div key={ticket.id} className={`glpi-card ${ticket.status}`}>
-              <div className="glpi-card-header">
-                <div className="glpi-number">#{ticket.glpi_number}</div>
-                <div className={`glpi-status ${ticket.status}`}>
-                  {ticket.status === 'ativa' ? '🔴 Ativa' : '✅ Concluída'}
-                </div>
-              </div>
+        <>
+          {activeTickets.length > 0 && (
+            <div className="glpi-section">
+              <h3>📋 Abertos ({activeTickets.length})</h3>
+              <div className="glpi-list">
+                {activeTickets.map((ticket) => (
+                  <div key={ticket.id} className={`glpi-card ${ticket.status}`}>
+                    <div className="glpi-card-header">
+                      <div className="glpi-number">#{ticket.glpi_number}</div>
+                      <div className={`glpi-status ${ticket.status}`}>
+                        {ticket.status === 'ativa' ? '🔴 Ativa' : '✅ Concluída'}
+                      </div>
+                    </div>
 
-              <div className="glpi-description">
-                {ticket.description}
-              </div>
+                    <div className="glpi-description">
+                      {ticket.description}
+                    </div>
 
-              <div className="glpi-footer">
-                <div className="glpi-date">
-                  📅 {new Date(ticket.opened_at).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                  })}
-                </div>
+                    <div className="glpi-footer">
+                      <div className="glpi-date">
+                        📅 {new Date(ticket.opened_at).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric'
+                        })}
+                      </div>
 
-                <div className="glpi-actions">
-                  <button
-                    className="btn-toggle"
-                    onClick={() => toggleStatus(ticket.id, ticket.status)}
-                    title={ticket.status === 'ativa' ? 'Marcar como concluída' : 'Reabrir'}
-                  >
-                    {ticket.status === 'ativa' ? '✓' : '↻'}
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => deleteTicket(ticket.id)}
-                    title="Deletar"
-                  >
-                    🗑️
-                  </button>
-                </div>
+                      <div className="glpi-actions">
+                        <button
+                          className="btn-toggle"
+                          onClick={() => toggleStatus(ticket.id, ticket.status)}
+                          title="Marcar como concluída"
+                        >
+                          ✓
+                        </button>
+                        <button
+                          className="btn-delete"
+                          onClick={() => deleteTicket(ticket.id)}
+                          title="Deletar"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          )}
+
+          {resolvedTickets.length > 0 && (
+            <div className="glpi-section">
+              <h3>📁 Histórico ({resolvedTickets.length})</h3>
+              <div className="glpi-list">
+                {resolvedTickets.map((ticket) => (
+                  <div key={ticket.id} className={`glpi-card ${ticket.status}`}>
+                    <div className="glpi-card-header">
+                      <div className="glpi-number">#{ticket.glpi_number}</div>
+                      <div className={`glpi-status ${ticket.status}`}>
+                        ✅ Concluída
+                      </div>
+                    </div>
+
+                    <div className="glpi-description">
+                      {ticket.description}
+                    </div>
+
+                    <div className="glpi-footer">
+                      <div className="glpi-date">
+                        📅 {new Date(ticket.opened_at).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric'
+                        })}
+                      </div>
+
+                      <div className="glpi-actions">
+                        <button
+                          className="btn-toggle"
+                          onClick={() => toggleStatus(ticket.id, ticket.status)}
+                          title="Reabrir"
+                        >
+                          ↻
+                        </button>
+                        <button
+                          className="btn-delete"
+                          onClick={() => deleteTicket(ticket.id)}
+                          title="Deletar"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

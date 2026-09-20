@@ -59,6 +59,7 @@ export default function Processes({ members }) {
   });
   const [filter, setFilter] = useState('');
   const [customCategory, setCustomCategory] = useState('');
+  const [processesView, setProcessesView] = useState('ativos'); // 'ativos' ou 'historico'
 
   const defaultCategories = [
     'Auditoria',
@@ -631,33 +632,75 @@ export default function Processes({ members }) {
         </div>
       ) : (
         <>
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', overflowX: 'auto', paddingBottom: '10px' }}>
-            {[...new Set(processes.map(p => p.category))].sort().map(cat => (
-              <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                style={{
-                  padding: '8px 15px',
-                  background: filter === cat ? '#4CAF50' : '#f0f0f0',
-                  color: filter === cat ? 'white' : '#333',
-                  border: 'none',
-                  borderRadius: '20px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                📁 {cat}
-              </button>
-            ))}
+          {/* Abas de Ativos/Histórico */}
+          <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', borderBottom: '2px solid #eee', paddingBottom: 0 }}>
+            <button
+              onClick={() => {
+                setProcessesView('ativos');
+                setFilter('');
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '12px 20px',
+                fontSize: '14px',
+                fontWeight: 600,
+                color: processesView === 'ativos' ? '#4CAF50' : '#999',
+                borderBottom: processesView === 'ativos' ? '3px solid #4CAF50' : 'none',
+                cursor: 'pointer'
+              }}
+            >
+              ✅ Ativos ({processes.filter(p => p.status !== 'concluido').length})
+            </button>
+            <button
+              onClick={() => {
+                setProcessesView('historico');
+                setFilter('');
+              }}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '12px 20px',
+                fontSize: '14px',
+                fontWeight: 600,
+                color: processesView === 'historico' ? '#4CAF50' : '#999',
+                borderBottom: processesView === 'historico' ? '3px solid #4CAF50' : 'none',
+                cursor: 'pointer'
+              }}
+            >
+              📁 Histórico ({processes.filter(p => p.status === 'concluido').length})
+            </button>
           </div>
 
-          {!filter ? (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#999' }}>
-              <p style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>👆 Clique em uma categoria acima para ver os processos</p>
-            </div>
-          ) : (
-          <div className="processes-grid">
+          {processesView === 'ativos' ? (
+            <>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap', overflowX: 'auto', paddingBottom: '10px' }}>
+                {[...new Set(processes.filter(p => p.status !== 'concluido').map(p => p.category))].sort().map(cat => (
+                  <button
+                    key={cat}
+                    onClick={() => setFilter(cat)}
+                    style={{
+                      padding: '8px 15px',
+                      background: filter === cat ? '#4CAF50' : '#f0f0f0',
+                      color: filter === cat ? 'white' : '#333',
+                      border: 'none',
+                      borderRadius: '20px',
+                      cursor: 'pointer',
+                      fontWeight: 'bold',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    📁 {cat}
+                  </button>
+                ))}
+              </div>
+
+              {!filter ? (
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#999' }}>
+                  <p style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>👆 Clique em uma categoria acima para ver os processos</p>
+                </div>
+              ) : (
+              <div className="processes-grid">
           {processes
             .filter(p => filter && p.category === filter)
             .sort((a, b) => {
@@ -793,6 +836,98 @@ export default function Processes({ members }) {
             </div>
           ))}
           </div>
+          )}
+            </>
+          ) : (
+            /* HISTÓRICO DE PROCESSOS CONCLUÍDOS */
+            <>
+              {processes.filter(p => p.status === 'concluido').length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '40px 20px', color: '#999' }}>
+                  <p>📭 Nenhum processo concluído ainda</p>
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                  {/* Agrupa por mês */}
+                  {[...new Set(
+                    processes
+                      .filter(p => p.status === 'concluido')
+                      .map(p => {
+                        const date = new Date(p.due_date || p.created_at);
+                        return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+                      })
+                  )].reverse().map(monthYear => (
+                    <div key={monthYear}>
+                      <h3 style={{ marginBottom: '15px', color: '#2c3e50', borderBottom: '2px solid #eee', paddingBottom: '10px' }}>
+                        📅 {monthYear.charAt(0).toUpperCase() + monthYear.slice(1)}
+                      </h3>
+                      <div className="processes-grid">
+                        {processes
+                          .filter(p => {
+                            if (p.status !== 'concluido') return false;
+                            const date = new Date(p.due_date || p.created_at);
+                            return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) === monthYear;
+                          })
+                          .sort((a, b) => {
+                            const dateA = new Date(b.due_date || b.created_at);
+                            const dateB = new Date(a.due_date || a.created_at);
+                            return dateA - dateB;
+                          })
+                          .map(process => (
+                            <div
+                              key={process.id}
+                              className="process-card"
+                              style={{ opacity: 0.8 }}
+                              onClick={() => {
+                                setSelectedProcess(process.id);
+                                loadProcessDetails(process.id);
+                              }}
+                            >
+                              <div className="process-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+                                <div style={{ flex: 1 }}>
+                                  <h4 style={{ margin: '0 0 8px 0', textDecoration: 'line-through', color: '#999' }}>{process.name}</h4>
+                                  <span style={{
+                                    display: 'inline-block',
+                                    background: '#c8e6c9',
+                                    padding: '4px 12px',
+                                    borderRadius: '12px',
+                                    fontSize: '11px',
+                                    fontWeight: 'bold',
+                                    color: '#2e7d32',
+                                    whiteSpace: 'nowrap'
+                                  }}>
+                                    ✅ Concluído
+                                  </span>
+                                </div>
+                                <button
+                                  className="btn-delete"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDelete(process.id);
+                                  }}
+                                >
+                                  <FiTrash2 />
+                                </button>
+                              </div>
+
+                              {process.description && (
+                                <p className="process-description" style={{ opacity: 0.7 }}>{process.description}</p>
+                              )}
+
+                              <div className="process-meta" style={{ alignItems: 'flex-start', gap: '10px' }}>
+                                {formatDueDate(process.due_date) && (
+                                  <div style={{ marginBottom: '8px', fontWeight: 'bold', color: '#999', fontSize: '12px' }}>
+                                    📅 {formatDueDate(process.due_date)}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </>
       )}

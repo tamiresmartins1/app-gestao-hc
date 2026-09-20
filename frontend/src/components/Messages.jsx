@@ -64,7 +64,12 @@ export default function Messages({ member, members, messages: messagesFromProps,
     }
   };
 
-  const unreadCount = messages.filter(m => !m.read).length;
+  // Filtra mensagens recebidas vs enviadas
+  const receivedMessages = messages.filter(m => m.recipient_id === member.id);
+  const sentMessages = messages.filter(m => m.sender_id === member.id);
+
+  const displayedMessages = view === 'inbox' ? receivedMessages : sentMessages;
+  const unreadCount = receivedMessages.filter(m => !m.read).length;
 
   // Atualiza o badge de não-lidos quando muda
   useEffect(() => {
@@ -124,6 +129,21 @@ export default function Messages({ member, members, messages: messagesFromProps,
           Você tem {unreadCount} recado(s) não lido(s)
         </div>
       )}
+
+      <div className="messages-tabs">
+        <button
+          className={`tab-button ${view === 'inbox' ? 'active' : ''}`}
+          onClick={() => setView('inbox')}
+        >
+          📥 Recebidos {receivedMessages.length > 0 && `(${receivedMessages.length})`}
+        </button>
+        <button
+          className={`tab-button ${view === 'sent' ? 'active' : ''}`}
+          onClick={() => setView('sent')}
+        >
+          📤 Enviados {sentMessages.length > 0 && `(${sentMessages.length})`}
+        </button>
+      </div>
 
       {showCompose && (
         <form className="compose-form" onSubmit={handleSend}>
@@ -195,20 +215,30 @@ export default function Messages({ member, members, messages: messagesFromProps,
 
       <div className="messages-container">
         <div className="messages-list">
-          {messages.length === 0 ? (
+          {displayedMessages.length === 0 ? (
             <div className="empty-state">
-              <p>📭 Nenhum recado no seu inbox</p>
+              <p>
+                {view === 'inbox'
+                  ? '📭 Nenhum recado recebido'
+                  : '📭 Nenhum recado enviado'}
+              </p>
             </div>
           ) : (
-            messages.map(msg => (
+            displayedMessages.map(msg => (
               <div
                 key={msg.id}
-                className={`message-item ${!msg.read ? 'unread' : ''}`}
+                className={`message-item ${view === 'inbox' && !msg.read ? 'unread' : ''}`}
                 onClick={() => handleOpenMessage(msg)}
               >
                 <div className="message-sender">
-                  <strong>{msg.sender_name || 'Desconhecido'}</strong>
-                  {!msg.read && <span className="new-badge">NOVO</span>}
+                  <strong>
+                    {view === 'inbox'
+                      ? msg.sender_name || 'Desconhecido'
+                      : msg.recipient_id === member.id
+                        ? 'Você'
+                        : members.find(m => m.id === msg.recipient_id)?.name || 'Desconhecido'}
+                  </strong>
+                  {view === 'inbox' && !msg.read && <span className="new-badge">NOVO</span>}
                 </div>
                 <div className="message-subject">{msg.subject}</div>
                 <div className="message-date">

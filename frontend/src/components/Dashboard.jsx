@@ -185,6 +185,45 @@ export default function Dashboard({ members }) {
               </div>
             )}
           </div>
+
+          <div className="dashboard-section">
+            <h3>📊 Carga de Trabalho por Membro</h3>
+            <div className="workload-grid">
+              {members.map((member) => {
+                const memberStats = stats[member.id] || {};
+                const totalTasks = memberStats.total_tasks || 0;
+                const activeTasks = memberStats.active_tasks || 0;
+                const overdueTasks = memberStats.overdue_tasks || 0;
+                const completedTasks = memberStats.completed_tasks || 0;
+
+                return (
+                  <div key={member.id} className="workload-card">
+                    <div className="workload-name">
+                      {member.name} {member.role === 'chefe' && '👑'}
+                    </div>
+                    <div className="workload-stats">
+                      <div className="stat-item">
+                        <span className="stat-value">{totalTasks}</span>
+                        <span className="stat-label">Total</span>
+                      </div>
+                      <div className="stat-item active">
+                        <span className="stat-value">{activeTasks}</span>
+                        <span className="stat-label">Ativas</span>
+                      </div>
+                      <div className="stat-item overdue">
+                        <span className="stat-value">{overdueTasks}</span>
+                        <span className="stat-label">Atrasadas</span>
+                      </div>
+                      <div className="stat-item completed">
+                        <span className="stat-value">{completedTasks}</span>
+                        <span className="stat-label">Concluídas</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </>
       )}
     </div>

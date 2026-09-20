@@ -41,18 +41,22 @@ export default function ScheduledTasks({ member }) {
         ...formData
       };
 
-      // Ajusta datas para UTC-3 (adiciona 1 dia) usando Date object
+      // Ajusta datas para UTC-3 (adiciona 1 dia) apenas na CRIAÇÃO
+      // Na edição, as datas já vêm ajustadas do banco
       const addOneDay = (dateStr) => {
         const date = new Date(dateStr + 'T00:00:00');
         date.setDate(date.getDate() + 1);
         return date.toISOString().split('T')[0];
       };
 
-      if (dataToSend.start_date) {
-        dataToSend.start_date = addOneDay(dataToSend.start_date);
-      }
-      if (dataToSend.end_date) {
-        dataToSend.end_date = addOneDay(dataToSend.end_date);
+      // Apenas adicionar dia se for criação nova (não edição)
+      if (!editingId) {
+        if (dataToSend.start_date) {
+          dataToSend.start_date = addOneDay(dataToSend.start_date);
+        }
+        if (dataToSend.end_date) {
+          dataToSend.end_date = addOneDay(dataToSend.end_date);
+        }
       }
 
       if (editingId) {
@@ -126,41 +130,24 @@ export default function ScheduledTasks({ member }) {
     <div className="scheduled-tasks-container">
       <div className="scheduled-header">
         <h3>📋 Tarefas Programadas</h3>
-        <div className="scheduled-buttons">
-          <button
-            className="btn-process"
-            onClick={async () => {
-              try {
-                const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`);
-                alert('✅ ' + res.data.message);
-                loadScheduledTasks();
-              } catch (error) {
-                alert('❌ Erro: ' + error.response?.data?.error);
-              }
-            }}
-            title="Processa tarefas programadas agora"
-          >
-            🔄 Processar
-          </button>
-          <button
-            className="btn-new-scheduled"
-            onClick={() => {
-              if (editingId) {
-                setEditingId(null);
-                setFormData({
-                  title: '',
-                  description: '',
-                  recurrence: 'semanal',
-                  start_date: '',
-                  end_date: ''
-                });
-              }
-              setShowForm(!showForm);
-            }}
-          >
-            {showForm ? '✕ Cancelar' : '+ Nova Programação'}
-          </button>
-        </div>
+        <button
+          className="btn-new-scheduled"
+          onClick={() => {
+            if (editingId) {
+              setEditingId(null);
+              setFormData({
+                title: '',
+                description: '',
+                recurrence: 'semanal',
+                start_date: '',
+                end_date: ''
+              });
+            }
+            setShowForm(!showForm);
+          }}
+        >
+          {showForm ? '✕ Cancelar' : '+ Nova Programação'}
+        </button>
       </div>
 
       {showForm && (

@@ -13,6 +13,36 @@
   margin-bottom: 15px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #4CAF50;
+  outline: none;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.2);
+}
+
 .form-row input,
 .form-row textarea,
 .form-row select {
@@ -25,7 +55,11 @@
   min-height: 80px;
 }
 
-.form-row input[type="text"] {
+.form-row .form-group:first-child input[type="text"] {
+  grid-column: 1 / -1;
+}
+
+.form-row > .form-group:nth-child(2) {
   grid-column: 1 / -1;
 }
 
