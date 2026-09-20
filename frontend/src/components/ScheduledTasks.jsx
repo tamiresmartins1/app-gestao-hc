@@ -25,7 +25,22 @@ export default function ScheduledTasks({ member }) {
     try {
       setLoading(true);
       const res = await axios.get(`${API_URL}/scheduled-tasks/member/${member.id}`);
-      setScheduledTasks(res.data);
+
+      // ADD 1 dia ao carregar para compensar interpretação UTC do input type="date"
+      const adjustedTasks = res.data.map(task => {
+        const addDay = (dateStr) => {
+          const d = new Date(dateStr + 'T00:00:00Z');
+          d.setDate(d.getDate() + 1);
+          return d.toISOString().split('T')[0];
+        };
+        return {
+          ...task,
+          start_date: addDay(task.start_date),
+          end_date: addDay(task.end_date)
+        };
+      });
+
+      setScheduledTasks(adjustedTasks);
     } catch (error) {
       console.error('Erro ao carregar tarefas programadas:', error);
     } finally {
@@ -36,14 +51,21 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dataToSend = editingId ? { ...formData } : {
+      let dataToSend = editingId ? { ...formData } : {
         member_id: member.id,
         ...formData
       };
 
-      // SEM ajuste de data - usa exatamente como o user coloca
-
+      // Na EDIÇÃO: subtract 1 dia (porque foi added ao carregar)
+      // Na CRIAÇÃO: envia como está
       if (editingId) {
+        const subtractDay = (dateStr) => {
+          const d = new Date(dateStr + 'T00:00:00Z');
+          d.setDate(d.getDate() - 1);
+          return d.toISOString().split('T')[0];
+        };
+        dataToSend.start_date = subtractDay(dataToSend.start_date);
+        dataToSend.end_date = subtractDay(dataToSend.end_date);
         await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
       } else {
         await axios.post(`${API_URL}/scheduled-tasks`, dataToSend);
