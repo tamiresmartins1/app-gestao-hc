@@ -60,14 +60,6 @@
   width: 100% !important;
 }
 
-
-.form-row textarea {
-  grid-column: 1 / -1 !important;
-  resize: vertical;
-  min-height: 80px;
-  width: 100% !important;
-}
-
 input[type="date"] {
   height: 36px !important;
   max-height: 36px !important;
