@@ -10,6 +10,7 @@ import Notifications from './components/Notifications';
 import Processes from './components/Processes';
 import QuickLinks from './components/QuickLinks';
 import GLPI from './components/GLPI';
+import CleanupModal from './components/CleanupModal';
 import './styles/app.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -352,6 +353,8 @@ function App() {
           </>
         )}
       </div>
+
+      <CleanupModal />
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { processesRoutes } from './routes/processes.js';
 import { notesRoutes } from './routes/notes.js';
 import { glpiRoutes } from './routes/glpi.js';
 import { scheduledTasksRoutes } from './routes/scheduled_tasks.js';
+import { cleanupRoutes } from './routes/cleanup.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -57,6 +58,7 @@ app.use('/api/processes', processesRoutes);
 app.use('/api/notes', notesRoutes);
 app.use('/api/glpi', glpiRoutes);
 app.use('/api/scheduled-tasks', scheduledTasksRoutes);
+app.use('/api/cleanup', cleanupRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
