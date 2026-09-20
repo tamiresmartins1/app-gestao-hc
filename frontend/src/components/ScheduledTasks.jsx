@@ -133,7 +133,7 @@ export default function ScheduledTasks({ member }) {
             className="btn-new-scheduled"
             onClick={async () => {
               try {
-                const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`);
+                const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`, { member_id: member.id });
                 alert(`✅ Criadas ${res.data.created} tarefas!`);
                 loadScheduledTasks();
               } catch (error) {

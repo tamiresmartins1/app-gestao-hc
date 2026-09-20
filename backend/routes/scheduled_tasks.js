@@ -100,15 +100,17 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 // POST process scheduled tasks (create active tasks)
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
+    const { member_id } = req.body;
     const today = new Date().toISOString().split('T')[0];
 
     // Buscar tarefas programadas ativas hoje que NÃO foram criadas hoje ainda
     const result = await pool.query(
       `SELECT * FROM scheduled_tasks
-       WHERE start_date::text <= $1
-       AND end_date::text >= $1
-       AND (last_created_date IS NULL OR last_created_date::text != $1)`,
-      [today]
+       WHERE member_id = $1
+       AND start_date::text <= $2
+       AND end_date::text >= $2
+       AND (last_created_date IS NULL OR last_created_date::text != $2)`,
+      [member_id, today]
     );
 
     let createdCount = 0;
