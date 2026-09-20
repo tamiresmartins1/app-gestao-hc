@@ -59,9 +59,6 @@
   grid-column: 1 / -1;
 }
 
-.form-row > .form-group:nth-child(2) {
-  grid-column: 1 / -1;
-}
 
 input[type="date"] {
   height: 36px !important;
