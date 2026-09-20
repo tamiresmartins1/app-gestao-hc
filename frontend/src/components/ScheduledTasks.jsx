@@ -74,20 +74,13 @@ export default function ScheduledTasks({ member }) {
   };
 
   const handleEdit = (task) => {
-    // ADD 1 dia para compensar UTC quando usar input type="date"
-    const addDay = (dateStr) => {
-      const d = new Date(dateStr + 'T00:00:00Z');
-      d.setDate(d.getDate() + 1);
-      return d.toISOString().split('T')[0];
-    };
-
     setEditingId(task.id);
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: addDay(task.start_date),
-      end_date: addDay(task.end_date)
+      start_date: task.start_date,
+      end_date: task.end_date
     });
     setShowForm(true);
   };
