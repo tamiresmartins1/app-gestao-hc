@@ -86,13 +86,31 @@ export default function Processes({ members, notifications: notificationsFromPro
 
     try {
       const year = new Date().getFullYear();
+
+      // Só usar owner_id real (não dummy)
+      const realOwner = members && members.length > 0 ? members[0].id : null;
+      if (!realOwner) {
+        alert('Carregando membros... tente novamente em alguns segundos');
+        return;
+      }
+
+      // Filtrar IDs de responsáveis que são reais (não dummy)
+      const realResponsibleIds = line.responsible_ids.filter(id =>
+        members.some(m => m.id === id)
+      );
+
+      if (realResponsibleIds.length === 0) {
+        alert('Nenhum responsável real selecionado. Aguarde o carregamento dos membros.');
+        return;
+      }
+
       const dataToSend = {
         name: line.name,
         description: line.description,
-        owner_id: line.owner_id || members[0]?.id,
+        owner_id: realOwner,
         category: line.category,
-        responsible_ids: line.responsible_ids,
-        participant_ids: line.participant_ids,
+        responsible_ids: realResponsibleIds,
+        participant_ids: line.participant_ids.filter(id => members.some(m => m.id === id)),
         process_month: `${year}-${selectedMonth}`,
         due_date: `${year}-${selectedMonth}-01`
       };
@@ -170,6 +188,85 @@ export default function Processes({ members, notifications: notificationsFromPro
       }]);
     } else {
       setFormLines(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleSaveAll = async () => {
+    if (!selectedMonth) {
+      alert('Selecione um mês');
+      return;
+    }
+
+    // Filtrar linhas que têm nome
+    const linesToSave = formLines.filter(line => line.name && line.name.trim());
+
+    if (linesToSave.length === 0) {
+      alert('Nenhum processo para salvar');
+      return;
+    }
+
+    // Verificar se tem membros reais
+    const realOwner = members && members.length > 0 ? members[0].id : null;
+    if (!realOwner) {
+      alert('Carregando membros... tente novamente em alguns segundos');
+      return;
+    }
+
+    try {
+      const year = new Date().getFullYear();
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (let line of linesToSave) {
+        // Filtrar IDs reais
+        const realResponsibleIds = line.responsible_ids.filter(id =>
+          members.some(m => m.id === id)
+        );
+
+        if (realResponsibleIds.length === 0) {
+          errorCount++;
+          continue;
+        }
+
+        const dataToSend = {
+          name: line.name,
+          description: line.description,
+          owner_id: realOwner,
+          category: line.category,
+          responsible_ids: realResponsibleIds,
+          participant_ids: line.participant_ids.filter(id => members.some(m => m.id === id)),
+          process_month: `${year}-${selectedMonth}`,
+          due_date: `${year}-${selectedMonth}-01`
+        };
+
+        try {
+          await axios.post(`${API_URL}/processes`, dataToSend);
+          successCount++;
+        } catch (error) {
+          console.error('Erro ao salvar processo:', line.name, error);
+          errorCount++;
+        }
+      }
+
+      alert(`✅ ${successCount} processo(s) salvo(s)${errorCount > 0 ? ` | ❌ ${errorCount} erro(s)` : ''}`);
+
+      if (successCount > 0) {
+        // Limpar formulário
+        setFormLines([{
+          id: Math.random(),
+          name: '',
+          description: '',
+          category: 'Auditoria',
+          owner_id: realOwner,
+          responsible_ids: [],
+          participant_ids: []
+        }]);
+        setSelectedMonth(null);
+        setShowForm(false);
+        loadProcesses();
+      }
+    } catch (error) {
+      alert('Erro ao salvar: ' + error.message);
     }
   };
 
@@ -324,9 +421,19 @@ export default function Processes({ members, notifications: notificationsFromPro
             ))}
           </div>
 
-          <button type="button" className="btn-add-another" onClick={addLine}>
-            + Adicionar Linha
-          </button>
+          <div className="form-actions">
+            <button type="button" className="btn-add-another" onClick={addLine}>
+              + Adicionar Linha
+            </button>
+            <button
+              type="button"
+              className="btn-save-all"
+              onClick={handleSaveAll}
+              disabled={!selectedMonth || formLines.every(line => !line.name)}
+            >
+              💾 Salvar Tudo
+            </button>
+          </div>
         </div>
       )}
 

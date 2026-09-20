@@ -294,6 +294,36 @@
   border-color: rgba(255, 255, 255, 0.6);
 }
 
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.btn-save-all {
+  background: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.btn-save-all:hover:not(:disabled) {
+  background: #1976D2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.btn-save-all:disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 /* MONTHS GRID */
 .months-grid {
   display: grid;
