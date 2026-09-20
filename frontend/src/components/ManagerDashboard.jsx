@@ -7,7 +7,7 @@ export default function ManagerDashboard({ members }) {
   const [teamStats, setTeamStats] = useState({});
   const [tasks, setTasks] = useState([]);
   const [modal, setModal] = useState({ open: false, type: null, memberName: null });
-  const teamMembers = ['Tamires', 'Poliana', 'Nathalia'];
+  const teamMembers = ['Deise', 'Tamires', 'Poliana', 'Nathalia'];
 
   useEffect(() => {
     loadTeamStats();

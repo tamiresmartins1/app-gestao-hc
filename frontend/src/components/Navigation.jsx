@@ -10,7 +10,7 @@ export default function Navigation({ activeTab, onTabChange, unreadMessagesCount
     { id: 'recados', label: 'Recados', icon: FiMail, badge: unreadMessagesCount > 0 ? unreadMessagesCount : null },
     { id: 'processos', label: 'Processos', icon: FiGitBranch },
     { id: 'links', label: 'Links Rápidos', icon: FiLink },
-    { id: 'notificacoes', label: 'Notificações', icon: FiBell, badge: unreadNotificationsCount > 0 ? unreadNotificationsCount : null },
+    { id: 'notificacoes', label: 'Aviso de Processo', icon: FiBell },
     { id: 'glpi', label: 'GLPI', icon: FiTool, badge: glpiActiveCount > 0 ? glpiActiveCount : null }
   ];
 
