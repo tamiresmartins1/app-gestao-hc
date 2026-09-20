@@ -16,6 +16,7 @@ export default function GLPI() {
   const [selectedTicketHistory, setSelectedTicketHistory] = useState(null);
   const [ticketHistory, setTicketHistory] = useState([]);
   const [historyByTicket, setHistoryByTicket] = useState({});
+  const [expandHistory, setExpandHistory] = useState(false);
 
   useEffect(() => {
     loadTickets();
@@ -204,9 +205,15 @@ export default function GLPI() {
 
           {resolvedTickets.length > 0 && (
             <div className="glpi-section">
-              <h3>📁 Histórico ({resolvedTickets.length})</h3>
-              <div className="glpi-list">
-                {resolvedTickets.map((ticket) => (
+              <h3
+                style={{ cursor: 'pointer', userSelect: 'none' }}
+                onClick={() => setExpandHistory(!expandHistory)}
+              >
+                {expandHistory ? '▼' : '▶'} 📁 Histórico ({resolvedTickets.length})
+              </h3>
+              {expandHistory && (
+                <div className="glpi-list">
+                  {resolvedTickets.map((ticket) => (
                   <div key={ticket.id} className={`glpi-card ${ticket.status}`}>
                     <div className="glpi-card-header">
                       <div className="glpi-number">#{ticket.glpi_number}</div>
@@ -262,8 +269,9 @@ export default function GLPI() {
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </>
