@@ -32,19 +32,29 @@ export default function Processes({ members, notifications: notificationsFromPro
   const [showForm, setShowForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
 
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    owner_id: members[0]?.id || '',
-    category: 'Auditoria',
-    responsible_ids: [],
-    participant_ids: [],
-    depends_on_id: null
+  const [formLines, setFormLines] = useState(() => {
+    const ownerMember = members && members.length > 0 ? members[0] : { id: '1', name: 'Membro 1' };
+    return [{
+      id: Math.random(),
+      name: '',
+      description: '',
+      category: 'Auditoria',
+      owner_id: ownerMember.id,
+      responsible_ids: [],
+      participant_ids: []
+    }];
   });
 
   useEffect(() => {
     loadProcesses();
   }, []);
+
+  // Se não tem membros, usar membros de teste
+  const availableMembers = members && members.length > 0 ? members : [
+    { id: '1', name: 'Membro 1' },
+    { id: '2', name: 'Membro 2' },
+    { id: '3', name: 'Membro 3' }
+  ];
 
   const loadProcesses = async () => {
     try {
@@ -62,32 +72,104 @@ export default function Processes({ members, notifications: notificationsFromPro
     }));
   };
 
-  const handleAddProcess = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !selectedMonth) return;
+  const handleAddProcess = async (lineIndex) => {
+    if (!selectedMonth) {
+      alert('Selecione um mês');
+      return;
+    }
+
+    const line = formLines[lineIndex];
+    if (!line.name || line.responsible_ids.length === 0) {
+      alert('Nome e responsáveis são obrigatórios');
+      return;
+    }
 
     try {
       const year = new Date().getFullYear();
       const dataToSend = {
-        ...formData,
+        name: line.name,
+        description: line.description,
+        owner_id: line.owner_id || members[0]?.id,
+        category: line.category,
+        responsible_ids: line.responsible_ids,
+        participant_ids: line.participant_ids,
         process_month: `${year}-${selectedMonth}`,
         due_date: `${year}-${selectedMonth}-01`
       };
 
       await axios.post(`${API_URL}/processes`, dataToSend);
 
-      // Limpar apenas o nome, manter o mês e categoria
-      setFormData(prev => ({
-        ...prev,
-        name: '',
-        description: '',
-        responsible_ids: [],
-        participant_ids: []
-      }));
+      // Remove a linha adicionada
+      setFormLines(prev => prev.filter((_, i) => i !== lineIndex));
+
+      // Se não tem mais linhas, add uma vazia
+      if (formLines.length === 1) {
+        setFormLines([{
+          id: Math.random(),
+          name: '',
+          description: '',
+          category: 'Auditoria',
+          responsible_ids: [],
+          participant_ids: []
+        }]);
+      }
 
       loadProcesses();
     } catch (error) {
       alert('Erro ao criar processo: ' + error.response?.data?.error);
+    }
+  };
+
+  const addLine = () => {
+    setFormLines(prev => [...prev, {
+      id: Math.random(),
+      name: '',
+      description: '',
+      category: 'Auditoria',
+      owner_id: members[0]?.id || '',
+      responsible_ids: [],
+      participant_ids: []
+    }]);
+  };
+
+  const updateLine = (index, field, value) => {
+    setFormLines(prev => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const updateLineCheckbox = (index, field, memberId) => {
+    setFormLines(prev => {
+      const updated = [...prev];
+      const line = { ...updated[index] };
+      const ids = line[field] || [];
+
+      if (ids.includes(memberId)) {
+        line[field] = ids.filter(id => id !== memberId);
+      } else {
+        line[field] = [...ids, memberId];
+      }
+
+      updated[index] = line;
+      return updated;
+    });
+  };
+
+  const removeLine = (index) => {
+    if (formLines.length === 1) {
+      setFormLines([{
+        id: Math.random(),
+        name: '',
+        description: '',
+        category: 'Auditoria',
+        owner_id: members[0]?.id || '',
+        responsible_ids: [],
+        participant_ids: []
+      }]);
+    } else {
+      setFormLines(prev => prev.filter((_, i) => i !== index));
     }
   };
 
@@ -135,7 +217,7 @@ export default function Processes({ members, notifications: notificationsFromPro
       </div>
 
       {showForm && (
-        <form className="process-form" onSubmit={handleAddProcess}>
+        <div className="process-form">
           <h3>Criar Novo Processo</h3>
 
           <div className="form-group">
@@ -154,43 +236,98 @@ export default function Processes({ members, notifications: notificationsFromPro
             </select>
           </div>
 
-          <div className="form-group">
-            <label>Nome do Processo *</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              placeholder="Ex: Auditoria de Estoque"
-              required
-            />
+          <div className="process-lines">
+            {formLines.map((line, index) => (
+              <div key={line.id} className="process-line">
+                <div className="line-inputs">
+                  <input
+                    type="text"
+                    value={line.name}
+                    onChange={(e) => updateLine(index, 'name', e.target.value)}
+                    placeholder="Nome do processo"
+                    className="line-input-main"
+                  />
+
+                  <select
+                    value={line.category}
+                    onChange={(e) => updateLine(index, 'category', e.target.value)}
+                    className="line-input-category"
+                  >
+                    {CATEGORIES.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+
+                  <textarea
+                    value={line.description}
+                    onChange={(e) => updateLine(index, 'description', e.target.value)}
+                    placeholder="Descrição"
+                    rows="1"
+                    className="line-input-desc"
+                  />
+                </div>
+
+                <div className="line-checkboxes">
+                  <div className="checkbox-section">
+                    <label className="section-label">👤 Responsáveis</label>
+                    <div className="checkbox-group-inline">
+                      {availableMembers.map(member => (
+                        <div key={member.id} className="checkbox-item-inline">
+                          <input
+                            type="checkbox"
+                            id={`resp-${index}-${member.id}`}
+                            checked={line.responsible_ids.includes(member.id)}
+                            onChange={() => updateLineCheckbox(index, 'responsible_ids', member.id)}
+                          />
+                          <label htmlFor={`resp-${index}-${member.id}`}>{member.name}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="checkbox-section">
+                    <label className="section-label">🔄 Próximas</label>
+                    <div className="checkbox-group-inline">
+                      {availableMembers.map(member => (
+                        <div key={member.id} className="checkbox-item-inline">
+                          <input
+                            type="checkbox"
+                            id={`part-${index}-${member.id}`}
+                            checked={line.participant_ids.includes(member.id)}
+                            onChange={() => updateLineCheckbox(index, 'participant_ids', member.id)}
+                          />
+                          <label htmlFor={`part-${index}-${member.id}`}>{member.name}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="line-actions">
+                  <button
+                    type="button"
+                    className="btn-add-line"
+                    onClick={() => handleAddProcess(index)}
+                    disabled={!line.name || line.responsible_ids.length === 0}
+                  >
+                    ✓ Adicionar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-remove-line"
+                    onClick={() => removeLine(index)}
+                  >
+                    ✕ Remover
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="form-group">
-            <label>Categoria *</label>
-            <select
-              value={formData.category}
-              onChange={(e) => setFormData({...formData, category: e.target.value})}
-            >
-              {CATEGORIES.map(cat => (
-                <option key={cat} value={cat}>{cat}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Descrição</label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({...formData, description: e.target.value})}
-              placeholder="Descrição do processo"
-              rows="3"
-            />
-          </div>
-
-          <button type="submit" className="btn-submit">
-            + Adicionar Processo
+          <button type="button" className="btn-add-another" onClick={addLine}>
+            + Adicionar Linha
           </button>
-        </form>
+        </div>
       )}
 
       <div className="months-grid">
