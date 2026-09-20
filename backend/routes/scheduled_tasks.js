@@ -129,17 +129,6 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
         ]
       );
 
-      // Atualizar last_created_date para não criar duplicadas
-      try {
-        const updateRes = await pool.query(
-          'UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2',
-          [today, task.id]
-        );
-        console.log(`✅ Atualizado last_created_date para ${task.id}`);
-      } catch (err) {
-        console.error(`❌ Erro ao atualizar last_created_date:`, err.message);
-      }
-
       createdCount++;
     }
 

@@ -285,15 +285,8 @@ function App() {
   // Processa tarefas programadas uma vez ao carregar
   useEffect(() => {
     const processScheduledTasks = async () => {
-      try {
-        const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`);
-        console.log('✅ Tarefas programadas processadas:', res.data);
-        alert(`✅ Criadas ${res.data.created} tarefas!`);
-        await loadTasks();
-      } catch (error) {
-        console.error('Erro:', error);
-        alert(`❌ ${error.message}`);
-      }
+      // Processamento automático desabilitado
+      // Usuário clica em "Gerar Tarefas" nas Tarefas Programadas
     };
 
     processScheduledTasks();
