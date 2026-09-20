@@ -36,28 +36,19 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ADD 1 dia porque input type="date" interpreta como UTC
-      // Quando salva 21, input mostra como 20 (UTC-3)
-      const addDay = (dateStr) => {
-        if (!dateStr) return '';
-        const d = new Date(dateStr + 'T00:00:00Z');
-        d.setDate(d.getDate() + 1);
-        return d.toISOString().split('T')[0];
-      };
-
       const dataToSend = editingId ? {
         title: formData.title,
         description: formData.description,
         recurrence: formData.recurrence,
-        start_date: addDay(formData.start_date),
-        end_date: addDay(formData.end_date)
+        start_date: formData.start_date,
+        end_date: formData.end_date
       } : {
         member_id: member.id,
         title: formData.title,
         description: formData.description,
         recurrence: formData.recurrence,
-        start_date: addDay(formData.start_date),
-        end_date: addDay(formData.end_date)
+        start_date: formData.start_date,
+        end_date: formData.end_date
       };
 
       if (editingId) {
@@ -191,21 +182,23 @@ export default function ScheduledTasks({ member }) {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Data de Início *</label>
+              <label>Data de Início * (YYYY-MM-DD)</label>
               <input
-                type="date"
+                type="text"
                 value={formData.start_date}
                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                placeholder="2026-09-20"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label>Data de Término *</label>
+              <label>Data de Término * (YYYY-MM-DD)</label>
               <input
-                type="date"
+                type="text"
                 value={formData.end_date}
                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                placeholder="2026-09-22"
                 required
               />
             </div>
