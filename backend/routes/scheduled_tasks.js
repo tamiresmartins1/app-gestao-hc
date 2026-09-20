@@ -104,7 +104,9 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
     const now = new Date();
     const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000));
     const today = brazilTime.toISOString().split('T')[0];
-    console.log(`🔄 Processing scheduled tasks for date: ${today}`);
+    console.log(`🔄 NOW: ${now.toISOString()}`);
+    console.log(`🔄 BRAZIL TIME: ${brazilTime.toISOString()}`);
+    console.log(`🔄 TODAY (for processing): ${today}`);
 
     // Get all scheduled tasks that should create a task today
     const scheduledResult = await pool.query(
