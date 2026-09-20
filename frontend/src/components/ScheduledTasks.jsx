@@ -74,13 +74,20 @@ export default function ScheduledTasks({ member }) {
   };
 
   const handleEdit = (task) => {
+    // ADD 1 dia para compensar UTC quando usar input type="date"
+    const addDay = (dateStr) => {
+      const d = new Date(dateStr + 'T00:00:00Z');
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().split('T')[0];
+    };
+
     setEditingId(task.id);
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: task.start_date,
-      end_date: task.end_date
+      start_date: addDay(task.start_date),
+      end_date: addDay(task.end_date)
     });
     setShowForm(true);
   };
@@ -182,23 +189,21 @@ export default function ScheduledTasks({ member }) {
 
           <div className="form-row">
             <div className="form-group">
-              <label>Data de Início * (YYYY-MM-DD)</label>
+              <label>Data de Início *</label>
               <input
-                type="text"
+                type="date"
                 value={formData.start_date}
                 onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
-                placeholder="2026-09-20"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label>Data de Término * (YYYY-MM-DD)</label>
+              <label>Data de Término *</label>
               <input
-                type="text"
+                type="date"
                 value={formData.end_date}
                 onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
-                placeholder="2026-09-22"
                 required
               />
             </div>
