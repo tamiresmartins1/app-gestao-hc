@@ -291,8 +291,6 @@ export default function GLPI() {
           </div>
         </div>
       )}
-        </>
-      )}
     </div>
   );
 }
