@@ -30,6 +30,8 @@ scheduledTasksRoutes.post('/', async (req, res) => {
   try {
     const { member_id, title, description, recurrence, start_date, end_date } = req.body;
 
+    console.log('📥 RECEBIDO:', { start_date, end_date });
+
     if (!member_id || !title || !recurrence || !start_date || !end_date) {
       return res.status(400).json({ error: 'member_id, title, recurrence, start_date e end_date são obrigatórios' });
     }
@@ -40,6 +42,8 @@ scheduledTasksRoutes.post('/', async (req, res) => {
        RETURNING *`,
       [member_id, title, description || null, recurrence, start_date, end_date]
     );
+
+    console.log('💾 SALVO:', { start_date: result.rows[0].start_date, end_date: result.rows[0].end_date });
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
