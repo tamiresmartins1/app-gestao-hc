@@ -83,8 +83,13 @@
 
 /* Global fix para todos os inputs de data */
 input[type="date"],
-input[type="date"]::-webkit-calendar-picker-indicator {
+input[type="date"]::-webkit-calendar-picker-indicator,
+.form-group input[type="date"],
+.form-row input[type="date"],
+.task-form input[type="date"],
+.scheduled-form input[type="date"] {
   height: 36px !important;
   max-height: 36px !important;
   min-height: 36px !important;
+  line-height: 36px !important;
 }
