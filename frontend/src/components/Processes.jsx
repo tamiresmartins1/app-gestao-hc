@@ -48,12 +48,18 @@ export default function Processes({ members, notifications: notificationsFromPro
     return today.toISOString().split('T')[0];
   };
 
+  const getDefaultMonth = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+  };
+
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     owner_id: members[0]?.id || '',
     due_date: getTodayDateString(),
     category: 'Auditoria',
+    process_month: getDefaultMonth(),
     responsible_ids: [],
     participant_ids: [],
     depends_on_id: null
@@ -132,6 +138,7 @@ export default function Processes({ members, notifications: notificationsFromPro
         owner_id: members[0]?.id || '',
         due_date: getTodayDateString(),
         category: 'Auditoria',
+        process_month: getDefaultMonth(),
         responsible_ids: [],
         participant_ids: [],
         depends_on_id: null
@@ -610,6 +617,16 @@ export default function Processes({ members, notifications: notificationsFromPro
             type="date"
             value={formData.due_date}
             onChange={(e) => setFormData({ ...formData, due_date: e.target.value })}
+            style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', marginTop: '15px' }}>
+            📆 Mês do Processo:
+          </label>
+          <input
+            type="month"
+            value={formData.process_month}
+            onChange={(e) => setFormData({ ...formData, process_month: e.target.value })}
             style={{ width: '100%', padding: '10px', marginBottom: '15px', boxSizing: 'border-box', borderRadius: '4px', border: '1px solid #ddd' }}
           />
 
