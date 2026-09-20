@@ -261,30 +261,6 @@ export default function GLPI() {
                         </button>
                       </div>
                     </div>
-
-                    {historyByTicket[ticket.id] && historyByTicket[ticket.id].length > 0 && (
-                      <div className="glpi-card-history">
-                        <div className="history-timeline">
-                          {historyByTicket[ticket.id].map((entry) => (
-                            <div key={entry.id} className="history-item">
-                              <span className="history-transition">
-                                {entry.status_from && <span className="status-badge-small from">{entry.status_from}</span>}
-                                <span className="arrow-small">→</span>
-                                <span className="status-badge-small to">{entry.status_to}</span>
-                              </span>
-                              <span className="history-time">
-                                {new Date(entry.created_at).toLocaleDateString('pt-BR', {
-                                  day: '2-digit',
-                                  month: '2-digit',
-                                  hour: '2-digit',
-                                  minute: '2-digit'
-                                })}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 ))}
               </div>
