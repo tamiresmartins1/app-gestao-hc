@@ -34,11 +34,18 @@ scheduledTasksRoutes.post('/', async (req, res) => {
       return res.status(400).json({ error: 'member_id, title, recurrence, start_date e end_date são obrigatórios' });
     }
 
+    // ADD 1 dia porque PostgreSQL interpreta como UTC
+    const addDay = (dateStr) => {
+      const d = new Date(dateStr + 'T00:00:00Z');
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().split('T')[0];
+    };
+
     const result = await pool.query(
       `INSERT INTO scheduled_tasks (member_id, title, description, recurrence, start_date, end_date)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING *`,
-      [member_id, title, description || null, recurrence, start_date, end_date]
+      [member_id, title, description || null, recurrence, addDay(start_date), addDay(end_date)]
     );
 
     res.status(201).json(result.rows[0]);
@@ -55,6 +62,14 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
     const { id } = req.params;
     const { title, description, recurrence, start_date, end_date } = req.body;
 
+    // ADD 1 dia porque PostgreSQL interpreta como UTC
+    const addDay = (dateStr) => {
+      if (!dateStr) return null;
+      const d = new Date(dateStr + 'T00:00:00Z');
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().split('T')[0];
+    };
+
     const result = await pool.query(
       `UPDATE scheduled_tasks
        SET title = COALESCE($1, title),
@@ -65,7 +80,7 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $6
        RETURNING *`,
-      [title, description, recurrence, start_date, end_date, id]
+      [title, description, recurrence, addDay(start_date), addDay(end_date), id]
     );
 
     if (!result.rows[0]) {
