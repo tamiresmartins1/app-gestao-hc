@@ -100,93 +100,38 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 // POST process scheduled tasks (create active tasks)
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
-    // TESTE: Usar data fixa para debugar
     const today = '2026-09-20';
-    console.log(`\n🔄 ===== PROCESSANDO TAREFAS =====`);
-    console.log(`🔄 TODAY: ${today}`);
 
-    // Get all scheduled tasks that should create a task today
-    console.log(`\n📋 Buscando tarefas com: start_date <= ${today} AND end_date >= ${today}`);
-    const scheduledResult = await pool.query(
-      `SELECT * FROM scheduled_tasks
-       WHERE start_date <= $1 AND end_date >= $1
-       AND (last_created_date IS NULL OR last_created_date < $1)`,
+    // SIMPLES: Buscar TODAS tarefas programadas que estão ativas hoje
+    const result = await pool.query(
+      `SELECT * FROM scheduled_tasks WHERE start_date <= $1 AND end_date >= $1`,
       [today]
     );
 
-    console.log(`📋 Encontradas ${scheduledResult.rows.length} tarefas`);
-    if (scheduledResult.rows.length === 0) {
-      console.log(`⚠️ Nenhuma tarefa encontrada! Verificar:
-        - start_date está <= ${today}?
-        - end_date está >= ${today}?
-        - last_created_date é NULL ou < ${today}?`);
-    }
-
-    const scheduledTasks = scheduledResult.rows;
     let createdCount = 0;
 
-    for (const scheduledTask of scheduledTasks) {
-      console.log(`\n📌 Task: "${scheduledTask.title}"`);
-      console.log(`   Start: ${scheduledTask.start_date}, End: ${scheduledTask.end_date}, Last created: ${scheduledTask.last_created_date}`);
-
-      // Check if we should create a task based on recurrence
-      let shouldCreate = false;
-      const lastCreatedDate = scheduledTask.last_created_date
-        ? new Date(scheduledTask.last_created_date)
-        : new Date(scheduledTask.start_date);
-      const todayDate = new Date(today);
-
-      const diffTime = todayDate - lastCreatedDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      console.log(`   Diff days: ${diffDays}, Recurrence: ${scheduledTask.recurrence}`);
-
-      switch (scheduledTask.recurrence) {
-        case 'diario':
-          shouldCreate = diffDays >= 0;
-          break;
-        case 'semanal':
-          shouldCreate = diffDays >= 7;
-          break;
-        case 'quinzenal':
-          shouldCreate = diffDays >= 15;
-          break;
-        case 'mensal':
-          shouldCreate = diffDays >= 30;
-          break;
-      }
-
-      if (shouldCreate) {
-        // Create task
-        console.log(`   ✅ Creating task for ${scheduledTask.member_id}`);
-        await pool.query(
-          `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
-           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-          [
-            uuidv4(),
-            scheduledTask.title,
-            scheduledTask.description || '',
-            scheduledTask.member_id,
-            'ativa',
-            scheduledTask.member_id,
-            today,
-            'média'
-          ]
-        );
-
-        // Update last_created_date
-        await pool.query(
-          'UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2',
-          [today, scheduledTask.id]
-        );
-
-        createdCount++;
-      }
+    for (const task of result.rows) {
+      // Criar uma tarefa para cada
+      await pool.query(
+        `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [
+          uuidv4(),
+          task.title,
+          task.description || '',
+          task.member_id,
+          'ativa',
+          task.member_id,
+          today,
+          'média'
+        ]
+      );
+      createdCount++;
     }
 
     res.json({ created: createdCount, message: `${createdCount} tarefas criadas` });
   } catch (error) {
-    console.error('Erro ao processar tarefas programadas:', error.message);
-    console.error('Stack:', error.stack);
-    res.status(500).json({ error: error.message || 'Erro ao processar tarefas programadas' });
+    console.error('Erro:', error.message);
+    res.status(500).json({ error: error.message });
   }
 });
