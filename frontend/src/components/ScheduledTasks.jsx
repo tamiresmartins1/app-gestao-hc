@@ -29,9 +29,15 @@ export default function ScheduledTasks({ member }) {
       // ADD 1 dia ao carregar para compensar interpretação UTC do input type="date"
       const adjustedTasks = res.data.map(task => {
         const addDay = (dateStr) => {
-          const d = new Date(dateStr + 'T00:00:00Z');
-          d.setDate(d.getDate() + 1);
-          return d.toISOString().split('T')[0];
+          if (!dateStr) return dateStr;
+          try {
+            const d = new Date(dateStr + 'T00:00:00Z');
+            d.setDate(d.getDate() + 1);
+            return d.toISOString().split('T')[0];
+          } catch (e) {
+            console.warn('Erro ao ajustar data:', dateStr, e);
+            return dateStr;
+          }
         };
         return {
           ...task,
