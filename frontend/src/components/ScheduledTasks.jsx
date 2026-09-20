@@ -51,7 +51,7 @@ export default function ScheduledTasks({ member }) {
         end_date: formData.end_date
       };
 
-      console.log('🔍 ENVIANDO:', dataToSend);
+      alert(`ENVIANDO:\nInício: ${dataToSend.start_date}\nFim: ${dataToSend.end_date}`);
 
       if (editingId) {
         await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
