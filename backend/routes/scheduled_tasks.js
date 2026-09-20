@@ -103,9 +103,12 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const dayOfWeek = new Date().getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
 
-    // Buscar tarefas ativas hoje (sem verificação de last_created_date)
+    // Buscar tarefas ativas hoje que ainda NÃO foram criadas hoje
     const result = await pool.query(
-      `SELECT * FROM scheduled_tasks WHERE start_date <= $1 AND end_date >= $1`,
+      `SELECT * FROM scheduled_tasks
+       WHERE start_date::text <= $1
+       AND end_date::text >= $1
+       AND (last_created_date IS NULL OR last_created_date::text < $1)`,
       [today]
     );
 
@@ -140,7 +143,7 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
           shouldCreate = false;
       }
 
-      // Se deve criar e ainda não foi criada hoje
+      // Se deve criar
       if (shouldCreate) {
         const taskResult = await pool.query(
           `SELECT 1 FROM tasks WHERE assigned_to = $1 AND due_date = $2 AND title = $3 LIMIT 1`,
@@ -166,12 +169,10 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
 
           createdCount++;
         }
-      }
 
-      // Atualizar last_created_date (apenas se criou hoje)
-      if (shouldCreate) {
+        // Atualizar last_created_date
         await pool.query(
-          `UPDATE scheduled_tasks SET last_created_date = to_date($1, 'YYYY-MM-DD') WHERE id = $2`,
+          `UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2`,
           [today, task.id]
         );
       }
