@@ -100,13 +100,13 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 // POST process scheduled tasks (create active tasks)
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
-    // Converter para timezone Brasil (UTC-3)
+    // Converter para timezone Brasil (America/Sao_Paulo)
     const now = new Date();
-    const brazilTime = new Date(now.getTime() - (3 * 60 * 60 * 1000));
-    const today = brazilTime.toISOString().split('T')[0];
-    console.log(`🔄 NOW: ${now.toISOString()}`);
-    console.log(`🔄 BRAZIL TIME: ${brazilTime.toISOString()}`);
-    console.log(`🔄 TODAY (for processing): ${today}`);
+    const brazilDate = new Date(now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }));
+    const today = brazilDate.toISOString().split('T')[0];
+    console.log(`🔄 NOW UTC: ${now.toISOString()}`);
+    console.log(`🔄 BRAZIL DATE: ${brazilDate.toISOString()}`);
+    console.log(`🔄 TODAY: ${today}`);
 
     // Get all scheduled tasks that should create a task today
     const scheduledResult = await pool.query(
