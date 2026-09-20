@@ -8,9 +8,13 @@
 
 .form-row {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 15px;
+}
+
+.form-row:has(.form-group:only-child) {
+  grid-template-columns: 1fr;
 }
 
 .form-group {
@@ -56,11 +60,6 @@
   width: 100% !important;
 }
 
-.task-form .form-row .form-group:first-child input[type="text"],
-.task-form .form-row:first-child .form-group input[type="text"] {
-  grid-column: 1 / -1 !important;
-  width: 100% !important;
-}
 
 .form-row textarea {
   grid-column: 1 / -1 !important;
