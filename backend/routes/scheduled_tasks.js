@@ -100,15 +100,10 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 // POST process scheduled tasks (create active tasks)
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
-    // Converter para timezone Brasil (UTC-3)
-    const now = new Date();
-    const utcDate = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
-    const brazilDate = new Date(utcDate.getTime() - (3 * 60 * 60 * 1000));
-    const today = brazilDate.toISOString().split('T')[0];
-
-    console.log(`\n🔄 ===== INICIANDO PROCESSO =====`);
-    console.log(`🔄 NOW: ${now.toISOString()}`);
-    console.log(`🔄 TODAY (Brasil): ${today}`);
+    // TESTE: Usar data fixa para debugar
+    const today = '2026-09-20';
+    console.log(`\n🔄 ===== PROCESSANDO TAREFAS =====`);
+    console.log(`🔄 TODAY: ${today}`);
 
     // Get all scheduled tasks that should create a task today
     console.log(`\n📋 Buscando tarefas com: start_date <= ${today} AND end_date >= ${today}`);
