@@ -150,13 +150,14 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
         // Create task
         console.log(`   ✅ Creating task for ${scheduledTask.member_id}`);
         await pool.query(
-          `INSERT INTO tasks (id, title, description, assigned_to, created_by, due_date, priority)
-           VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
           [
             uuidv4(),
             scheduledTask.title,
             scheduledTask.description || '',
             scheduledTask.member_id,
+            'ativa',
             scheduledTask.member_id,
             today,
             'média'
