@@ -48,7 +48,9 @@ export default function Messages({ member, members, messages: messagesFromProps,
   const handleDelete = async (messageId) => {
     if (!window.confirm('Deseja deletar este recado?')) return;
     try {
-      await axios.delete(`${API_URL}/messages/${messageId}`);
+      await axios.delete(`${API_URL}/messages/${messageId}`, {
+        data: { member_id: member.id }
+      });
       // Mensagens serão recarregadas pelo polling global
     } catch (error) {
       alert('Erro ao deletar recado: ' + error.response?.data?.error);

@@ -65,6 +65,23 @@ export const initDatabase = async () => {
       )
     `);
 
+    // Adicionar colunas de soft delete se não existirem
+    try {
+      await pool.query(`
+        ALTER TABLE messages ADD COLUMN deleted_by_sender BOOLEAN DEFAULT false;
+      `);
+    } catch (error) {
+      // Coluna já existe
+    }
+
+    try {
+      await pool.query(`
+        ALTER TABLE messages ADD COLUMN deleted_by_recipient BOOLEAN DEFAULT false;
+      `);
+    } catch (error) {
+      // Coluna já existe
+    }
+
     // Adicionar coluna parent_message_id se ela não existir (para bancos existentes)
     try {
       await pool.query(`

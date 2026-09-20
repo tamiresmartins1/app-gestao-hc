@@ -6,12 +6,13 @@ export const messagesRoutes = express.Router();
 
 messagesRoutes.get('/all/:member_id', async (req, res) => {
   try {
+    const memberId = req.params.member_id;
     const messages = await allAsync(
       `SELECT m.*, s.name as sender_name FROM messages m
        LEFT JOIN members s ON m.sender_id = s.id
-       WHERE m.recipient_id = $1 OR m.sender_id = $1
+       WHERE (m.recipient_id = $1 AND deleted_by_recipient = false) OR (m.sender_id = $1 AND deleted_by_sender = false)
        ORDER BY m.created_at DESC`,
-      [req.params.member_id]
+      [memberId]
     );
     res.json(messages);
   } catch (error) {
@@ -78,7 +79,23 @@ messagesRoutes.put('/:id/read', async (req, res) => {
 
 messagesRoutes.delete('/:id', async (req, res) => {
   try {
-    await runAsync('DELETE FROM messages WHERE id = $1', [req.params.id]);
+    const { member_id } = req.body;
+    const messageId = req.params.id;
+
+    // Buscar a mensagem para saber quem é o sender
+    const message = await getAsync('SELECT * FROM messages WHERE id = $1', [messageId]);
+
+    if (!message) {
+      return res.status(404).json({ error: 'Mensagem não encontrada' });
+    }
+
+    // Determinar se é sender ou recipient e fazer soft delete
+    if (message.sender_id === member_id) {
+      await runAsync('UPDATE messages SET deleted_by_sender = true WHERE id = $1', [messageId]);
+    } else if (message.recipient_id === member_id) {
+      await runAsync('UPDATE messages SET deleted_by_recipient = true WHERE id = $1', [messageId]);
+    }
+
     res.json({ success: true });
   } catch (error) {
     res.status(500).json({ error: error.message });
