@@ -63,10 +63,11 @@
   grid-column: 1 / -1;
 }
 
-.form-group input[type="date"] {
+input[type="date"] {
   height: 36px !important;
   max-height: 36px !important;
   min-height: 36px !important;
+  line-height: 36px !important;
 }
 
 .form-actions {
