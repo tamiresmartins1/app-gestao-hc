@@ -157,6 +157,28 @@ export const initDatabase = async () => {
       )
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS scheduled_tasks (
+        id TEXT PRIMARY KEY,
+        member_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        recurrence TEXT DEFAULT 'semanal',
+        start_date DATE NOT NULL,
+        end_date DATE NOT NULL,
+        last_created_date DATE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (member_id) REFERENCES members(id)
+      )
+    `);
+
+    try {
+      await pool.query(`ALTER TABLE scheduled_tasks ADD COLUMN last_created_date DATE;`);
+    } catch (error) {
+      // Coluna já existe
+    }
+
     console.log('📊 Tabelas criadas/verificadas com sucesso');
   } catch (error) {
     console.error('Erro ao inicializar banco:', error);
