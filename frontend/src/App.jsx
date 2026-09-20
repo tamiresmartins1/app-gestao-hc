@@ -286,11 +286,13 @@ function App() {
   useEffect(() => {
     const processScheduledTasks = async () => {
       try {
-        await axios.post(`${API_URL}/scheduled-tasks/process/all`);
-        console.log('✅ Tarefas programadas processadas');
+        const res = await axios.post(`${API_URL}/scheduled-tasks/process/all`);
+        console.log('✅ Tarefas programadas processadas:', res.data);
+        alert(`✅ Processadas! Criadas ${res.data.created} tarefas`);
         await loadTasks();
       } catch (error) {
         console.error('Erro ao processar tarefas programadas:', error);
+        alert(`❌ Erro: ${error.message}`);
       }
     };
 
