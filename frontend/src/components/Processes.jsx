@@ -67,6 +67,7 @@ export default function Processes({ members, notifications: notificationsFromPro
   const [filter, setFilter] = useState('');
   const [customCategory, setCustomCategory] = useState('');
   const [processesView, setProcessesView] = useState('ativos'); // 'ativos' ou 'historico'
+  const [selectedMonth, setSelectedMonth] = useState(getDefaultMonth());
 
   const defaultCategories = [
     'Auditoria',
