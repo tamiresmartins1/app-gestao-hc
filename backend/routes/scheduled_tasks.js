@@ -80,14 +80,6 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
   }
 });
 
-// DEBUG: Get today's date
-scheduledTasksRoutes.get('/debug/today', async (req, res) => {
-  const now = new Date();
-  const brazilDate = new Date(now.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' }));
-  const today = brazilDate.toISOString().split('T')[0];
-  res.json({ now: now.toISOString(), brazilDate: brazilDate.toISOString(), today });
-});
-
 // DELETE scheduled task
 scheduledTasksRoutes.delete('/:id', async (req, res) => {
   try {
