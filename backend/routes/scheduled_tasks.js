@@ -64,11 +64,14 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
 
     // ADD 1 dia porque PostgreSQL interpreta como UTC
     const addDay = (dateStr) => {
-      if (!dateStr) return null;
+      if (!dateStr) return undefined;
       const d = new Date(dateStr + 'T00:00:00Z');
       d.setDate(d.getDate() + 1);
       return d.toISOString().split('T')[0];
     };
+
+    const updateStart = start_date !== undefined ? addDay(start_date) : undefined;
+    const updateEnd = end_date !== undefined ? addDay(end_date) : undefined;
 
     const result = await pool.query(
       `UPDATE scheduled_tasks
@@ -80,7 +83,7 @@ scheduledTasksRoutes.patch('/:id', async (req, res) => {
            updated_at = CURRENT_TIMESTAMP
        WHERE id = $6
        RETURNING *`,
-      [title, description, recurrence, addDay(start_date), addDay(end_date), id]
+      [title, description, recurrence, updateStart, updateEnd, id]
     );
 
     if (!result.rows[0]) {
