@@ -110,12 +110,20 @@ export const initDatabase = async () => {
         status TEXT DEFAULT 'em_progresso',
         owner_id TEXT NOT NULL,
         due_date DATE,
+        process_month TEXT,
         depends_on_id TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (owner_id) REFERENCES members(id),
         FOREIGN KEY (depends_on_id) REFERENCES processes(id)
       )
     `);
+
+    // Adicionar coluna process_month se não existir
+    try {
+      await pool.query(`ALTER TABLE processes ADD COLUMN process_month TEXT;`);
+    } catch (error) {
+      // Coluna já existe
+    }
 
     try {
       await pool.query(`ALTER TABLE processes ADD COLUMN category TEXT DEFAULT 'auditoria';`);
