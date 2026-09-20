@@ -36,12 +36,24 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const dataToSend = editingId ? { ...formData } : {
-        member_id: member.id,
-        ...formData
+      // SUBTRACT 1 dia porque o input type="date" adicionou 1
+      const subtractDay = (dateStr) => {
+        const d = new Date(dateStr + 'T00:00:00Z');
+        d.setDate(d.getDate() - 1);
+        return d.toISOString().split('T')[0];
       };
 
-      // SEM conversão - coloca X, salva X!
+      const dataToSend = editingId ? {
+        ...formData,
+        start_date: subtractDay(formData.start_date),
+        end_date: subtractDay(formData.end_date)
+      } : {
+        member_id: member.id,
+        ...formData,
+        start_date: subtractDay(formData.start_date),
+        end_date: subtractDay(formData.end_date)
+      };
+
       if (editingId) {
         await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
       } else {
@@ -65,13 +77,20 @@ export default function ScheduledTasks({ member }) {
   };
 
   const handleEdit = (task) => {
+    // ADD 1 dia para exibir corretamente no input type="date" (que interpreta como UTC)
+    const addDay = (dateStr) => {
+      const d = new Date(dateStr + 'T00:00:00Z');
+      d.setDate(d.getDate() + 1);
+      return d.toISOString().split('T')[0];
+    };
+
     setEditingId(task.id);
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: task.start_date,
-      end_date: task.end_date
+      start_date: addDay(task.start_date),
+      end_date: addDay(task.end_date)
     });
     setShowForm(true);
   };
@@ -97,6 +116,17 @@ export default function ScheduledTasks({ member }) {
         alert('Erro ao deletar: ' + error.response?.data?.error);
       }
     }
+  };
+
+  const addDay = (dateStr) => {
+    const d = new Date(dateStr + 'T00:00:00Z');
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().split('T')[0];
+  };
+
+  const formatDateDisplay = (dateStr) => {
+    // ADD 1 dia porque input type="date" interpreta como UTC
+    return new Date(addDay(dateStr)).toLocaleDateString('pt-BR');
   };
 
   const getRecurrenceLabel = (rec) => {
@@ -218,7 +248,7 @@ export default function ScheduledTasks({ member }) {
               </div>
 
               <div className="scheduled-dates">
-                <span>📅 {new Date(task.start_date).toLocaleDateString('pt-BR')} até {new Date(task.end_date).toLocaleDateString('pt-BR')}</span>
+                <span>📅 {formatDateDisplay(task.start_date)} até {formatDateDisplay(task.end_date)}</span>
               </div>
 
               <div className="scheduled-actions">
