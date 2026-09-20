@@ -101,47 +101,29 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
+    console.log(`📅 TODAY: ${today}`);
 
-    // Buscar tarefas ativas hoje que ainda NÃO foram criadas hoje
     const result = await pool.query(
-      `SELECT * FROM scheduled_tasks
-       WHERE start_date <= $1
-       AND end_date >= $1
-       AND (last_created_date IS NULL OR last_created_date < $1)`,
+      `SELECT * FROM scheduled_tasks WHERE start_date <= $1 AND end_date >= $1 AND (last_created_date IS NULL OR last_created_date < $1)`,
       [today]
     );
 
+    console.log(`✅ Found ${result.rows.length} tasks`);
     let createdCount = 0;
 
     for (const task of result.rows) {
-      // Criar tarefa
       await pool.query(
-        `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [
-          uuidv4(),
-          task.title,
-          task.description || '',
-          task.member_id,
-          'ativa',
-          task.member_id,
-          today,
-          'média'
-        ]
+        `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [uuidv4(), task.title, task.description || '', task.member_id, 'ativa', task.member_id, today, 'média']
       );
 
-      // Atualizar last_created_date para hoje
-      await pool.query(
-        `UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2`,
-        [today, task.id]
-      );
-
+      await pool.query(`UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2`, [today, task.id]);
       createdCount++;
     }
 
     res.json({ created: createdCount, message: `${createdCount} tarefas criadas` });
   } catch (error) {
-    console.error('Erro:', error.message);
+    console.error('❌ Erro:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
