@@ -36,26 +36,19 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ADD 1 dia para compensar interpretação UTC do input type="date"
-      const addDayToDate = (dateStr) => {
-        const [year, month, day] = dateStr.split('-');
-        const dayNum = parseInt(day) + 1;
-        return `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
-      };
-
       const dataToSend = editingId ? {
         title: formData.title,
         description: formData.description,
         recurrence: formData.recurrence,
-        start_date: addDayToDate(formData.start_date),
-        end_date: addDayToDate(formData.end_date)
+        start_date: formData.start_date,
+        end_date: formData.end_date
       } : {
         member_id: member.id,
         title: formData.title,
         description: formData.description,
         recurrence: formData.recurrence,
-        start_date: addDayToDate(formData.start_date),
-        end_date: addDayToDate(formData.end_date)
+        start_date: formData.start_date,
+        end_date: formData.end_date
       };
 
 
