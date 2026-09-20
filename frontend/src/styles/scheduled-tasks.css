@@ -96,7 +96,8 @@
 }
 
 .form-group input[type="date"] {
-  height: 36px;
+  height: 36px !important;
+  max-height: 36px !important;
 }
 
 .form-group input:focus,
