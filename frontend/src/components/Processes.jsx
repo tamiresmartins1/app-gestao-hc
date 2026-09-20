@@ -29,6 +29,7 @@ const CATEGORIES = [
 export default function Processes({ members, notifications: notificationsFromProps = [], onUnreadNotificationsUpdate }) {
   const [processes, setProcesses] = useState([]);
   const [expandedMonths, setExpandedMonths] = useState({});
+  const [expandedProcesses, setExpandedProcesses] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
 
@@ -291,6 +292,25 @@ export default function Processes({ members, notifications: notificationsFromPro
     );
   };
 
+  const handleMarkComplete = async (processId) => {
+    try {
+      // Get the first responsible member
+      const process = processes.find(p => p.id === processId);
+      if (!process) return;
+
+      const firstMember = members[0];
+      if (!firstMember) {
+        alert('Nenhum membro disponível');
+        return;
+      }
+
+      await axios.put(`${API_URL}/processes/${processId}/member-complete/${firstMember.id}`);
+      loadProcesses();
+    } catch (error) {
+      alert('Erro ao marcar como concluído: ' + error.response?.data?.error);
+    }
+  };
+
   const getAvailableMonths = () => {
     return MONTHS.map(month => ({
       ...month,
@@ -403,18 +423,10 @@ export default function Processes({ members, notifications: notificationsFromPro
                 <div className="line-actions">
                   <button
                     type="button"
-                    className="btn-add-line"
-                    onClick={() => handleAddProcess(index)}
-                    disabled={!line.name || line.responsible_ids.length === 0}
-                  >
-                    ✓ Adicionar
-                  </button>
-                  <button
-                    type="button"
                     className="btn-remove-line"
                     onClick={() => removeLine(index)}
                   >
-                    ✕ Remover
+                    ✕ Remover Linha
                   </button>
                 </div>
               </div>
@@ -461,17 +473,37 @@ export default function Processes({ members, notifications: notificationsFromPro
                         <div className="processes-list">
                           {categoryProcesses.map(process => (
                             <div key={process.id} className="process-item">
-                              <div className="process-info">
-                                <h5>{process.name}</h5>
-                                <p>{process.description}</p>
-                                <small>{process.status}</small>
-                              </div>
-                              <button
-                                className="btn-delete"
-                                onClick={() => handleDeleteProcess(process.id)}
+                              <div
+                                className="process-info"
+                                onClick={() => setExpandedProcesses(prev => ({
+                                  ...prev,
+                                  [process.id]: !prev[process.id]
+                                }))}
                               >
-                                <FiTrash2 />
-                              </button>
+                                <h5>{process.name}</h5>
+                                {expandedProcesses[process.id] && (
+                                  <>
+                                    <p>{process.description}</p>
+                                    <small>{process.status}</small>
+                                  </>
+                                )}
+                              </div>
+                              {expandedProcesses[process.id] && (
+                                <div className="process-actions">
+                                  <button
+                                    className="btn-complete"
+                                    onClick={() => handleMarkComplete(process.id)}
+                                  >
+                                    ✓ Feito
+                                  </button>
+                                  <button
+                                    className="btn-delete"
+                                    onClick={() => handleDeleteProcess(process.id)}
+                                  >
+                                    <FiTrash2 />
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           ))}
                         </div>
