@@ -71,7 +71,6 @@ export default function Processes({ members, notifications: notificationsFromPro
   const [selectedProcessDetails, setSelectedProcessDetails] = useState(null);
   const [editingProcess, setEditingProcess] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState([]);
 
   const loadProcessDetails = async (processId) => {
     try {
