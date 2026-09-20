@@ -102,11 +102,9 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = '2026-09-20';
 
-    // Buscar tarefas: ativas hoje E não foram criadas ainda hoje
+    // Buscar tarefas ativas hoje (sem verificação de last_created_date)
     const result = await pool.query(
-      `SELECT * FROM scheduled_tasks
-       WHERE start_date <= $1 AND end_date >= $1
-       AND (last_created_date IS NULL OR last_created_date < $1)`,
+      `SELECT * FROM scheduled_tasks WHERE start_date <= $1 AND end_date >= $1`,
       [today]
     );
 
