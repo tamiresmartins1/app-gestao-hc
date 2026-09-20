@@ -100,7 +100,7 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 // POST process scheduled tasks (create active tasks)
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
-    const today = '2026-09-20';
+    const today = new Date().toISOString().split('T')[0];
 
     // Buscar tarefas ativas hoje (sem verificação de last_created_date)
     const result = await pool.query(
