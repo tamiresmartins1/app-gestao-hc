@@ -192,6 +192,13 @@ export const initDatabase = async () => {
       )
     `);
 
+    // Adicionar coluna closed_at se não existir
+    try {
+      await pool.query(`ALTER TABLE glpi_tickets ADD COLUMN closed_at TIMESTAMP;`);
+    } catch (error) {
+      // Coluna já existe
+    }
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS glpi_history (
         id SERIAL PRIMARY KEY,
