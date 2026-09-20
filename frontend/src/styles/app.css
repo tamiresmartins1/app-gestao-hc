@@ -80,3 +80,11 @@
     font-size: 14px;
   }
 }
+
+/* Global fix para todos os inputs de data */
+input[type="date"],
+input[type="date"]::-webkit-calendar-picker-indicator {
+  height: 36px !important;
+  max-height: 36px !important;
+  min-height: 36px !important;
+}
