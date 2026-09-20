@@ -177,6 +177,7 @@ processesRoutes.get('/notifications/:member_id', async (req, res) => {
     const notifications = await allAsync(
       `SELECT pn.*, p.name as process_name FROM process_notifications pn
        JOIN processes p ON pn.process_id = p.id
+       WHERE p.status != 'concluido'
        WHERE pn.member_id = $1 AND pn.read = false
        ORDER BY pn.created_at DESC`,
       [req.params.member_id]
