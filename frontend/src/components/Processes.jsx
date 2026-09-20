@@ -104,6 +104,16 @@ export default function Processes({ members, notifications: notificationsFromPro
     }
   }, [notificationsFromProps, onUnreadNotificationsUpdate]);
 
+  // Atualiza owner_id quando members mudam
+  useEffect(() => {
+    if (members && members.length > 0 && !formData.owner_id) {
+      setFormData(prev => ({
+        ...prev,
+        owner_id: members[0].id
+      }));
+    }
+  }, [members]);
+
   useEffect(() => {
     loadProcesses();
   }, []);
