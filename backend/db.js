@@ -179,6 +179,31 @@ export const initDatabase = async () => {
       // Coluna já existe
     }
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS glpi_tickets (
+        id SERIAL PRIMARY KEY,
+        glpi_number TEXT NOT NULL UNIQUE,
+        description TEXT NOT NULL,
+        status TEXT DEFAULT 'ativa',
+        opened_at TIMESTAMP,
+        closed_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS glpi_history (
+        id SERIAL PRIMARY KEY,
+        ticket_id INTEGER NOT NULL,
+        status_from TEXT,
+        status_to TEXT NOT NULL,
+        closed_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (ticket_id) REFERENCES glpi_tickets(id) ON DELETE CASCADE
+      )
+    `);
+
     console.log('📊 Tabelas criadas/verificadas com sucesso');
   } catch (error) {
     console.error('Erro ao inicializar banco:', error);

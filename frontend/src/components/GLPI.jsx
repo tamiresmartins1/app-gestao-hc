@@ -13,6 +13,8 @@ export default function GLPI() {
     status: 'ativa'
   });
   const [showForm, setShowForm] = useState(false);
+  const [selectedTicketHistory, setSelectedTicketHistory] = useState(null);
+  const [ticketHistory, setTicketHistory] = useState([]);
 
   useEffect(() => {
     loadTickets();
@@ -62,6 +64,16 @@ export default function GLPI() {
         console.error('Erro ao deletar ticket:', error);
         alert('❌ Erro ao deletar: ' + (error.response?.data?.error || error.message));
       }
+    }
+  };
+
+  const loadHistory = async (ticketId) => {
+    try {
+      const res = await axios.get(`${API_URL}/glpi/${ticketId}/history`);
+      setTicketHistory(res.data);
+      setSelectedTicketHistory(ticketId);
+    } catch (error) {
+      console.error('Erro ao carregar histórico:', error);
     }
   };
 
@@ -200,9 +212,25 @@ export default function GLPI() {
                           month: '2-digit',
                           year: 'numeric'
                         })}
+                        {ticket.closed_at && (
+                          <span style={{ marginLeft: '10px' }}>
+                            ✅ {new Date(ticket.closed_at).toLocaleDateString('pt-BR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        )}
                       </div>
 
                       <div className="glpi-actions">
+                        <button
+                          className="btn-history"
+                          onClick={() => loadHistory(ticket.id)}
+                          title="Ver histórico"
+                        >
+                          📋
+                        </button>
                         <button
                           className="btn-toggle"
                           onClick={() => toggleStatus(ticket.id, ticket.status)}
@@ -224,6 +252,45 @@ export default function GLPI() {
               </div>
             </div>
           )}
+        </>
+      )}
+
+      {selectedTicketHistory && (
+        <div className="glpi-modal-overlay" onClick={() => setSelectedTicketHistory(null)}>
+          <div className="glpi-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="glpi-modal-header">
+              <h3>📋 Histórico do Ticket</h3>
+              <button onClick={() => setSelectedTicketHistory(null)}>✕</button>
+            </div>
+            <div className="glpi-modal-content">
+              {ticketHistory.length === 0 ? (
+                <p>Sem histórico registrado</p>
+              ) : (
+                <div className="history-list">
+                  {ticketHistory.map((entry) => (
+                    <div key={entry.id} className="history-entry">
+                      <div className="history-status">
+                        {entry.status_from && <span className="status-badge from">{entry.status_from}</span>}
+                        <span className="arrow">→</span>
+                        <span className="status-badge to">{entry.status_to}</span>
+                      </div>
+                      <div className="history-date">
+                        📅 {new Date(entry.created_at).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
         </>
       )}
     </div>
