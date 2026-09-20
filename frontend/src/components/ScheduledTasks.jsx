@@ -36,22 +36,28 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // SUBTRACT 1 dia porque o input type="date" adicionou 1
-      const subtractDay = (dateStr) => {
+      // ADD 1 dia porque input type="date" interpreta como UTC
+      // Quando salva 21, input mostra como 20 (UTC-3)
+      const addDay = (dateStr) => {
+        if (!dateStr) return '';
         const d = new Date(dateStr + 'T00:00:00Z');
-        d.setDate(d.getDate() - 1);
+        d.setDate(d.getDate() + 1);
         return d.toISOString().split('T')[0];
       };
 
       const dataToSend = editingId ? {
-        ...formData,
-        start_date: subtractDay(formData.start_date),
-        end_date: subtractDay(formData.end_date)
+        title: formData.title,
+        description: formData.description,
+        recurrence: formData.recurrence,
+        start_date: addDay(formData.start_date),
+        end_date: addDay(formData.end_date)
       } : {
         member_id: member.id,
-        ...formData,
-        start_date: subtractDay(formData.start_date),
-        end_date: subtractDay(formData.end_date)
+        title: formData.title,
+        description: formData.description,
+        recurrence: formData.recurrence,
+        start_date: addDay(formData.start_date),
+        end_date: addDay(formData.end_date)
       };
 
       if (editingId) {
@@ -77,20 +83,13 @@ export default function ScheduledTasks({ member }) {
   };
 
   const handleEdit = (task) => {
-    // ADD 1 dia para exibir corretamente no input type="date" (que interpreta como UTC)
-    const addDay = (dateStr) => {
-      const d = new Date(dateStr + 'T00:00:00Z');
-      d.setDate(d.getDate() + 1);
-      return d.toISOString().split('T')[0];
-    };
-
     setEditingId(task.id);
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: addDay(task.start_date),
-      end_date: addDay(task.end_date)
+      start_date: task.start_date,
+      end_date: task.end_date
     });
     setShowForm(true);
   };
@@ -116,17 +115,6 @@ export default function ScheduledTasks({ member }) {
         alert('Erro ao deletar: ' + error.response?.data?.error);
       }
     }
-  };
-
-  const addDay = (dateStr) => {
-    const d = new Date(dateStr + 'T00:00:00Z');
-    d.setDate(d.getDate() + 1);
-    return d.toISOString().split('T')[0];
-  };
-
-  const formatDateDisplay = (dateStr) => {
-    // ADD 1 dia porque input type="date" interpreta como UTC
-    return new Date(addDay(dateStr)).toLocaleDateString('pt-BR');
   };
 
   const getRecurrenceLabel = (rec) => {
@@ -248,7 +236,7 @@ export default function ScheduledTasks({ member }) {
               </div>
 
               <div className="scheduled-dates">
-                <span>📅 {formatDateDisplay(task.start_date)} até {formatDateDisplay(task.end_date)}</span>
+                <span>📅 {new Date(task.start_date).toLocaleDateString('pt-BR')} até {new Date(task.end_date).toLocaleDateString('pt-BR')}</span>
               </div>
 
               <div className="scheduled-actions">
