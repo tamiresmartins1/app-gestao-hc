@@ -83,20 +83,12 @@ export default function ScheduledTasks({ member }) {
 
   const handleEdit = (task) => {
     setEditingId(task.id);
-
-    // Corrige timezone: adiciona 1 dia para compensar interpretação UTC
-    const fixDate = (dateStr) => {
-      const date = new Date(dateStr + 'T00:00:00Z');
-      date.setDate(date.getDate() + 1);
-      return date.toISOString().split('T')[0];
-    };
-
     setFormData({
       title: task.title,
       description: task.description || '',
       recurrence: task.recurrence,
-      start_date: fixDate(task.start_date),
-      end_date: fixDate(task.end_date)
+      start_date: task.start_date,
+      end_date: task.end_date
     });
     setShowForm(true);
   };
