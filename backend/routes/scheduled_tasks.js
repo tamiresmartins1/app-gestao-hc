@@ -101,80 +101,42 @@ scheduledTasksRoutes.delete('/:id', async (req, res) => {
 scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const dayOfWeek = new Date().getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
 
-    // Buscar tarefas ativas hoje que ainda NÃO foram criadas hoje
+    // Buscar todas tarefas programadas ativas hoje
     const result = await pool.query(
       `SELECT * FROM scheduled_tasks
        WHERE start_date::text <= $1
-       AND end_date::text >= $1
-       AND (last_created_date IS NULL OR last_created_date::text < $1)`,
+       AND end_date::text >= $1`,
       [today]
     );
 
     let createdCount = 0;
 
     for (const task of result.rows) {
-      let shouldCreate = false;
+      // Verificar se já não existe tarefa duplicada
+      const taskResult = await pool.query(
+        `SELECT 1 FROM tasks WHERE assigned_to = $1 AND due_date = $2 AND title = $3 LIMIT 1`,
+        [task.member_id, today, task.title]
+      );
 
-      // Verificar se deve criar tarefa baseado na recorrência
-      switch (task.recurrence) {
-        case 'diario':
-          // Criar apenas em dias úteis (segunda a sexta = 1 a 5)
-          shouldCreate = dayOfWeek >= 1 && dayOfWeek <= 5;
-          break;
-        case 'semanal':
-          // Criar apenas em dias úteis (segunda a sexta)
-          shouldCreate = dayOfWeek >= 1 && dayOfWeek <= 5;
-          break;
-        case 'quinzenal':
-          // Criar a cada 15 dias em dias úteis
-          const startDate = new Date(task.start_date);
-          const diffDays = Math.floor((new Date(today) - startDate) / (1000 * 60 * 60 * 24));
-          shouldCreate = (diffDays % 15 === 0) && (dayOfWeek >= 1 && dayOfWeek <= 5);
-          break;
-        case 'mensal':
-          // Criar no mesmo dia do mês em dias úteis
-          const todayDate = new Date(today);
-          const startDayOfMonth = new Date(task.start_date).getDate();
-          shouldCreate = (todayDate.getDate() === startDayOfMonth) && (dayOfWeek >= 1 && dayOfWeek <= 5);
-          break;
-        default:
-          shouldCreate = false;
-      }
-
-      // Se deve criar
-      if (shouldCreate) {
-        const taskResult = await pool.query(
-          `SELECT 1 FROM tasks WHERE assigned_to = $1 AND due_date = $2 AND title = $3 LIMIT 1`,
-          [task.member_id, today, task.title]
-        );
-
-        // Se não existe tarefa duplicada
-        if (taskResult.rows.length === 0) {
-          await pool.query(
-            `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-            [
-              uuidv4(),
-              task.title,
-              task.description || '',
-              task.member_id,
-              'ativa',
-              task.member_id,
-              today,
-              'média'
-            ]
-          );
-
-          createdCount++;
-        }
-
-        // Atualizar last_created_date
+      // Se não existe tarefa duplicada, criar
+      if (taskResult.rows.length === 0) {
         await pool.query(
-          `UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2`,
-          [today, task.id]
+          `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            uuidv4(),
+            task.title,
+            task.description || '',
+            task.member_id,
+            'ativa',
+            task.member_id,
+            today,
+            'média'
+          ]
         );
+
+        createdCount++;
       }
     }
 
