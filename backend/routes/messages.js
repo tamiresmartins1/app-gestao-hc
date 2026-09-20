@@ -82,6 +82,10 @@ messagesRoutes.delete('/:id', async (req, res) => {
     const { member_id } = req.body;
     const messageId = req.params.id;
 
+    if (!member_id) {
+      return res.status(400).json({ error: 'member_id é obrigatório' });
+    }
+
     // Buscar a mensagem para saber quem é o sender
     const message = await getAsync('SELECT * FROM messages WHERE id = $1', [messageId]);
 
@@ -94,10 +98,13 @@ messagesRoutes.delete('/:id', async (req, res) => {
       await runAsync('UPDATE messages SET deleted_by_sender = true WHERE id = $1', [messageId]);
     } else if (message.recipient_id === member_id) {
       await runAsync('UPDATE messages SET deleted_by_recipient = true WHERE id = $1', [messageId]);
+    } else {
+      return res.status(403).json({ error: 'Você não tem permissão para deletar esta mensagem' });
     }
 
     res.json({ success: true });
   } catch (error) {
+    console.error('Erro ao deletar mensagem:', error.message);
     res.status(500).json({ error: error.message });
   }
 });
