@@ -39,8 +39,9 @@ const formatDueDate = (dueDate) => {
   }
 };
 
-export default function Processes({ members }) {
+export default function Processes({ members, notifications: notificationsFromProps = [], onUnreadNotificationsUpdate }) {
   const [processes, setProcesses] = useState([]);
+  const [notifications, setNotifications] = useState(notificationsFromProps || []);
   const [showForm, setShowForm] = useState(false);
   const getTodayDateString = () => {
     const today = new Date();
@@ -88,6 +89,15 @@ export default function Processes({ members }) {
       console.error('Erro ao carregar detalhes:', error);
     }
   };
+
+  // Sincroniza notificações
+  useEffect(() => {
+    setNotifications(notificationsFromProps || []);
+    if (onUnreadNotificationsUpdate) {
+      const unreadCount = (notificationsFromProps || []).filter(n => !n.read).length;
+      onUnreadNotificationsUpdate(unreadCount);
+    }
+  }, [notificationsFromProps, onUnreadNotificationsUpdate]);
 
   useEffect(() => {
     loadProcesses();
@@ -155,6 +165,17 @@ export default function Processes({ members }) {
     }
   };
 
+  const markNotificationAsRead = async (notificationId) => {
+    try {
+      await axios.put(`${API_URL}/processes/notifications/${notificationId}/read`);
+      // Notificações serão recarregadas pelo polling global
+    } catch (error) {
+      console.error('Erro ao marcar como lido:', error);
+    }
+  };
+
+  const unreadNotificationsCount = notifications.filter(n => !n.read).length;
+
   return (
     <div className="processes">
       <div className="processes-header">
@@ -166,6 +187,63 @@ export default function Processes({ members }) {
           <FiPlus /> Novo Processo
         </button>
       </div>
+
+      {/* Seção de Notificações de Processo */}
+      {notifications && notifications.length > 0 && (
+        <div style={{
+          background: '#fff3cd',
+          border: '1px solid #ffc107',
+          borderRadius: '8px',
+          padding: '15px',
+          marginBottom: '20px'
+        }}>
+          <div style={{ marginBottom: '12px' }}>
+            <strong style={{ color: '#856404', fontSize: '14px' }}>
+              ⚠️ Aviso de Processo ({unreadNotificationsCount} nova{unreadNotificationsCount !== 1 ? 's' : ''})
+            </strong>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '200px', overflowY: 'auto' }}>
+            {notifications.map(notification => (
+              <div
+                key={notification.id}
+                style={{
+                  background: 'white',
+                  padding: '10px',
+                  borderRadius: '4px',
+                  borderLeft: !notification.read ? '3px solid #ffc107' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+                onClick={() => markNotificationAsRead(notification.id)}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', gap: '10px' }}>
+                  <div style={{ flex: 1 }}>
+                    <strong style={{ color: '#333', fontSize: '13px' }}>
+                      {notification.process_name}
+                    </strong>
+                    <p style={{ margin: '4px 0', color: '#666', fontSize: '12px' }}>
+                      {notification.message}
+                    </p>
+                    <small style={{ color: '#999' }}>
+                      {new Date(notification.created_at).toLocaleString('pt-BR')}
+                    </small>
+                  </div>
+                  {!notification.read && (
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      background: '#ffc107',
+                      borderRadius: '50%',
+                      flexShrink: 0,
+                      marginTop: '4px'
+                    }}></div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {selectedProcessDetails && (
         <div style={{

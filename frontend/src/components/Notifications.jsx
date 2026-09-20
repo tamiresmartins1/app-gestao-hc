@@ -32,7 +32,7 @@ export default function Notifications({ member, notifications: notificationsFrom
   return (
     <div className="notifications">
       <div className="notifications-header">
-        <h2>🔔 Notificações</h2>
+        <h2>⚠️ Aviso de Processo</h2>
         {unreadCount > 0 && (
           <span className="unread-badge">
             {unreadCount} nova{unreadCount !== 1 ? 's' : ''}

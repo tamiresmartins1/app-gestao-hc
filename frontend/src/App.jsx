@@ -344,7 +344,7 @@ function App() {
             )}
 
             {activeTab === 'processos' && (
-              <Processes members={members} />
+              <Processes members={members} notifications={notifications} onUnreadNotificationsUpdate={handleUnreadNotificationsUpdate} />
             )}
 
             {activeTab === 'links' && (
