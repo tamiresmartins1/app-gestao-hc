@@ -102,16 +102,18 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
   try {
     const today = '2026-09-20';
 
-    // SIMPLES: Buscar TODAS tarefas programadas que estão ativas hoje
+    // Buscar tarefas: ativas hoje E não foram criadas ainda hoje
     const result = await pool.query(
-      `SELECT * FROM scheduled_tasks WHERE start_date <= $1 AND end_date >= $1`,
+      `SELECT * FROM scheduled_tasks
+       WHERE start_date <= $1 AND end_date >= $1
+       AND (last_created_date IS NULL OR last_created_date < $1)`,
       [today]
     );
 
     let createdCount = 0;
 
     for (const task of result.rows) {
-      // Criar uma tarefa para cada
+      // Criar tarefa
       await pool.query(
         `INSERT INTO tasks (id, title, description, assigned_to, status, created_by, due_date, priority)
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
@@ -126,6 +128,13 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
           'média'
         ]
       );
+
+      // Atualizar last_created_date para não criar duplicadas
+      await pool.query(
+        'UPDATE scheduled_tasks SET last_created_date = $1 WHERE id = $2',
+        [today, task.id]
+      );
+
       createdCount++;
     }
 
