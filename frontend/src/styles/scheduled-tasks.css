@@ -95,6 +95,10 @@
   font-family: inherit;
 }
 
+.form-group input[type="date"] {
+  height: 36px;
+}
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
