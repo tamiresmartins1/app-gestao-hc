@@ -59,6 +59,11 @@
   grid-column: 1 / -1;
 }
 
+.form-row textarea {
+  grid-column: 1 / -1;
+  resize: vertical;
+  min-height: 80px;
+}
 
 input[type="date"] {
   height: 36px !important;
