@@ -127,6 +127,12 @@ scheduledTasksRoutes.post('/process/all', async (req, res) => {
         ]
       );
 
+      // Atualizar last_created_date usando to_date
+      await pool.query(
+        `UPDATE scheduled_tasks SET last_created_date = to_date($1, 'YYYY-MM-DD') WHERE id = $2`,
+        [today, task.id]
+      );
+
       createdCount++;
     }
 
