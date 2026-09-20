@@ -57,23 +57,21 @@ export default function ScheduledTasks({ member }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const subtractDay = (dateStr) => {
-        if (!dateStr) return dateStr;
-        const d = new Date(dateStr + 'T00:00:00Z');
-        d.setDate(d.getDate() - 1);
-        return d.toISOString().split('T')[0];
-      };
-
       let dataToSend = editingId ? { ...formData } : {
         member_id: member.id,
         ...formData
       };
 
-      // SEMPRE subtract 1 dia (porque o input type="date" interpreta como UTC)
-      dataToSend.start_date = subtractDay(dataToSend.start_date);
-      dataToSend.end_date = subtractDay(dataToSend.end_date);
-
+      // Na EDIÇÃO: subtract 1 dia (porque foi added ao carregar)
       if (editingId) {
+        const subtractDay = (dateStr) => {
+          if (!dateStr) return dateStr;
+          const d = new Date(dateStr + 'T00:00:00Z');
+          d.setDate(d.getDate() - 1);
+          return d.toISOString().split('T')[0];
+        };
+        dataToSend.start_date = subtractDay(dataToSend.start_date);
+        dataToSend.end_date = subtractDay(dataToSend.end_date);
         await axios.patch(`${API_URL}/scheduled-tasks/${editingId}`, dataToSend);
       } else {
         await axios.post(`${API_URL}/scheduled-tasks`, dataToSend);
