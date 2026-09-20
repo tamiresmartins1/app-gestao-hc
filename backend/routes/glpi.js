@@ -52,7 +52,7 @@ glpiRoutes.post('/', async (req, res) => {
 // PATCH update GLPI ticket status
 glpiRoutes.patch('/:id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const ticketId = parseInt(req.params.id);
     const { status } = req.body;
 
     if (!status) {
@@ -62,7 +62,7 @@ glpiRoutes.patch('/:id', async (req, res) => {
     // Buscar status anterior
     const currentTicket = await pool.query(
       'SELECT * FROM glpi_tickets WHERE id = $1',
-      [id]
+      [ticketId]
     );
 
     if (!currentTicket.rows[0]) {
@@ -75,19 +75,23 @@ glpiRoutes.patch('/:id', async (req, res) => {
     // Atualizar ticket
     const result = await pool.query(
       'UPDATE glpi_tickets SET status = $1, closed_at = $2, updated_at = $3 WHERE id = $4 RETURNING *',
-      [status, status === 'concluída' ? now : null, now, id]
+      [status, status === 'concluída' ? now : null, now, ticketId]
     );
 
     // Registrar no histórico
-    await pool.query(
-      'INSERT INTO glpi_history (ticket_id, status_from, status_to, closed_at, created_at) VALUES ($1, $2, $3, $4, $5)',
-      [id, oldStatus, status, status === 'concluída' ? now : null, now]
-    );
+    try {
+      await pool.query(
+        'INSERT INTO glpi_history (ticket_id, status_from, status_to, closed_at, created_at) VALUES ($1, $2, $3, $4, $5)',
+        [ticketId, oldStatus, status, status === 'concluída' ? now : null, now]
+      );
+    } catch (historyError) {
+      console.warn('Aviso ao registrar histórico:', historyError.message);
+    }
 
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Erro ao atualizar GLPI ticket:', error);
-    res.status(500).json({ error: 'Erro ao atualizar GLPI ticket' });
+    res.status(500).json({ error: 'Erro ao atualizar GLPI ticket: ' + error.message });
   }
 });
 
