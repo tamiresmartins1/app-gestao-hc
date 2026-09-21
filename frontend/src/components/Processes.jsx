@@ -39,13 +39,14 @@ export default function Processes({ members, notifications: notificationsFromPro
 
   const [formLines, setFormLines] = useState(() => {
     const ownerMember = members && members.length > 0 ? members[0] : { id: '1', name: 'Membro 1' };
+    const today = new Date().toISOString().split('T')[0];
     return [{
       id: Math.random(),
       name: '',
       description: '',
       category: 'Auditoria',
       owner_id: ownerMember.id,
-      due_date: '',
+      due_date: today,
       responsible_ids: [],
       participant_ids: []
     }];
@@ -400,43 +401,55 @@ export default function Processes({ members, notifications: notificationsFromPro
             {formLines.map((line, index) => (
               <div key={line.id} className="process-line">
                 <div className="line-inputs">
-                  <input
-                    type="text"
-                    value={line.name}
-                    onChange={(e) => updateLine(index, 'name', e.target.value)}
-                    placeholder="Nome do processo"
-                    className="line-input-main"
-                  />
+                  <div className="input-group">
+                    <label>📌 Nome do Processo *</label>
+                    <input
+                      type="text"
+                      value={line.name}
+                      onChange={(e) => updateLine(index, 'name', e.target.value)}
+                      placeholder="Ex: Auditoria de Prontuário, Reunião Clínica"
+                      className="line-input-main"
+                    />
+                  </div>
 
-                  <input
-                    type="date"
-                    value={line.due_date}
-                    onChange={(e) => updateLine(index, 'due_date', e.target.value)}
-                    className="line-input-date"
-                  />
+                  <div className="input-group">
+                    <label>📅 Prazo de Entrega *</label>
+                    <input
+                      type="date"
+                      value={line.due_date}
+                      onChange={(e) => updateLine(index, 'due_date', e.target.value)}
+                      className="line-input-date"
+                    />
+                  </div>
 
-                  <select
-                    value={line.category}
-                    onChange={(e) => updateLine(index, 'category', e.target.value)}
-                    className="line-input-category"
-                  >
-                    {CATEGORIES.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
+                  <div className="input-group">
+                    <label>🏷️ Categoria</label>
+                    <select
+                      value={line.category}
+                      onChange={(e) => updateLine(index, 'category', e.target.value)}
+                      className="line-input-category"
+                    >
+                      {CATEGORIES.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
 
-                  <textarea
-                    value={line.description}
-                    onChange={(e) => updateLine(index, 'description', e.target.value)}
-                    placeholder="Descrição"
-                    rows="1"
-                    className="line-input-desc"
-                  />
+                  <div className="input-group full-width">
+                    <label>📝 Descrição (o que precisa ser feito)</label>
+                    <textarea
+                      value={line.description}
+                      onChange={(e) => updateLine(index, 'description', e.target.value)}
+                      placeholder="Descreva em detalhes o que precisa ser realizado neste processo"
+                      rows="2"
+                      className="line-input-desc"
+                    />
+                  </div>
                 </div>
 
                 <div className="line-checkboxes">
                   <div className="checkbox-section">
-                    <label className="section-label">👤 Responsáveis</label>
+                    <label className="section-label">👤 Responsáveis (quem executa) *</label>
                     <div className="checkbox-group-inline">
                       {availableMembers.map(member => (
                         <div key={member.id} className="checkbox-item-inline">
@@ -453,7 +466,7 @@ export default function Processes({ members, notifications: notificationsFromPro
                   </div>
 
                   <div className="checkbox-section">
-                    <label className="section-label">🔄 Próximas</label>
+                    <label className="section-label">🔄 Próximas Etapas (próximos responsáveis)</label>
                     <div className="checkbox-group-inline">
                       {availableMembers.map(member => (
                         <div key={member.id} className="checkbox-item-inline">
