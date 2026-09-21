@@ -22,13 +22,14 @@ const MONTHS = [
 
 const CATEGORIES = [
   'Auditoria',
-  'Fechamento de Indicador',
+  'Fechamento Indicadores Matriz',
   'Reunião Clínica Agenda'
 ];
 
 export default function Processes({ members, notifications: notificationsFromProps = [], onUnreadNotificationsUpdate }) {
   const [processes, setProcesses] = useState([]);
   const [expandedMonths, setExpandedMonths] = useState({});
+  const [expandedCategories, setExpandedCategories] = useState({});
   const [expandedProcesses, setExpandedProcesses] = useState({});
   const [selectedResponsible, setSelectedResponsible] = useState({});
   const [showForm, setShowForm] = useState(false);
@@ -472,14 +473,34 @@ export default function Processes({ members, notifications: notificationsFromPro
             {expandedMonths[month.num] && (
               <div className="month-content">
                 {CATEGORIES.map(category => {
+                  const categoryKey = `${month.num}-${category}`;
                   const categoryProcesses = getProcessesByMonthAndCategory(month.num, category);
+                  const isExpanded = expandedCategories[categoryKey];
+
                   return (
                     <div key={category} className="category-section">
-                      <h4>{category}</h4>
-                      {categoryProcesses.length === 0 ? (
-                        <p className="empty">Nenhum processo</p>
-                      ) : (
-                        <div className="processes-list">
+                      <div
+                        className="category-header"
+                        onClick={() => setExpandedCategories(prev => ({
+                          ...prev,
+                          [categoryKey]: !prev[categoryKey]
+                        }))}
+                      >
+                        <h4>{category}</h4>
+                        {categoryProcesses.length > 0 && (
+                          <span className="category-count">{categoryProcesses.length}</span>
+                        )}
+                        <span className="category-toggle">
+                          {isExpanded ? '▼' : '▶'}
+                        </span>
+                      </div>
+
+                      {isExpanded && (
+                        <>
+                          {categoryProcesses.length === 0 ? (
+                            <p className="empty">Nenhum processo</p>
+                          ) : (
+                            <div className="processes-list">
                           {categoryProcesses.map(process => (
                             <div key={process.id} className="process-item">
                               <div
@@ -542,7 +563,9 @@ export default function Processes({ members, notifications: notificationsFromPro
                               )}
                             </div>
                           ))}
-                        </div>
+                            </div>
+                          )}
+                        </>
                       )}
                     </div>
                   );
