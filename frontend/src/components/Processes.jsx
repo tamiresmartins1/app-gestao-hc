@@ -557,7 +557,17 @@ export default function Processes({ members, notifications: notificationsFromPro
                                     <p>{process.description}</p>
                                     <div className="process-meta">
                                       {process.due_date && (
-                                        <small className="due-date">📅 {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}</small>
+                                        <small className="due-date">
+                                          📅 {(() => {
+                                            try {
+                                              const dateStr = process.due_date.split('T')[0];
+                                              const [year, month, day] = dateStr.split('-');
+                                              return `${day}/${month}/${year}`;
+                                            } catch (e) {
+                                              return process.due_date;
+                                            }
+                                          })()}
+                                        </small>
                                       )}
                                       {process.completion_status && process.completion_status.total > 0 ? (
                                         <div className="completion-bar">
