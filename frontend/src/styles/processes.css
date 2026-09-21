@@ -579,9 +579,33 @@
 
 .process-actions-completed {
   display: flex;
-  justify-content: flex-end;
-  padding: 8px 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
   border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+.completed-by {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.completed-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #4CAF50;
+}
+
+.completed-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 4px 8px;
+  background: #e8f5e9;
+  border-radius: 4px;
 }
 
 .responsible-selector {

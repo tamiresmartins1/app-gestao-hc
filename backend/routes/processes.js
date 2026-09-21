@@ -21,16 +21,21 @@ processesRoutes.get('/', async (req, res) => {
       );
       process.assigned_members = members;
 
-      // Get completion status for each member
+      // Get completion status for each member with names
       const completion = await allAsync(
-        `SELECT member_id, completed FROM process_completion_status WHERE process_id = $1`,
+        `SELECT pcs.member_id, pcs.completed, m.name FROM process_completion_status pcs
+         LEFT JOIN members m ON pcs.member_id = m.id
+         WHERE pcs.process_id = $1`,
         [process.id]
       );
       const completedCount = completion.filter(c => c.completed).length;
+      const completedBy = completion.find(c => c.completed);
       process.completion_status = {
         total: completion.length,
         completed: completedCount,
-        percentage: completion.length > 0 ? Math.round((completedCount / completion.length) * 100) : 0
+        percentage: completion.length > 0 ? Math.round((completedCount / completion.length) * 100) : 0,
+        completed_by_name: completedBy?.name || null,
+        completed_by_id: completedBy?.member_id || null
       };
     }
 
@@ -233,34 +238,29 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
       const currentProcess = await getAsync('SELECT * FROM processes WHERE id = $1', [processId]);
       console.log(`✅ Processo concluído: ${currentProcess.name} (ID: ${processId})`);
 
-      // Notificar TODOS os membros do processo (responsáveis + participantes)
+      // Buscar APENAS os "Próximas Etapas" (participants)
+      // Participants são membros em process_members que NÃO estão em process_completion_status
       const participants = await allAsync(
         `SELECT DISTINCT pm.member_id FROM process_members pm
-         WHERE pm.process_id = $1`,
+         WHERE pm.process_id = $1
+         AND pm.member_id NOT IN (
+           SELECT member_id FROM process_completion_status WHERE process_id = $1
+         )`,
         [processId]
       );
 
-      console.log(`📢 Encontrados ${participants.length} participantes para notificar`);
-      console.log(`📋 Query: Buscando em process_members onde NÃO estão em process_completion_status`);
+      console.log(`📢 "Próximas Etapas" encontradas: ${participants.length} participantes`);
 
-      // Se não tem participantes, notifica TODOS os outros membros
-      let recipientsToNotify = participants;
-      if (recipientsToNotify.length === 0) {
-        console.log(`⚠️ Nenhum participante encontrado! Notificando TODOS os membros...`);
-        const allMembers = await allAsync(
-          `SELECT id FROM members WHERE id != $1`,
-          [memberId]
-        );
-        recipientsToNotify = allMembers.map(m => ({ member_id: m.id }));
-        console.log(`📢 Alterado: notificando ${recipientsToNotify.length} membros`);
-      }
-
-      for (let { member_id } of recipientsToNotify) {
+      // Enviar notificação apenas para os participants (Próximas Etapas)
+      for (let { member_id } of participants) {
         const notifId = uuidv4();
+        const completedMember = await getAsync('SELECT name FROM members WHERE id = $1', [memberId]);
+        const message = `✅ ${completedMember.name} concluiu o processo "${currentProcess.name}"! Sua etapa pode começar agora!`;
+
         await runAsync(
           `INSERT INTO process_notifications (id, process_id, member_id, message)
            VALUES ($1, $2, $3, $4)`,
-          [notifId, processId, member_id, `✅ O processo "${currentProcess.name}" foi CONCLUÍDO! Notificação enviada em ${new Date().toLocaleTimeString('pt-BR')}`]
+          [notifId, processId, member_id, message]
         );
         console.log(`📩 Notificação criada para ${member_id}: ${notifId}`);
       }

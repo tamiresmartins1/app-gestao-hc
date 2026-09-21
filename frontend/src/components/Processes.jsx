@@ -597,6 +597,10 @@ export default function Processes({ members, notifications: notificationsFromPro
                                 <>
                                   {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed === process.completion_status.total ? (
                                     <div className="process-actions-completed">
+                                      <div className="completed-by">
+                                        <span className="completed-label">✅ Concluído por:</span>
+                                        <span className="completed-name">{process.completion_status.completed_by_name || 'Não informado'}</span>
+                                      </div>
                                       <button
                                         className="btn-delete"
                                         onClick={() => handleDeleteProcess(process.id)}

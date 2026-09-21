@@ -14,7 +14,8 @@
       "Bash(git commit -m 'Adjust sidebar width - tasks 40%, notes 60% *)",
       "Bash(git commit -m ' *)",
       "Bash(git commit -m 'Hide action buttons when process is complete, show only delete button *)",
-      "Bash(git commit -m 'Hide entire action section when process is complete *)"
+      "Bash(git commit -m 'Hide entire action section when process is complete *)",
+      "Bash(git commit -m 'Show who completed the process and improve notifications *)"
     ]
   }
 }
