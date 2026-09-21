@@ -18,7 +18,19 @@ export default function ScheduledTasks({ member }) {
   });
 
   useEffect(() => {
-    loadScheduledTasks();
+    const initializeTasks = async () => {
+      try {
+        // Gerar tarefas automaticamente ao abrir
+        await axios.post(`${API_URL}/scheduled-tasks/process/all`, { member_id: member.id });
+      } catch (error) {
+        console.error('Erro ao gerar tarefas automaticamente:', error);
+      } finally {
+        // Sempre carregar as tarefas, mesmo se houver erro na geração
+        loadScheduledTasks();
+      }
+    };
+
+    initializeTasks();
   }, [member.id]);
 
   const loadScheduledTasks = async () => {
