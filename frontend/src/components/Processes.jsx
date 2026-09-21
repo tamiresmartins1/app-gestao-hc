@@ -613,26 +613,40 @@ export default function Processes({ members, notifications: notificationsFromPro
                                     </select>
                                   </div>
                                   <div className="process-actions-buttons">
-                                    <button
-                                      className="btn-complete"
-                                      onClick={() => handleMarkComplete(process.id, selectedResponsible[process.id])}
-                                      disabled={!selectedResponsible[process.id]}
-                                    >
-                                      ✓ Marcar Concluído
-                                    </button>
-                                    <button
-                                      className="btn-duplicate"
-                                      onClick={() => setDuplicatingProcess(process.id)}
-                                      title="Duplicar para outro mês"
-                                    >
-                                      📋 Duplicar
-                                    </button>
-                                    <button
-                                      className="btn-delete"
-                                      onClick={() => handleDeleteProcess(process.id)}
-                                    >
-                                      <FiTrash2 />
-                                    </button>
+                                    {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed === process.completion_status.total ? (
+                                      <>
+                                        <span className="process-completed-badge">✅ Concluído</span>
+                                        <button
+                                          className="btn-delete"
+                                          onClick={() => handleDeleteProcess(process.id)}
+                                        >
+                                          <FiTrash2 />
+                                        </button>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <button
+                                          className="btn-complete"
+                                          onClick={() => handleMarkComplete(process.id, selectedResponsible[process.id])}
+                                          disabled={!selectedResponsible[process.id]}
+                                        >
+                                          ✓ Marcar Concluído
+                                        </button>
+                                        <button
+                                          className="btn-duplicate"
+                                          onClick={() => setDuplicatingProcess(process.id)}
+                                          title="Duplicar para outro mês"
+                                        >
+                                          📋 Duplicar
+                                        </button>
+                                        <button
+                                          className="btn-delete"
+                                          onClick={() => handleDeleteProcess(process.id)}
+                                        >
+                                          <FiTrash2 />
+                                        </button>
+                                      </>
+                                    )}
                                   </div>
 
                                   {duplicatingProcess === process.id && (

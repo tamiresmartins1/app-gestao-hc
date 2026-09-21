@@ -4,7 +4,16 @@
       "PowerShell(npm --version)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(git commit -m 'Add Programadas tab back to tasks view *)",
+      "Bash(git commit --allow-empty -m 'Rebuild on Netlify *)",
+      "Bash(git reset *)",
+      "Bash(git commit -m 'Reorganize Minhas Tarefas with new sections layout *)",
+      "Bash(git commit -m 'Change to sidebar layout with writable sections *)",
+      "Bash(git commit -m 'Change sidebar to tabbed interface *)",
+      "Bash(git commit -m 'Adjust sidebar width - tasks 40%, notes 60% *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git commit -m 'Hide action buttons when process is complete, show only delete button *)"
     ]
   }
 }

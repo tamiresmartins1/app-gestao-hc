@@ -633,6 +633,22 @@
   flex-shrink: 0;
 }
 
+.process-completed-badge {
+  flex: 1;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 12px;
+  text-align: center;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .process-meta {
   display: flex;
   flex-direction: column;
