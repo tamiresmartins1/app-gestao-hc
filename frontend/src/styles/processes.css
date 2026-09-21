@@ -577,6 +577,13 @@
   border-top: 1px solid #eee;
 }
 
+.process-actions-completed {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
+}
+
 .responsible-selector {
   display: flex;
   flex-direction: column;

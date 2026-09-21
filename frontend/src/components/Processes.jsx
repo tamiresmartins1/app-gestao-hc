@@ -594,37 +594,36 @@ export default function Processes({ members, notifications: notificationsFromPro
                                 )}
                               </div>
                               {expandedProcesses[process.id] && (
-                                <div className="process-actions">
-                                  <div className="responsible-selector">
-                                    <label>Quem completou?</label>
-                                    <select
-                                      value={selectedResponsible[process.id] || ''}
-                                      onChange={(e) => setSelectedResponsible(prev => ({
-                                        ...prev,
-                                        [process.id]: e.target.value
-                                      }))}
-                                    >
-                                      <option value="">Selecione...</option>
-                                      {process.assigned_members && process.assigned_members.map(member => (
-                                        <option key={member.id} value={member.id}>
-                                          {member.name}
-                                        </option>
-                                      ))}
-                                    </select>
-                                  </div>
-                                  <div className="process-actions-buttons">
-                                    {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed === process.completion_status.total ? (
-                                      <>
-                                        <span className="process-completed-badge">✅ Concluído</span>
-                                        <button
-                                          className="btn-delete"
-                                          onClick={() => handleDeleteProcess(process.id)}
+                                <>
+                                  {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed === process.completion_status.total ? (
+                                    <div className="process-actions-completed">
+                                      <button
+                                        className="btn-delete"
+                                        onClick={() => handleDeleteProcess(process.id)}
+                                      >
+                                        <FiTrash2 />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <div className="process-actions">
+                                      <div className="responsible-selector">
+                                        <label>Quem completou?</label>
+                                        <select
+                                          value={selectedResponsible[process.id] || ''}
+                                          onChange={(e) => setSelectedResponsible(prev => ({
+                                            ...prev,
+                                            [process.id]: e.target.value
+                                          }))}
                                         >
-                                          <FiTrash2 />
-                                        </button>
-                                      </>
-                                    ) : (
-                                      <>
+                                          <option value="">Selecione...</option>
+                                          {process.assigned_members && process.assigned_members.map(member => (
+                                            <option key={member.id} value={member.id}>
+                                              {member.name}
+                                            </option>
+                                          ))}
+                                        </select>
+                                      </div>
+                                      <div className="process-actions-buttons">
                                         <button
                                           className="btn-complete"
                                           onClick={() => handleMarkComplete(process.id, selectedResponsible[process.id])}
@@ -645,33 +644,33 @@ export default function Processes({ members, notifications: notificationsFromPro
                                         >
                                           <FiTrash2 />
                                         </button>
-                                      </>
-                                    )}
-                                  </div>
-
-                                  {duplicatingProcess === process.id && (
-                                    <div className="duplicate-selector">
-                                      <label>Duplicar para qual mês?</label>
-                                      <div className="duplicate-months">
-                                        {MONTHS.map(m => (
-                                          <button
-                                            key={m.num}
-                                            className="month-btn"
-                                            onClick={() => handleDuplicateProcess(process, m.num)}
-                                          >
-                                            {m.name}
-                                          </button>
-                                        ))}
                                       </div>
-                                      <button
-                                        className="btn-cancel-duplicate"
-                                        onClick={() => setDuplicatingProcess(null)}
-                                      >
-                                        ✕ Cancelar
-                                      </button>
+
+                                      {duplicatingProcess === process.id && (
+                                        <div className="duplicate-selector">
+                                          <label>Duplicar para qual mês?</label>
+                                          <div className="duplicate-months">
+                                            {MONTHS.map(m => (
+                                              <button
+                                                key={m.num}
+                                                className="month-btn"
+                                                onClick={() => handleDuplicateProcess(process, m.num)}
+                                              >
+                                                {m.name}
+                                              </button>
+                                            ))}
+                                          </div>
+                                          <button
+                                            className="btn-cancel-duplicate"
+                                            onClick={() => setDuplicatingProcess(null)}
+                                          >
+                                            ✕ Cancelar
+                                          </button>
+                                        </div>
+                                      )}
                                     </div>
                                   )}
-                                </div>
+                                </>
                               )}
                             </div>
                           ))}
