@@ -205,6 +205,19 @@ export const initDatabase = async () => {
     }
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS member_sections (
+        id TEXT PRIMARY KEY,
+        member_id TEXT NOT NULL,
+        section_type TEXT NOT NULL,
+        content TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (member_id) REFERENCES members(id),
+        UNIQUE(member_id, section_type)
+      )
+    `);
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS glpi_tickets (
         id SERIAL PRIMARY KEY,
         glpi_number TEXT NOT NULL UNIQUE,

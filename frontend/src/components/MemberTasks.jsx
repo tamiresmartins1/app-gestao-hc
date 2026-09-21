@@ -3,6 +3,7 @@ import { FiPlus, FiTrash2, FiEdit2 } from 'react-icons/fi';
 import TaskForm from './TaskForm';
 import TaskList from './TaskList';
 import MemberNotes from './MemberNotes';
+import SectionEditor from './SectionEditor';
 import ScheduledTasks from './ScheduledTasks';
 import '../styles/member-tasks.css';
 
@@ -219,27 +220,33 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
 
             {activeSection === 'agendas' && (
               <div className="section-box">
-                <textarea
-                  className="section-textarea"
-                  placeholder="Escreva aqui as agendas que você é responsável..."
+                <SectionEditor
+                  member={member}
+                  section="agendas"
+                  title="Agendas Logística"
+                  icon="📅"
                 />
               </div>
             )}
 
             {activeSection === 'auditorias' && (
               <div className="section-box">
-                <textarea
-                  className="section-textarea"
-                  placeholder="Escreva aqui as auditorias que você é responsável..."
+                <SectionEditor
+                  member={member}
+                  section="auditorias"
+                  title="Auditorias de Prontuário"
+                  icon="🔍"
                 />
               </div>
             )}
 
             {activeSection === 'programadas' && (
               <div className="section-box">
-                <textarea
-                  className="section-textarea"
-                  placeholder="Escreva aqui as tarefas programadas..."
+                <SectionEditor
+                  member={member}
+                  section="programadas"
+                  title="Tarefas Programadas"
+                  icon="📌"
                 />
               </div>
             )}
