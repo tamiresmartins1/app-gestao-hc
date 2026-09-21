@@ -327,9 +327,9 @@
 }
 
 .btn-add-another {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 2px dashed rgba(255, 255, 255, 0.4);
+  background: #f0f0f0;
+  color: #333;
+  border: 2px dashed #4CAF50;
   padding: 12px 24px;
   border-radius: 6px;
   cursor: pointer;
@@ -340,8 +340,8 @@
 }
 
 .btn-add-another:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: #e8f5e9;
+  border-color: #388e3c;
 }
 
 .form-actions {
