@@ -9,7 +9,7 @@ import '../styles/member-tasks.css';
 export default function MemberTasks({ member, tasks, members, onAddTask, onUpdateTask, onDeleteTask }) {
   const [showForm, setShowForm] = useState(false);
   const [viewMode, setViewMode] = useState('ativas');
-  const [activeSection, setActiveSection] = useState('tarefas');
+  const [activeSection, setActiveSection] = useState('anotacoes');
 
   // Carrega filtros do localStorage por membro
   const getStoredFilterStatus = () => {
@@ -183,35 +183,66 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
         </div>
 
         <div className="notes-column">
-          <div className="sidebar-sections">
-            <div className="sidebar-section active">
-              <h3>📝 Anotações</h3>
-              <MemberNotes member={member} />
-            </div>
+          <div className="sidebar-tabs">
+            <button
+              className={`sidebar-tab ${activeSection === 'anotacoes' ? 'active' : ''}`}
+              onClick={() => setActiveSection('anotacoes')}
+            >
+              📝 Anotações
+            </button>
+            <button
+              className={`sidebar-tab ${activeSection === 'agendas' ? 'active' : ''}`}
+              onClick={() => setActiveSection('agendas')}
+            >
+              📅 Agendas
+            </button>
+            <button
+              className={`sidebar-tab ${activeSection === 'auditorias' ? 'active' : ''}`}
+              onClick={() => setActiveSection('auditorias')}
+            >
+              🔍 Auditorias
+            </button>
+            <button
+              className={`sidebar-tab ${activeSection === 'programadas' ? 'active' : ''}`}
+              onClick={() => setActiveSection('programadas')}
+            >
+              📌 Programadas
+            </button>
+          </div>
 
-            <div className="sidebar-section">
-              <h3>📅 Agendas Logística</h3>
-              <textarea
-                className="section-textarea"
-                placeholder="Escreva aqui as agendas que você é responsável..."
-              />
-            </div>
+          <div className="sidebar-content">
+            {activeSection === 'anotacoes' && (
+              <div className="section-box">
+                <MemberNotes member={member} />
+              </div>
+            )}
 
-            <div className="sidebar-section">
-              <h3>🔍 Auditorias de Prontuário</h3>
-              <textarea
-                className="section-textarea"
-                placeholder="Escreva aqui as auditorias que você é responsável..."
-              />
-            </div>
+            {activeSection === 'agendas' && (
+              <div className="section-box">
+                <textarea
+                  className="section-textarea"
+                  placeholder="Escreva aqui as agendas que você é responsável..."
+                />
+              </div>
+            )}
 
-            <div className="sidebar-section">
-              <h3>📌 Tarefas Programadas</h3>
-              <textarea
-                className="section-textarea"
-                placeholder="Escreva aqui as tarefas programadas..."
-              />
-            </div>
+            {activeSection === 'auditorias' && (
+              <div className="section-box">
+                <textarea
+                  className="section-textarea"
+                  placeholder="Escreva aqui as auditorias que você é responsável..."
+                />
+              </div>
+            )}
+
+            {activeSection === 'programadas' && (
+              <div className="section-box">
+                <textarea
+                  className="section-textarea"
+                  placeholder="Escreva aqui as tarefas programadas..."
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
