@@ -50,6 +50,9 @@
   font-size: 13px;
   color: #666;
   margin-bottom: 8px;
+  word-break: break-word;
+  white-space: normal;
+  overflow: visible;
 }
 
 .task-meta {
