@@ -30,6 +30,7 @@ export default function Processes({ members, notifications: notificationsFromPro
   const [processes, setProcesses] = useState([]);
   const [expandedMonths, setExpandedMonths] = useState({});
   const [expandedProcesses, setExpandedProcesses] = useState({});
+  const [selectedResponsible, setSelectedResponsible] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
 
@@ -292,15 +293,18 @@ export default function Processes({ members, notifications: notificationsFromPro
     );
   };
 
-  const handleMarkComplete = async (processId) => {
+  const handleMarkComplete = async (processId, memberId) => {
     try {
-      const currentMember = members[0];
-      if (!currentMember) {
-        alert('Nenhum membro logado');
+      if (!memberId) {
+        alert('Selecione um responsável');
         return;
       }
 
-      await axios.put(`${API_URL}/processes/${processId}/member-complete/${currentMember.id}`);
+      await axios.put(`${API_URL}/processes/${processId}/member-complete/${memberId}`);
+      setSelectedResponsible(prev => ({
+        ...prev,
+        [processId]: null
+      }));
       loadProcesses();
     } catch (error) {
       alert('Erro ao marcar como concluído: ' + error.response?.data?.error);
@@ -502,18 +506,38 @@ export default function Processes({ members, notifications: notificationsFromPro
                               </div>
                               {expandedProcesses[process.id] && (
                                 <div className="process-actions">
-                                  <button
-                                    className="btn-complete"
-                                    onClick={() => handleMarkComplete(process.id)}
-                                  >
-                                    ✓ Feito
-                                  </button>
-                                  <button
-                                    className="btn-delete"
-                                    onClick={() => handleDeleteProcess(process.id)}
-                                  >
-                                    <FiTrash2 />
-                                  </button>
+                                  <div className="responsible-selector">
+                                    <label>Quem completou?</label>
+                                    <select
+                                      value={selectedResponsible[process.id] || ''}
+                                      onChange={(e) => setSelectedResponsible(prev => ({
+                                        ...prev,
+                                        [process.id]: e.target.value
+                                      }))}
+                                    >
+                                      <option value="">Selecione...</option>
+                                      {process.assigned_members && process.assigned_members.map(member => (
+                                        <option key={member.id} value={member.id}>
+                                          {member.name}
+                                        </option>
+                                      ))}
+                                    </select>
+                                  </div>
+                                  <div className="process-actions-buttons">
+                                    <button
+                                      className="btn-complete"
+                                      onClick={() => handleMarkComplete(process.id, selectedResponsible[process.id])}
+                                      disabled={!selectedResponsible[process.id]}
+                                    >
+                                      ✓ Marcar Concluído
+                                    </button>
+                                    <button
+                                      className="btn-delete"
+                                      onClick={() => handleDeleteProcess(process.id)}
+                                    >
+                                      <FiTrash2 />
+                                    </button>
+                                  </div>
                                 </div>
                               )}
                             </div>

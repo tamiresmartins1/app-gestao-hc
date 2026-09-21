@@ -489,9 +489,49 @@
 
 .process-actions {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  padding: 8px 0;
+  padding: 12px 0;
   border-top: 1px solid #eee;
+}
+
+.responsible-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.responsible-selector label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.responsible-selector select {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.responsible-selector select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.process-actions-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.process-actions-buttons .btn-complete {
+  flex: 1;
+}
+
+.process-actions-buttons .btn-delete {
+  flex-shrink: 0;
 }
 
 .btn-complete {
