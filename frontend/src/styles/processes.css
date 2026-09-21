@@ -588,24 +588,38 @@
 
 .completed-by {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   flex: 1;
+  flex-wrap: wrap;
 }
 
 .completed-label {
   font-size: 12px;
   font-weight: 600;
   color: #4CAF50;
+  white-space: nowrap;
+}
+
+.completed-names {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
 }
 
 .completed-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: #2c3e50;
   padding: 4px 8px;
   background: #e8f5e9;
   border-radius: 4px;
+  white-space: nowrap;
+}
+
+.process-actions-completed.fully-completed {
+  justify-content: space-between;
 }
 
 .responsible-selector {

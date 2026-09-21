@@ -15,7 +15,8 @@
       "Bash(git commit -m ' *)",
       "Bash(git commit -m 'Hide action buttons when process is complete, show only delete button *)",
       "Bash(git commit -m 'Hide entire action section when process is complete *)",
-      "Bash(git commit -m 'Show who completed the process and improve notifications *)"
+      "Bash(git commit -m 'Show who completed the process and improve notifications *)",
+      "Bash(git commit -m 'Show all completed members, not just when 100% *)"
     ]
   }
 }

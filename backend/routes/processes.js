@@ -29,13 +29,12 @@ processesRoutes.get('/', async (req, res) => {
         [process.id]
       );
       const completedCount = completion.filter(c => c.completed).length;
-      const completedBy = completion.find(c => c.completed);
+      const completedMembers = completion.filter(c => c.completed).map(c => ({ id: c.member_id, name: c.name }));
       process.completion_status = {
         total: completion.length,
         completed: completedCount,
         percentage: completion.length > 0 ? Math.round((completedCount / completion.length) * 100) : 0,
-        completed_by_name: completedBy?.name || null,
-        completed_by_id: completedBy?.member_id || null
+        completed_members: completedMembers
       };
     }
 
