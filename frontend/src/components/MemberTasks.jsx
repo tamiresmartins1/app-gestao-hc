@@ -10,7 +10,7 @@ import '../styles/member-tasks.css';
 export default function MemberTasks({ member, tasks, members, onAddTask, onUpdateTask, onDeleteTask }) {
   const [showForm, setShowForm] = useState(false);
   const [viewMode, setViewMode] = useState('ativas');
-  const [activeSection, setActiveSection] = useState('anotacoes');
+  const [activeSection, setActiveSection] = useState(null);
 
   // Carrega filtros do localStorage por membro
   const getStoredFilterStatus = () => {
