@@ -9,6 +9,7 @@ import '../styles/member-tasks.css';
 export default function MemberTasks({ member, tasks, members, onAddTask, onUpdateTask, onDeleteTask }) {
   const [showForm, setShowForm] = useState(false);
   const [viewMode, setViewMode] = useState('ativas');
+  const [activeSection, setActiveSection] = useState('tarefas');
 
   // Carrega filtros do localStorage por membro
   const getStoredFilterStatus = () => {
@@ -94,106 +95,159 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
     <div className="member-tasks">
       <div className="tasks-header">
         <h2>👋 Olá, {member.name}!</h2>
+        {activeSection === 'tarefas' && (
+          <button
+            className="btn-primary"
+            onClick={() => setShowForm(!showForm)}
+          >
+            <FiPlus /> Nova Tarefa
+          </button>
+        )}
+      </div>
+
+      <div className="sections-tabs">
         <button
-          className="btn-primary"
-          onClick={() => setShowForm(!showForm)}
+          className={`section-tab ${activeSection === 'tarefas' ? 'active' : ''}`}
+          onClick={() => setActiveSection('tarefas')}
         >
-          <FiPlus /> Nova Tarefa
+          📋 Tarefas
+        </button>
+        <button
+          className={`section-tab ${activeSection === 'anotacoes' ? 'active' : ''}`}
+          onClick={() => setActiveSection('anotacoes')}
+        >
+          📝 Anotações
+        </button>
+        <button
+          className={`section-tab ${activeSection === 'agendas' ? 'active' : ''}`}
+          onClick={() => setActiveSection('agendas')}
+        >
+          📅 Agendas Logística
+        </button>
+        <button
+          className={`section-tab ${activeSection === 'auditorias' ? 'active' : ''}`}
+          onClick={() => setActiveSection('auditorias')}
+        >
+          🔍 Auditorias de Prontuário
+        </button>
+        <button
+          className={`section-tab ${activeSection === 'programadas' ? 'active' : ''}`}
+          onClick={() => setActiveSection('programadas')}
+        >
+          ⏰ Tarefas Programadas
         </button>
       </div>
 
-      <div className="tasks-layout">
-        <div className="tasks-column">
-          {showForm && (
-            <TaskForm
-              member={member}
-              members={members}
-              onSubmit={async (data) => {
-                console.log('📤 Frontend sending task data:', data);
-                if (data.due_date) {
-                  console.log(`📅 Frontend due_date: "${data.due_date}" (type: ${typeof data.due_date})`);
-                }
-                await onAddTask(data);
-                setShowForm(false);
-              }}
-              onCancel={() => setShowForm(false)}
-            />
-          )}
-
-          <div className="tasks-stats">
-            <div className="stat-card">
-              <div className="stat-number">{stats.total}</div>
-              <div className="stat-label">Total</div>
-            </div>
-            <div className="stat-card active">
-              <div className="stat-number">{stats.active}</div>
-              <div className="stat-label">Ativas</div>
-            </div>
-            <div className="stat-card overdue">
-              <div className="stat-number">{stats.overdue}</div>
-              <div className="stat-label">Atrasadas</div>
-            </div>
-            <div className="stat-card completed">
-              <div className="stat-number">{stats.completed}</div>
-              <div className="stat-label">Concluídas</div>
-            </div>
-          </div>
-
-          <div className="tasks-controls">
-            <div className="view-tabs">
-              <button
-                className={`view-tab ${viewMode === 'ativas' ? 'active' : ''}`}
-                onClick={() => setViewMode('ativas')}
-              >
-                📋 Ativas
-              </button>
-              <button
-                className={`view-tab ${viewMode === 'concluidas' ? 'active' : ''}`}
-                onClick={() => setViewMode('concluidas')}
-              >
-                ✅ Concluídas
-              </button>
-              <button
-                className={`view-tab ${viewMode === 'programadas' ? 'active' : ''}`}
-                onClick={() => setViewMode('programadas')}
-              >
-                🔔 Programadas
-              </button>
-            </div>
-
-            {viewMode === 'ativas' && (
-              <div className="filters-row">
-                <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
-                  <option value="all">Todos os status</option>
-                  <option value="ativa">Ativas</option>
-                  <option value="atrasada">Atrasadas</option>
-                </select>
-
-                <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
-                  <option value="all">Todas as prioridades</option>
-                  <option value="alta">Alta</option>
-                  <option value="média">Média</option>
-                  <option value="baixa">Baixa</option>
-                </select>
-              </div>
+      <div className="section-content">
+        {activeSection === 'tarefas' && (
+          <div className="tarefas-section">
+            {showForm && (
+              <TaskForm
+                member={member}
+                members={members}
+                onSubmit={async (data) => {
+                  console.log('📤 Frontend sending task data:', data);
+                  if (data.due_date) {
+                    console.log(`📅 Frontend due_date: "${data.due_date}" (type: ${typeof data.due_date})`);
+                  }
+                  await onAddTask(data);
+                  setShowForm(false);
+                }}
+                onCancel={() => setShowForm(false)}
+              />
             )}
-          </div>
 
-          {viewMode === 'programadas' ? (
-            <ScheduledTasks member={member} />
-          ) : (
+            <div className="tasks-stats">
+              <div className="stat-card">
+                <div className="stat-number">{stats.total}</div>
+                <div className="stat-label">Total</div>
+              </div>
+              <div className="stat-card active">
+                <div className="stat-number">{stats.active}</div>
+                <div className="stat-label">Ativas</div>
+              </div>
+              <div className="stat-card overdue">
+                <div className="stat-number">{stats.overdue}</div>
+                <div className="stat-label">Atrasadas</div>
+              </div>
+              <div className="stat-card completed">
+                <div className="stat-number">{stats.completed}</div>
+                <div className="stat-label">Concluídas</div>
+              </div>
+            </div>
+
+            <div className="tasks-controls">
+              <div className="view-tabs">
+                <button
+                  className={`view-tab ${viewMode === 'ativas' ? 'active' : ''}`}
+                  onClick={() => setViewMode('ativas')}
+                >
+                  📋 Ativas
+                </button>
+                <button
+                  className={`view-tab ${viewMode === 'concluidas' ? 'active' : ''}`}
+                  onClick={() => setViewMode('concluidas')}
+                >
+                  ✅ Concluídas
+                </button>
+              </div>
+
+              {viewMode === 'ativas' && (
+                <div className="filters-row">
+                  <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                    <option value="all">Todos os status</option>
+                    <option value="ativa">Ativas</option>
+                    <option value="atrasada">Atrasadas</option>
+                  </select>
+
+                  <select value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
+                    <option value="all">Todas as prioridades</option>
+                    <option value="alta">Alta</option>
+                    <option value="média">Média</option>
+                    <option value="baixa">Baixa</option>
+                  </select>
+                </div>
+              )}
+            </div>
+
             <TaskList
               tasks={filteredTasks}
               onUpdate={onUpdateTask}
               onDelete={onDeleteTask}
               isTaskDueToday={isTaskDueToday}
             />
-          )}
-        </div>
+          </div>
+        )}
 
-        <div className="notes-column">
-          <MemberNotes member={member} />
-        </div>
+        {activeSection === 'anotacoes' && (
+          <div className="anotacoes-section">
+            <MemberNotes member={member} />
+          </div>
+        )}
+
+        {activeSection === 'agendas' && (
+          <div className="agendas-section">
+            <div className="placeholder-content">
+              <h3>📅 Agendas Logística</h3>
+              <p>Coloque aqui as agendas que você é responsável</p>
+            </div>
+          </div>
+        )}
+
+        {activeSection === 'auditorias' && (
+          <div className="auditorias-section">
+            <div className="placeholder-content">
+              <h3>🔍 Auditorias de Prontuário</h3>
+              <p>Coloque aqui as auditorias que você é responsável</p>
+            </div>
+          </div>
+        )}
+
+        {activeSection === 'programadas' && (
+          <div className="programadas-section">
+            <ScheduledTasks member={member} />
+          </div>
+        )}
       </div>
     </div>
   );
