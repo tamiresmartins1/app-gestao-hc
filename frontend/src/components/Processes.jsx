@@ -294,8 +294,7 @@ export default function Processes({ members, notifications: notificationsFromPro
 
     return processes.filter(p =>
       p.process_month === monthKey &&
-      p.category === category &&
-      p.status !== 'concluido'
+      p.category === category
     );
   };
 
