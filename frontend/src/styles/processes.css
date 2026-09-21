@@ -37,18 +37,20 @@
 
 /* FORM */
 .process-form {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px;
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
   padding: 25px;
   margin-bottom: 30px;
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  color: #333;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .process-form h3 {
   margin: 0 0 20px 0;
   font-size: 18px;
-  color: white;
+  color: #2c3e50;
+  font-weight: 600;
 }
 
 .form-group {
@@ -59,7 +61,7 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: white;
+  color: #333;
   font-size: 14px;
 }
 
@@ -68,17 +70,20 @@
 .form-group select {
   width: 100%;
   padding: 10px 12px;
-  border: none;
+  border: 1px solid #ddd;
   border-radius: 6px;
   font-family: inherit;
   font-size: 14px;
+  background: white;
+  color: #333;
 }
 
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .btn-submit {
@@ -141,8 +146,8 @@
 }
 
 .process-line {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: white;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   padding: 16px;
 }
@@ -167,7 +172,7 @@
 .input-group label {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.95);
+  color: #333;
   margin: 0;
 }
 
@@ -175,11 +180,11 @@
 .input-group select,
 .input-group textarea {
   padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #ddd;
   border-radius: 6px;
   font-family: inherit;
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   color: #333;
 }
 
@@ -187,8 +192,8 @@
 .input-group select:focus,
 .input-group textarea:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
 }
 
 .line-input-main {
@@ -231,7 +236,7 @@
   gap: 16px;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .checkbox-section {
@@ -243,7 +248,7 @@
 .section-label {
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -264,12 +269,12 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-  accent-color: white;
+  accent-color: #4CAF50;
 }
 
 .checkbox-item-inline label {
   cursor: pointer;
-  color: white;
+  color: #333;
   font-size: 12px;
   margin: 0;
   white-space: nowrap;
