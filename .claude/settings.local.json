@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(npm --version)"
+      "PowerShell(npm --version)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }

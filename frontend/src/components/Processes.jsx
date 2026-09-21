@@ -32,6 +32,8 @@ export default function Processes({ members, notifications: notificationsFromPro
   const [expandedCategories, setExpandedCategories] = useState({});
   const [expandedProcesses, setExpandedProcesses] = useState({});
   const [selectedResponsible, setSelectedResponsible] = useState({});
+  const [duplicatingProcess, setDuplicatingProcess] = useState(null);
+  const [duplicateMonth, setDuplicateMonth] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState(null);
 
@@ -321,6 +323,35 @@ export default function Processes({ members, notifications: notificationsFromPro
     return { completed: 0, total: 0, percentage: 0 };
   };
 
+  const handleDuplicateProcess = async (process, targetMonth) => {
+    if (!targetMonth) {
+      alert('Selecione um mês');
+      return;
+    }
+
+    try {
+      const year = new Date().getFullYear();
+      const dataToSend = {
+        name: process.name,
+        description: process.description,
+        owner_id: process.owner_id,
+        category: process.category,
+        responsible_ids: process.assigned_members?.map(m => m.id) || [],
+        participant_ids: [],
+        process_month: `${year}-${targetMonth}`,
+        due_date: `${year}-${targetMonth}-01`
+      };
+
+      await axios.post(`${API_URL}/processes`, dataToSend);
+      setDuplicatingProcess(null);
+      setDuplicateMonth(null);
+      loadProcesses();
+      alert('✅ Processo duplicado com sucesso!');
+    } catch (error) {
+      alert('Erro ao duplicar: ' + error.response?.data?.error);
+    }
+  };
+
   const getAvailableMonths = () => {
     return MONTHS.map(month => ({
       ...month,
@@ -514,14 +545,19 @@ export default function Processes({ members, notifications: notificationsFromPro
                                 {expandedProcesses[process.id] && (
                                   <>
                                     <p>{process.description}</p>
-                                    {process.completion_status && process.completion_status.total > 0 ? (
-                                      <div className="completion-bar">
-                                        <div className="completion-progress" style={{width: `${process.completion_status.percentage}%`}}></div>
-                                        <small>{process.completion_status.completed}/{process.completion_status.total} concluído</small>
-                                      </div>
-                                    ) : (
-                                      <small>{process.status}</small>
-                                    )}
+                                    <div className="process-meta">
+                                      {process.due_date && (
+                                        <small className="due-date">📅 {new Date(process.due_date + 'T00:00:00').toLocaleDateString('pt-BR')}</small>
+                                      )}
+                                      {process.completion_status && process.completion_status.total > 0 ? (
+                                        <div className="completion-bar">
+                                          <div className="completion-progress" style={{width: `${process.completion_status.percentage}%`}}></div>
+                                          <small>{process.completion_status.completed}/{process.completion_status.total} concluído</small>
+                                        </div>
+                                      ) : (
+                                        <small>{process.status}</small>
+                                      )}
+                                    </div>
                                   </>
                                 )}
                               </div>
@@ -553,12 +589,42 @@ export default function Processes({ members, notifications: notificationsFromPro
                                       ✓ Marcar Concluído
                                     </button>
                                     <button
+                                      className="btn-duplicate"
+                                      onClick={() => setDuplicatingProcess(process.id)}
+                                      title="Duplicar para outro mês"
+                                    >
+                                      📋 Duplicar
+                                    </button>
+                                    <button
                                       className="btn-delete"
                                       onClick={() => handleDeleteProcess(process.id)}
                                     >
                                       <FiTrash2 />
                                     </button>
                                   </div>
+
+                                  {duplicatingProcess === process.id && (
+                                    <div className="duplicate-selector">
+                                      <label>Duplicar para qual mês?</label>
+                                      <div className="duplicate-months">
+                                        {MONTHS.map(m => (
+                                          <button
+                                            key={m.num}
+                                            className="month-btn"
+                                            onClick={() => handleDuplicateProcess(process, m.num)}
+                                          >
+                                            {m.name}
+                                          </button>
+                                        ))}
+                                      </div>
+                                      <button
+                                        className="btn-cancel-duplicate"
+                                        onClick={() => setDuplicatingProcess(null)}
+                                      >
+                                        ✕ Cancelar
+                                      </button>
+                                    </div>
+                                  )}
                                 </div>
                               )}
                             </div>
