@@ -45,6 +45,7 @@ export default function Processes({ members, notifications: notificationsFromPro
       description: '',
       category: 'Auditoria',
       owner_id: ownerMember.id,
+      due_date: '',
       responsible_ids: [],
       participant_ids: []
     }];
@@ -150,6 +151,7 @@ export default function Processes({ members, notifications: notificationsFromPro
       description: '',
       category: 'Auditoria',
       owner_id: members[0]?.id || '',
+      due_date: '',
       responsible_ids: [],
       participant_ids: []
     }]);
@@ -188,6 +190,7 @@ export default function Processes({ members, notifications: notificationsFromPro
         description: '',
         category: 'Auditoria',
         owner_id: members[0]?.id || '',
+        due_date: '',
         responsible_ids: [],
         participant_ids: []
       }]);
@@ -241,7 +244,7 @@ export default function Processes({ members, notifications: notificationsFromPro
           responsible_ids: realResponsibleIds,
           participant_ids: line.participant_ids.filter(id => members.some(m => m.id === id)),
           process_month: `${year}-${selectedMonth}`,
-          due_date: `${year}-${selectedMonth}-01`
+          due_date: line.due_date || `${year}-${selectedMonth}-01`
         };
 
         try {
@@ -404,6 +407,13 @@ export default function Processes({ members, notifications: notificationsFromPro
                     onChange={(e) => updateLine(index, 'name', e.target.value)}
                     placeholder="Nome do processo"
                     className="line-input-main"
+                  />
+
+                  <input
+                    type="date"
+                    value={line.due_date}
+                    onChange={(e) => updateLine(index, 'due_date', e.target.value)}
+                    className="line-input-date"
                   />
 
                   <select

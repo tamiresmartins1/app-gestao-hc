@@ -149,7 +149,7 @@
 
 .line-inputs {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -178,6 +178,14 @@
   font-family: inherit;
   font-size: 14px;
   resize: vertical;
+}
+
+.line-input-date {
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 14px;
 }
 
 .line-checkboxes {
