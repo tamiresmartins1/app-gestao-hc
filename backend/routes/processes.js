@@ -20,6 +20,18 @@ processesRoutes.get('/', async (req, res) => {
         [process.id]
       );
       process.assigned_members = members;
+
+      // Get completion status for each member
+      const completion = await allAsync(
+        `SELECT member_id, completed FROM process_completion_status WHERE process_id = $1`,
+        [process.id]
+      );
+      const completedCount = completion.filter(c => c.completed).length;
+      process.completion_status = {
+        total: completion.length,
+        completed: completedCount,
+        percentage: completion.length > 0 ? Math.round((completedCount / completion.length) * 100) : 0
+      };
     }
 
     res.json(processes);

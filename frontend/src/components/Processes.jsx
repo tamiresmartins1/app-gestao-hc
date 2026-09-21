@@ -294,21 +294,26 @@ export default function Processes({ members, notifications: notificationsFromPro
 
   const handleMarkComplete = async (processId) => {
     try {
-      // Get the first responsible member
-      const process = processes.find(p => p.id === processId);
-      if (!process) return;
-
-      const firstMember = members[0];
-      if (!firstMember) {
-        alert('Nenhum membro disponível');
+      const currentMember = members[0];
+      if (!currentMember) {
+        alert('Nenhum membro logado');
         return;
       }
 
-      await axios.put(`${API_URL}/processes/${processId}/member-complete/${firstMember.id}`);
+      await axios.put(`${API_URL}/processes/${processId}/member-complete/${currentMember.id}`);
       loadProcesses();
     } catch (error) {
       alert('Erro ao marcar como concluído: ' + error.response?.data?.error);
     }
+  };
+
+  const getProcessCompletionInfo = (processId) => {
+    const process = processes.find(p => p.id === processId);
+    if (!process) return { completed: 0, total: 0, percentage: 0 };
+
+    // This would need to come from backend completion_status table
+    // For now, we'll pass an empty object
+    return { completed: 0, total: 0, percentage: 0 };
   };
 
   const getAvailableMonths = () => {
@@ -484,7 +489,14 @@ export default function Processes({ members, notifications: notificationsFromPro
                                 {expandedProcesses[process.id] && (
                                   <>
                                     <p>{process.description}</p>
-                                    <small>{process.status}</small>
+                                    {process.completion_status && process.completion_status.total > 0 ? (
+                                      <div className="completion-bar">
+                                        <div className="completion-progress" style={{width: `${process.completion_status.percentage}%`}}></div>
+                                        <small>{process.completion_status.completed}/{process.completion_status.total} concluído</small>
+                                      </div>
+                                    ) : (
+                                      <small>{process.status}</small>
+                                    )}
                                   </>
                                 )}
                               </div>
