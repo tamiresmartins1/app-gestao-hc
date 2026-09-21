@@ -59,6 +59,14 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
     return dueDate.getTime() === today.getTime();
   };
 
+  const toggleSection = (section) => {
+    if (activeSection === section) {
+      setActiveSection(null);
+    } else {
+      setActiveSection(section);
+    }
+  };
+
   const stats = {
     total: tasks.length,
     active: tasks.filter(t => t.status === 'ativa' && !isTaskOverdue(t)).length,
@@ -187,25 +195,25 @@ export default function MemberTasks({ member, tasks, members, onAddTask, onUpdat
           <div className="sidebar-tabs">
             <button
               className={`sidebar-tab ${activeSection === 'anotacoes' ? 'active' : ''}`}
-              onClick={() => setActiveSection('anotacoes')}
+              onClick={() => toggleSection('anotacoes')}
             >
               📝 Anotações
             </button>
             <button
               className={`sidebar-tab ${activeSection === 'agendas' ? 'active' : ''}`}
-              onClick={() => setActiveSection('agendas')}
+              onClick={() => toggleSection('agendas')}
             >
               📅 Agendas
             </button>
             <button
               className={`sidebar-tab ${activeSection === 'auditorias' ? 'active' : ''}`}
-              onClick={() => setActiveSection('auditorias')}
+              onClick={() => toggleSection('auditorias')}
             >
               🔍 Auditorias
             </button>
             <button
               className={`sidebar-tab ${activeSection === 'programadas' ? 'active' : ''}`}
-              onClick={() => setActiveSection('programadas')}
+              onClick={() => toggleSection('programadas')}
             >
               📌 Programadas
             </button>
