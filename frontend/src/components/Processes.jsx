@@ -608,14 +608,12 @@ export default function Processes({ members, notifications: notificationsFromPro
                                           ))}
                                         </div>
                                       </div>
-                                      {process.completion_status.completed === process.completion_status.total && (
-                                        <button
-                                          className="btn-delete"
-                                          onClick={() => handleDeleteProcess(process.id)}
-                                        >
-                                          <FiTrash2 />
-                                        </button>
-                                      )}
+                                      <button
+                                        className="btn-delete"
+                                        onClick={() => handleDeleteProcess(process.id)}
+                                      >
+                                        <FiTrash2 />
+                                      </button>
                                     </div>
                                   ) : (
                                     <div className="process-actions">
