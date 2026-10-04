@@ -20,39 +20,44 @@ export default function Notifications({ member, notifications: notificationsFrom
 
   const markAsRead = async (notificationId) => {
     try {
+      // Remove da lista local imediatamente
+      setNotifications(notifications.filter(n => n.id !== notificationId));
+
+      // Marca como lida no backend
       await axios.put(`${API_URL}/processes/notifications/${notificationId}/read`);
-      // Notificações serão recarregadas pelo polling global no App.jsx
     } catch (error) {
       console.error('Erro ao marcar como lido:', error);
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  // Mostrar apenas notificações NÃO lidas
+  const unreadNotifications = notifications.filter(n => !n.read);
 
   return (
     <div className="notifications">
       <div className="notifications-header">
         <h2>⚠️ Aviso de Processo</h2>
-        {unreadCount > 0 && (
+        {unreadNotifications.length > 0 && (
           <span className="unread-badge">
-            {unreadCount} nova{unreadCount !== 1 ? 's' : ''}
+            {unreadNotifications.length} nova{unreadNotifications.length !== 1 ? 's' : ''}
           </span>
         )}
       </div>
 
       {loading ? (
         <div>Carregando...</div>
-      ) : notifications.length === 0 ? (
+      ) : unreadNotifications.length === 0 ? (
         <div className="empty-state">
           <p>📭 Você não tem notificações</p>
         </div>
       ) : (
         <div className="notifications-list">
-          {notifications.map(notification => (
+          {unreadNotifications.map(notification => (
             <div
               key={notification.id}
-              className={`notification-item ${!notification.read ? 'unread' : ''}`}
+              className="notification-item unread"
               onClick={() => markAsRead(notification.id)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="notification-content">
                 <h4>{notification.process_name}</h4>
@@ -61,9 +66,7 @@ export default function Notifications({ member, notifications: notificationsFrom
                   {new Date(notification.created_at).toLocaleString('pt-BR')}
                 </small>
               </div>
-              {!notification.read && (
-                <div className="notification-dot"></div>
-              )}
+              <div className="notification-dot"></div>
             </div>
           ))}
         </div>
