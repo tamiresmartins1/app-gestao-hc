@@ -595,19 +595,24 @@ export default function Processes({ members, notifications: notificationsFromPro
                               </div>
                               {expandedProcesses[process.id] && (
                                 <>
-                                  {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed > 0 ? (
-                                    <div className={`process-actions-completed ${process.completion_status.completed === process.completion_status.total ? 'fully-completed' : ''}`}>
-                                      <div className="completed-by">
-                                        <span className="completed-label">✅ Concluído por:</span>
-                                        <div className="completed-names">
-                                          {process.completion_status.completed_members && process.completion_status.completed_members.map((member, idx) => (
-                                            <span key={member.id} className="completed-name">
-                                              {member.name}
-                                              {idx < process.completion_status.completed_members.length - 1 ? ', ' : ''}
-                                            </span>
-                                          ))}
-                                        </div>
+                                  {/* Mostrar quem completou se houver pelo menos 1 completo */}
+                                  {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed > 0 && (
+                                    <div className="completed-by-info">
+                                      <span className="completed-label">✅ Concluído por:</span>
+                                      <div className="completed-names">
+                                        {process.completion_status.completed_members && process.completion_status.completed_members.map((member, idx) => (
+                                          <span key={member.id} className="completed-name">
+                                            {member.name}
+                                            {idx < process.completion_status.completed_members.length - 1 ? ', ' : ''}
+                                          </span>
+                                        ))}
                                       </div>
+                                    </div>
+                                  )}
+
+                                  {/* Se 100% completo, mostrar só o delete. Senão, mostrar seletor */}
+                                  {process.completion_status && process.completion_status.total > 0 && process.completion_status.completed === process.completion_status.total ? (
+                                    <div className="process-actions-completed fully-completed">
                                       <button
                                         className="btn-delete"
                                         onClick={() => handleDeleteProcess(process.id)}
