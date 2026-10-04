@@ -25,24 +25,12 @@ export default function QuickLinks() {
     operacoes: {
       title: '06 OPERAÇÕES',
       links: [
-        { name: 'ESPACO FISICO', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
+        { name: 'Mapa de Ocupação - 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
         { name: 'Controle Reservas do Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1r7Q_tnYpqbn_NAuOlEsz1Mk9tO1Ux8_T9OPuIDH7TUI/edit?gid=195376181#gid=195376181' },
         { name: 'FISIO | Controle de Estoque 2026', url: 'https://docs.google.com/spreadsheets/d/1wEijgtWBAkFm_RpmBMwKUISVV_DO_jn8jRjJaPmLaVU/edit?gid=689280098#gid=689280098' },
         { name: 'Monitoramento - Operações Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1naUtnLplFIPOshZpK4J3PqttvVjzkoAilWqc8vdRfJs/edit?gid=1797299157#gid=1797299157' },
         { name: 'LOGISTICA AGENDAMENTOS 2026', url: 'https://docs.google.com/spreadsheets/d/1EGE2kM9HkraxnzCMrWmuPUFrrY6dCbMDNjDHy1r5Nmc/edit' },
         { name: 'CONTROLE DE TRIAGEM AMBULATORIO ATUAL_26', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
-      ]
-    },
-
-    // 05 GESTÃO E PROJETOS (mantém o que era logística e painéis)
-    logistica: {
-      title: '05 GESTÃO E PROJETOS',
-      links: [
-        { name: 'Controle de Triagem', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' },
-        { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' },
-        { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' },
-        { name: 'Logistica agendas', url: 'https://docs.google.com/spreadsheets/d/1xrciwqZHoYVcgGC9hxYGpJgOGMysopuehhridYxkpZA/edit?usp=drive_web&ouid=114421952541590824162' },
-        { name: 'Mapa de ocupação 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' }
       ]
     },
 
@@ -53,7 +41,9 @@ export default function QuickLinks() {
         { name: 'RASTREABILIDADE (Pasta Drive)', url: 'https://drive.google.com/drive/u/0/folders/1E-SWl-R6FI2C3E1SFbfUxGOm0b8V4Hjk' },
         { name: 'Controle de esterilização', url: 'https://docs.google.com/spreadsheets/d/1xq1Ui5WpPxkoJmVIgclkZ-SH0q5tV-2LGxTAvBJy5i0/edit?gid=825708681#gid=825708681' },
         { name: 'Rastreabilidade de Sondas Ambulatório', url: 'https://docs.google.com/spreadsheets/d/1Yg02-aUoMhNM9nDLgsgWu_AMeMSAln7iY5sv9Ji6YXY/edit?gid=1826935223#gid=1826935223' },
-        { name: 'RASTREABILIDADE UNIFICADA', url: 'https://docs.google.com/spreadsheets/d/1CdahV54pWaVnVwW0PJGlxvxjf20G9YOoThlSfgsRw8M/edit?gid=162437101#gid=162437101' }
+        { name: 'RASTREABILIDADE UNIFICADA', url: 'https://docs.google.com/spreadsheets/d/1CdahV54pWaVnVwW0PJGlxvxjf20G9YOoThlSfgsRw8M/edit?gid=162437101#gid=162437101' },
+        { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' },
+        { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' }
       ]
     },
 
