@@ -74,50 +74,28 @@ export default function QuickLinks() {
       ]
     },
 
-    // 01 PROFISSIONAIS
+    // 01 PROFISSIONAIS (com TREINAMENTOS)
     profissionais: {
       title: '01 PROFISSIONAIS',
       links: [
-        { name: 'Cadastro de Funcionários 2026', url: 'https://docs.google.com/spreadsheets/d/1sKidqBtVO9T6piYNkr3c6sDoHdESCMMuvTGsiVBF0jc/edit?gid=288335903#gid=288335903' }
-      ]
-    },
-
-    // TREINAMENTOS (mantém)
-    treinamento: {
-      title: '🎓 TREINAMENTOS',
-      links: [
+        { name: 'Cadastro de Funcionários 2026', url: 'https://docs.google.com/spreadsheets/d/1sKidqBtVO9T6piYNkr3c6sDoHdESCMMuvTGsiVBF0jc/edit?gid=288335903#gid=288335903' },
         { name: 'Treinamentos (Pasta Drive)', url: 'https://drive.google.com/drive/u/0/folders/1aL4CUPXqWxa-GniIGF82JxfpO9ttzYV6' },
         { name: 'Lista de treinamento - IMPRESSÃO', url: 'https://docs.google.com/document/d/1xA3_D2b0RaT8ucMW1pKsAnFWy0KyIaEN/edit' },
-        { name: 'Treinamento Admissão + Atualização 2026', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' }
-      ]
-    },
-
-    // PAINÉIS (mantém)
-    paineis: {
-      title: '🖥️ PAINÉIS',
-      links: [
-        { name: 'Painel Faturamento', url: 'http://portalhishc.phcnet.usp.br/PAINEL/ACCOUNT/LOGIN_NEW.ASPX?chave=kWHnpAzY6uQZXfCJVmrnfzZM3Nb6%2baZFEIM7xmLkXMqPqMmhJE2Qz%2fRPYBHJpLap8QOrpmDQQz15h0Z5uSbBwA%3d%3d' },
-        { name: 'Painel MV Atendimento', url: 'http://painelmv.phcnet.usp.br/PainelEvolucaoFisioterapeuticaAmbulatorial' },
-        { name: 'Painel MV Triagem', url: 'http://painelmv.phcnet.usp.br/PainelTriagemFisioAmb' }
-      ]
-    },
-
-    // CHECAGEM (mantém)
-    checagem: {
-      title: '✓ CHECAGEM',
-      links: [
-        { name: 'Checagem painel diário', url: 'https://docs.google.com/spreadsheets/d/1ooaDcXuaBRMZzBop6tFNcgL0270Cj0AUiBwklEZkfIs/edit?gid=1124401189#gid=1124401189' },
+        { name: 'Treinamento Admissão + Atualização 2026', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' },
         { name: 'Liberação porta FOFITO', url: 'https://docs.google.com/spreadsheets/d/1RGUNDiKTUgNA-HlbDi0gchqk2nNP1E11vMZr1dRAtqM/edit?gid=1695514206#gid=1695514206' }
       ]
     },
 
-    // COMPRAS (mantém)
-    compras: {
-      title: '💳 COMPRAS',
+    // PAINÉIS E CHECAGEM DIÁRIA
+    paineis: {
+      title: '🖥️ PAINÉIS E CHECAGEM DIÁRIA',
       links: [
-        { name: 'Compras', url: 'https://docs.google.com/spreadsheets/d/1_SPyzZcamEn3e1TIk-dtB-xMn2NCEd90HOSixrOhEYU/edit?gid=557954761#gid=557954761' }
+        { name: 'Painel Faturamento', url: 'http://portalhishc.phcnet.usp.br/PAINEL/ACCOUNT/LOGIN_NEW.ASPX?chave=kWHnpAzY6uQZXfCJVmrnfzZM3Nb6%2baZFEIM7xmLkXMqPqMmhJE2Qz%2fRPYBHJpLap8QOrpmDQQz15h0Z5uSbBwA%3d%3d' },
+        { name: 'Painel MV Atendimento', url: 'http://painelmv.phcnet.usp.br/PainelEvolucaoFisioterapeuticaAmbulatorial' },
+        { name: 'Painel MV Triagem', url: 'http://painelmv.phcnet.usp.br/PainelTriagemFisioAmb' },
+        { name: 'Checagem painel diário', url: 'https://docs.google.com/spreadsheets/d/1ooaDcXuaBRMZzBop6tFNcgL0270Cj0AUiBwklEZkfIs/edit?gid=1124401189#gid=1124401189' }
       ]
-    }
+    },
   };
 
   const phones = [
