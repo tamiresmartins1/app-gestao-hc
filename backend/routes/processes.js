@@ -256,8 +256,8 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
         const message = `✅ ${completedMember.name} concluiu o processo "${currentProcess.name}"! Sua etapa pode começar agora!`;
 
         await runAsync(
-          `INSERT INTO process_notifications (id, process_id, member_id, message)
-           VALUES ($1, $2, $3, $4)`,
+          `INSERT INTO process_notifications (id, process_id, member_id, message, read)
+           VALUES ($1, $2, $3, $4, false)`,
           [notifId, processId, member_id, message]
         );
         console.log(`📩 Notificação criada para ${member_id}: ${notifId}`);
@@ -283,8 +283,8 @@ processesRoutes.put('/:id/member-complete/:member_id', async (req, res) => {
         for (let { member_id } of members) {
           const notifId = uuidv4();
           await runAsync(
-            `INSERT INTO process_notifications (id, process_id, member_id, message)
-             VALUES ($1, $2, $3, $4)`,
+            `INSERT INTO process_notifications (id, process_id, member_id, message, read)
+             VALUES ($1, $2, $3, $4, false)`,
             [notifId, depProcess.id, member_id, `🔗 O processo "${currentProcess.name}" foi concluído! Sua etapa "${depProcess.name}" pode começar!`]
           );
           console.log(`📩 Notificação criada para responsável ${member_id} de ${depProcess.name}: ${notifId}`);
