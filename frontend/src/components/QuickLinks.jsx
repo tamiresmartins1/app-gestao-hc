@@ -118,7 +118,7 @@ export default function QuickLinks() {
     { area: 'Bombeiro', number: '6030' },
     { area: 'Gustavo FFM Patrimônio', number: '3016-5700' },
     { area: 'Volante', number: '6070' },
-    { area: 'Tele Assistência', number: '6294' },
+    { area: 'Tele Obstetrícia', number: '9284' },
     { area: 'Lorena TI', number: '6006' },
     { area: 'PS ICHC', number: '3375 / 3370' },
     { area: 'ONET - Manutenção/Oxigênio', number: '6025' },
