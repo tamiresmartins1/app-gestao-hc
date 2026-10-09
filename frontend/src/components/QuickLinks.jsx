@@ -99,7 +99,7 @@ export default function QuickLinks() {
   };
 
   const phones = [
-    { area: 'Telefonista HC', number: '6' },
+    { area: 'Telefonista HC', number: '9' },
     { area: 'DIVISÃO', number: '6867 / 7969' },
     { area: 'FOFITO', number: '6515' },
     { area: 'Sala Deise', number: '3373' },
