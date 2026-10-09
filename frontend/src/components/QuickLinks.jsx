@@ -111,7 +111,7 @@ export default function QuickLinks() {
     { area: 'Vanessa Telessaude', number: '9710' },
     { area: 'TELE - Stefany', number: '9188' },
     { area: 'TI', number: '6630' },
-    { area: 'Desdesorção', number: '6643' },
+    { area: 'Dedetização', number: '6643' },
     { area: 'Serviço Social', number: '6066' },
     { area: 'Rouparia', number: '6382' },
     { area: 'Engenharia Clínica', number: '6323' },
