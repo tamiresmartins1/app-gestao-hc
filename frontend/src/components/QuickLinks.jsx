@@ -99,15 +99,30 @@ export default function QuickLinks() {
   };
 
   const phones = [
+    { area: 'Telefonista HC', number: '3' },
     { area: 'DIVISÃO', number: '6867 / 7969' },
     { area: 'FOFITO', number: '6515' },
     { area: 'Sala Deise', number: '3373' },
-    { area: 'CEAC - Recepção', number: '7576' },
+    { area: 'CEAC - Recepção', number: '2223' },
     { area: 'CEAC amb', number: '2239' },
     { area: 'Ricardo TI', number: '8071' },
     { area: 'Alexandre Crispim TI', number: '8071' },
-    { area: 'Jose Nogueira (Chefe DAM)', number: '6699' },
-    { area: 'Vanessa Telessaude', number: '9719' }
+    { area: 'Jose Nogueira (Chefe DAM)', number: '6600' },
+    { area: 'Vanessa Telessaude', number: '9710' },
+    { area: 'TELE - Stefany', number: '9188' },
+    { area: 'TI', number: '6630' },
+    { area: 'Desdesorção', number: '6643' },
+    { area: 'Serviço Social', number: '6066' },
+    { area: 'Rouparia', number: '6382' },
+    { area: 'Engenharia Clínica', number: '6323' },
+    { area: 'Bombeiro', number: '6030' },
+    { area: 'Gustavo FFM Patrimônio', number: '3016-5700' },
+    { area: 'Volante', number: '6070' },
+    { area: 'Tele Assistência', number: '6294' },
+    { area: 'Lorena TI', number: '6006' },
+    { area: 'PS ICHC', number: '3375 / 3370' },
+    { area: 'ONET - Manutenção/Oxigênio', number: '6025' },
+    { area: 'ONET - Manutenção Ar Condicionado', number: '6025' }
   ];
 
   return (
