@@ -10,14 +10,7 @@ export default function QuickLinks() {
     especialidades: {
       title: '07 ESPECIALIDADES',
       links: [
-        { name: 'Perfil dos Ambulatórios_2018-20Atual', url: 'https://docs.google.com/spreadsheets/d/1zhN762qYLiZG9aQD_uxmhUFm6tw6DlJCuUbnAdfi7bA/edit?gid=490316343#gid=490316343' },
-        { name: 'Telessaude', url: 'https://drive.google.com/drive/u/0/folders/1Ysj9dW3EREA9mHAvBB8cOYd0H9ogD1gl' },
-        { name: 'Fisio pélvica', url: 'https://drive.google.com/drive/u/0/folders/1qgR4KA_0UFouY0ytLD5p65-VFTFc0shd' },
-        { name: 'Reumato', url: 'https://drive.google.com/drive/u/0/folders/1j8eeW8Sv5sBbH1n0aNzQI65E9Jz_SoQc' },
-        { name: 'Neuromodulacao', url: 'https://drive.google.com/drive/u/0/folders/1mGJFcA6eAbR2at4xbjIBRg-oWXF8k20I' },
-        { name: 'Neurofuncional', url: 'https://drive.google.com/drive/u/0/folders/1DPkpDuOjeAWCNNMUyUrlku1TquWYjvYo' },
-        { name: 'Geronto', url: 'https://drive.google.com/drive/u/0/folders/1IU4X9Fe8rkcksGCPS_Fm8oWE4JIKgwJZ' },
-        { name: 'CEAC', url: 'https://drive.google.com/drive/u/0/folders/1FSwNQTaPB_LU-yO-sYAOeJAMbrpiqd8H' }
+        { name: 'Perfil dos Ambulatórios Atualizado 2026', url: 'https://docs.google.com/spreadsheets/d/1KzJ05bGy1n2Xan1icKDuZ-A0ouObJ4ZrSV6YahubdWw/edit?gid=427248708#gid=427248708' }
       ]
     },
 
@@ -27,8 +20,8 @@ export default function QuickLinks() {
       links: [
         { name: 'Mapa de Ocupação - 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
         { name: 'Controle Reservas do Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1r7Q_tnYpqbn_NAuOlEsz1Mk9tO1Ux8_T9OPuIDH7TUI/edit?gid=195376181#gid=195376181' },
-        { name: 'FISIO | Controle de Estoque 2026', url: 'https://docs.google.com/spreadsheets/d/1wEijgtWBAkFm_RpmBMwKUISVV_DO_jn8jRjJaPmLaVU/edit?gid=689280098#gid=689280098' },
-        { name: 'Monitoramento - Operações Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1naUtnLplFIPOshZpK4J3PqttvVjzkoAilWqc8vdRfJs/edit?gid=1797299157#gid=1797299157' },
+        { name: 'Controle de Ordens de Serviço e Notificações', url: 'https://docs.google.com/spreadsheets/d/13NHLyPs41-RepS5Q-x9p6KwKQZ9VRdjqhAOGwrP3R14/edit?gid=0#gid=0' },
+        { name: 'Arquivo Morto Triagem - Ambulatório Fisio', url: 'https://drive.google.com/drive/folders/15PtPA6-BKuGCCNgXtJWLPMuc0L5OmXPg' },
         { name: 'LOGISTICA AGENDAMENTOS 2026', url: 'https://docs.google.com/spreadsheets/d/1EGE2kM9HkraxnzCMrWmuPUFrrY6dCbMDNjDHy1r5Nmc/edit' },
         { name: 'CONTROLE DE TRIAGEM AMBULATORIO ATUAL_26', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
       ]
@@ -38,12 +31,13 @@ export default function QuickLinks() {
     equipamentos: {
       title: '04 EQUIPAMENTOS',
       links: [
-        { name: 'RASTREABILIDADE (Pasta Drive)', url: 'https://drive.google.com/drive/u/0/folders/1E-SWl-R6FI2C3E1SFbfUxGOm0b8V4Hjk' },
         { name: 'Controle de esterilização', url: 'https://docs.google.com/spreadsheets/d/1xq1Ui5WpPxkoJmVIgclkZ-SH0q5tV-2LGxTAvBJy5i0/edit?gid=825708681#gid=825708681' },
         { name: 'Rastreabilidade de Sondas Ambulatório', url: 'https://docs.google.com/spreadsheets/d/1Yg02-aUoMhNM9nDLgsgWu_AMeMSAln7iY5sv9Ji6YXY/edit?gid=1826935223#gid=1826935223' },
         { name: 'RASTREABILIDADE UNIFICADA', url: 'https://docs.google.com/spreadsheets/d/1CdahV54pWaVnVwW0PJGlxvxjf20G9YOoThlSfgsRw8M/edit?gid=162437101#gid=162437101' },
         { name: 'Etiquetas', url: 'https://docs.google.com/spreadsheets/d/1dMyQUDOIjpaNS9K08PmPHDrfofjgkejg/edit?gid=1143134970#gid=1143134970' },
-        { name: 'Forms retirada e devolução equipamento', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' }
+        { name: 'Formulário - Retirada e devolução de sonda', url: 'https://docs.google.com/forms/d/1RB8uA6DSnj5hcY8X3ql3Wtsr9SfzNT5PqY7qY-Gb3aw/edit' },
+        { name: 'Formulário - Retirada de materiais', url: 'https://docs.google.com/forms/d/1E1rL_lAR5oL9rBuoksWDUR5n_W8iBckWx89w_fpnSls/edit' },
+        { name: 'Formulário - Rastreabilidade de equipamentos', url: 'https://docs.google.com/forms/d/1xc4YSDV5HHswOdn8MszGAS-GTvE92jAJqDHyH04_eaw/edit' }
       ]
     },
 
@@ -80,8 +74,7 @@ export default function QuickLinks() {
       links: [
         { name: 'Cadastro de Funcionários 2026', url: 'https://docs.google.com/spreadsheets/d/1sKidqBtVO9T6piYNkr3c6sDoHdESCMMuvTGsiVBF0jc/edit?gid=288335903#gid=288335903' },
         { name: 'Treinamentos (Pasta Drive)', url: 'https://drive.google.com/drive/u/0/folders/1aL4CUPXqWxa-GniIGF82JxfpO9ttzYV6' },
-        { name: 'Lista de treinamento - IMPRESSÃO', url: 'https://docs.google.com/document/d/1xA3_D2b0RaT8ucMW1pKsAnFWy0KyIaEN/edit' },
-        { name: 'Treinamento Admissão + Atualização 2026', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' },
+        { name: 'Organização dos Treinamentos', url: 'https://docs.google.com/spreadsheets/d/1s_U6aBc-9vbw3aP-FlVWOmAJehoICeCPh6NdYsXW02I/edit?gid=1440432876#gid=1440432876' },
         { name: 'Liberação porta FOFITO', url: 'https://docs.google.com/spreadsheets/d/1RGUNDiKTUgNA-HlbDi0gchqk2nNP1E11vMZr1dRAtqM/edit?gid=1695514206#gid=1695514206' }
       ]
     },
