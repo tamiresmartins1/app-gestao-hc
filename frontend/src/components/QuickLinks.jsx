@@ -22,7 +22,6 @@ export default function QuickLinks() {
         { name: 'Controle Reservas do Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1r7Q_tnYpqbn_NAuOlEsz1Mk9tO1Ux8_T9OPuIDH7TUI/edit?gid=195376181#gid=195376181' },
         { name: 'Controle de Ordens de Serviço e Notificações', url: 'https://docs.google.com/spreadsheets/d/1naUtnLplFIPOshZpK4J3PqttvVjzkoAilWqc8vdRfJs/edit?gid=1797299157#gid=1797299157' },
         { name: 'Arquivo Morto Triagem - Ambulatório Fisio', url: 'https://docs.google.com/spreadsheets/d/13NHLyPs41-RepS5Q-x9p6KwKQZ9VRdjqhAOGwrP3R14/edit?gid=0#gid=0' },
-        { name: 'Arquivo Morto Triagem - Pasta do Drive', url: 'https://drive.google.com/drive/folders/15PtPA6-BKuGCCNgXtJWLPMuc0L5OmXPg' },
         { name: 'LOGISTICA AGENDAMENTOS 2026', url: 'https://docs.google.com/spreadsheets/d/1EGE2kM9HkraxnzCMrWmuPUFrrY6dCbMDNjDHy1r5Nmc/edit' },
         { name: 'CONTROLE DE TRIAGEM AMBULATORIO ATUAL_26', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
       ]
@@ -32,6 +31,7 @@ export default function QuickLinks() {
     equipamentos: {
       title: '04 EQUIPAMENTOS',
       links: [
+        { name: 'Impressos Fisio Secretaria Amb', url: 'https://drive.google.com/drive/folders/15PtPA6-BKuGCCNgXtJWLPMuc0L5OmXPg' },
         { name: 'Controle de esterilização', url: 'https://docs.google.com/spreadsheets/d/1xq1Ui5WpPxkoJmVIgclkZ-SH0q5tV-2LGxTAvBJy5i0/edit?gid=825708681#gid=825708681' },
         { name: 'Rastreabilidade de Sondas Ambulatório', url: 'https://docs.google.com/spreadsheets/d/1Yg02-aUoMhNM9nDLgsgWu_AMeMSAln7iY5sv9Ji6YXY/edit?gid=1826935223#gid=1826935223' },
         { name: 'RASTREABILIDADE UNIFICADA', url: 'https://docs.google.com/spreadsheets/d/1CdahV54pWaVnVwW0PJGlxvxjf20G9YOoThlSfgsRw8M/edit?gid=162437101#gid=162437101' },
