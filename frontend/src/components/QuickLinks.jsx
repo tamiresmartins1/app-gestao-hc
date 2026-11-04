@@ -21,7 +21,8 @@ export default function QuickLinks() {
         { name: 'Mapa de Ocupação - 2026', url: 'https://docs.google.com/spreadsheets/d/1gSV357rg34ZQEglMo0MM6kuFYYIU0sjBujdfvkBJ4Uw/edit?gid=1858629908#gid=1858629908' },
         { name: 'Controle Reservas do Ambulatório 2026', url: 'https://docs.google.com/spreadsheets/d/1r7Q_tnYpqbn_NAuOlEsz1Mk9tO1Ux8_T9OPuIDH7TUI/edit?gid=195376181#gid=195376181' },
         { name: 'Controle de Ordens de Serviço e Notificações', url: 'https://docs.google.com/spreadsheets/d/1naUtnLplFIPOshZpK4J3PqttvVjzkoAilWqc8vdRfJs/edit?gid=1797299157#gid=1797299157' },
-        { name: 'Arquivo Morto Triagem - Ambulatório Fisio', url: 'https://drive.google.com/drive/folders/15PtPA6-BKuGCCNgXtJWLPMuc0L5OmXPg' },
+        { name: 'Arquivo Morto Triagem - Ambulatório Fisio', url: 'https://docs.google.com/spreadsheets/d/13NHLyPs41-RepS5Q-x9p6KwKQZ9VRdjqhAOGwrP3R14/edit?gid=0#gid=0' },
+        { name: 'Arquivo Morto Triagem - Pasta do Drive', url: 'https://drive.google.com/drive/folders/15PtPA6-BKuGCCNgXtJWLPMuc0L5OmXPg' },
         { name: 'LOGISTICA AGENDAMENTOS 2026', url: 'https://docs.google.com/spreadsheets/d/1EGE2kM9HkraxnzCMrWmuPUFrrY6dCbMDNjDHy1r5Nmc/edit' },
         { name: 'CONTROLE DE TRIAGEM AMBULATORIO ATUAL_26', url: 'https://docs.google.com/spreadsheets/d/1xI_J8uUos95PFw5xcpDG7PTZkP2XJuB1nlDI9DyNyz8/edit?gid=1785422635#gid=1785422635' }
       ]
