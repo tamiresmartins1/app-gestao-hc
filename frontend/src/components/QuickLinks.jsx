@@ -100,7 +100,6 @@ export default function QuickLinks() {
     { area: 'FONO', number: '3329' },
     { area: 'T.O', number: '9044' },
     { area: 'CEAC - Domênica', number: '2223' },
-    { area: 'CEAC amb FISIOTERAPIA', number: '' },
     { area: 'CEAC - Antônio', number: '7277' },
     { area: 'Ricardo TI / Alexandre Crispim TI LOCAL', number: '8071' },
     { area: 'TI', number: '6630' },
