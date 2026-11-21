@@ -15,6 +15,12 @@ import './styles/app.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+const addOneDay = (dateStr) => {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const next = new Date(Date.UTC(year, month - 1, day + 1));
+  return next.toISOString().slice(0, 10);
+};
+
 function App() {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('activeTab') || 'dashboard';
@@ -200,9 +206,7 @@ function App() {
       };
 
       if (dataToSend.due_date) {
-        const [year, month, day] = dataToSend.due_date.split('-');
-        const dayNum = parseInt(day) + 1;
-        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        dataToSend.due_date = addOneDay(dataToSend.due_date);
         console.log(`⏰ Adjusting date for UTC-3: ${taskData.due_date} → ${dataToSend.due_date}`);
       }
 
@@ -218,9 +222,7 @@ function App() {
       const dataToSend = { ...updates };
 
       if (dataToSend.due_date) {
-        const [year, month, day] = dataToSend.due_date.split('-');
-        const dayNum = parseInt(day) + 1;
-        dataToSend.due_date = `${year}-${month}-${String(dayNum).padStart(2, '0')}`;
+        dataToSend.due_date = addOneDay(dataToSend.due_date);
         console.log(`⏰ Adjusting update date for UTC-3: ${updates.due_date} → ${dataToSend.due_date}`);
       }
 
